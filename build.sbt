@@ -3,6 +3,8 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "vat-deferral-new-payment-scheme-frontend"
 
+PlayKeys.playDefaultPort := 8020
+
 val silencerVersion = "1.7.0"
 
 lazy val microservice = Project(appName, file("."))
