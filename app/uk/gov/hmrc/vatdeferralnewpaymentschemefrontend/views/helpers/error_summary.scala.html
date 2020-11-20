@@ -1,0 +1,24 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@(errorsList: Option[List[(String, String)]] = None)(implicit messages: Messages)
+@errorsList.map{ errors =>
+  <div 
+    class="error-summary" 
+    role="alert" 
+    aria-labelledby="error-summary-heading" 
+    tabindex="-1">
+    
+    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
+      @messages("error.summary.heading")
+    </h2>
+    
+    <ul class="error-summary-list">
+      @errors.map { error =>
+        <li><a href="#@error._2">@error._1</a></li>
+      }
+    </ul>
+  </div>
+}

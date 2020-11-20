@@ -9,7 +9,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.HelloWorldPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.TermsAndConditionsPage
 import scala.concurrent.Future
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import play.api.i18n.I18nSupport
@@ -19,15 +19,15 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 
 @Singleton
-class HelloWorldController @Inject()(
+class TermsAndConditionsController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   http: HttpClient,
-  helloWorldPage: HelloWorldPage)
+  termsAndConditionsPage: TermsAndConditionsPage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  val helloWorld: Action[AnyContent] = auth.authorise { implicit request =>
-    Future.successful(Ok(helloWorldPage()))
+  val get: Action[AnyContent] = auth.authorise { implicit request =>
+    Future.successful(Ok(termsAndConditionsPage()))
   }
 }

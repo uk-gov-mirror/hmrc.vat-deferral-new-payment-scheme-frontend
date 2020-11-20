@@ -5,6 +5,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -19,7 +20,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 
 @Singleton
-class HelloWorldController @Inject()(
+class IVController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   http: HttpClient,
@@ -27,7 +28,11 @@ class HelloWorldController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  val helloWorld: Action[AnyContent] = auth.authorise { implicit request =>
-    Future.successful(Ok(helloWorldPage()))
+  def get(journeyId: Option[String]): Action[AnyContent] = Action.async  { implicit request =>
+    for {
+      uplift <- http.GET[HttpResponse](s"http://localhost:9948/mdtp/journey/journeyId/${journeyId.getOrElse(0)}")
+    } yield {
+      Ok(s"enrolment: ${uplift.body}")
+    }
   }
 }

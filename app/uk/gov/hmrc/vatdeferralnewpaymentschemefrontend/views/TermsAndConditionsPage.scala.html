@@ -1,0 +1,43 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+
+@this(layout: Layout)
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Accept the terms and conditions before you continue</h1>
+            <form action="total-deferred-vat-bill" method="post" novalidate>
+
+
+                <h2 class="govuk-heading-m">Terms and conditions</h2>
+                <p>We can cancel this agreement if you:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>pay late or miss a payment</li>
+                    <li>pay another tax bill late</li>
+                    <li>do not submit your future tax returns on time</li>
+                </ul>
+                <p>If we cancel this agreement, you will need to pay the total amount you owe straight away.</p>
+                <p>We can use any refunds you might get to pay off your tax charges.</p>
+                <p>If your circumstances change and you can pay more or you can pay in full, you need to let us know.</p>
+                <h2 class="govuk-heading-m">Declaration</h2>
+                <p>
+                    I agree to the terms and conditions of this payment plan. I confirm that this is the earliest I am able to settle this debt.
+                </p>
+
+
+                <button class="govuk-button" data-module="govuk-button">
+                    Accept and continue
+                </button>
+            </form>
+
+        </div>
+    </div>
+}

@@ -1,6 +1,20 @@
 service.name = vat-deferral-new-payment-scheme-frontend
 service.homePageUrl = /vat-deferral-new-payment-scheme-frontend
 service.text = This is your new service
+error.summary.heading=There is a problem
+
+global.month.1 = January
+global.month.2 = Feburary
+global.month.3 = March
+global.month.4 = April
+global.month.5 = May
+global.month.6 = June
+global.month.7 = July
+global.month.8 = August
+global.month.9 = September
+global.month.10 = October
+global.month.11 = November
+global.month.12 = December
 
 footer.cookies.text = Cookies
 footer.cookies.url = /help/cookies
@@ -10,3 +24,23 @@ footer.termsConditions.text = Terms and conditions
 footer.termsConditions.url = /help/terms-and-conditions
 footer.govukHelp.text = Help using GOV.UK
 footer.govukHelp.url = https://www.gov.uk/help
+
+enter.vrn.heading = What is your VAT registration number?
+enter.vrn.hint = This is 9 numbers, sometimes with 'GB' at the start, for example 123456789 or GB123456789. You can find it on your VAT registration certificate.
+enter.vrn.required=Enter the VAT number
+enter.vrn.invalid=VRN is invalid
+
+enter.postcode.heading = What is the postcode where your business is registered for VAT?
+enter.postcode.hint = For example, AB1 2YZ
+
+enter.latestVatReturn.heading = What is your latest VAT Return total?
+enter.latestVatReturn.hint = You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. <br /> The format of this number needs to be two decimal places, for example &#163;123.00
+
+enter.latestVatPeriod.heading = Select the last month of your latest VAT accounting period
+enter.latestVatPeriod.hint = You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
+
+enter.vatRegistrationDate.heading = When did you become VAT registered?
+enter.vatRegistrationDate.hint1 = You can find this date on your VAT registration certificate.
+enter.vatRegistrationDate.hint2 = For example, 31 3 2018
+
+global.button.continue = Continue
