@@ -13,12 +13,13 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.HelloWorldPage
 
 import scala.concurrent.Future
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import play.api.i18n.I18nSupport
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Vrn
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 
 @Singleton
 class HelloWorldController @Inject()(
@@ -30,6 +31,8 @@ class HelloWorldController @Inject()(
     extends FrontendController(mcc) with I18nSupport {
 
   val helloWorld: Action[AnyContent] = auth.authorise { implicit request =>
+    implicit vrn =>
+
     Future.successful(Ok(helloWorldPage()))
   }
 

@@ -27,7 +27,7 @@ class TermsAndConditionsController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  val get: Action[AnyContent] = auth.authorise { implicit request =>
+  val get: Action[AnyContent] = auth.authorise { implicit request => implicit vrn =>
     Future.successful(Ok(termsAndConditionsPage()))
   }
 }

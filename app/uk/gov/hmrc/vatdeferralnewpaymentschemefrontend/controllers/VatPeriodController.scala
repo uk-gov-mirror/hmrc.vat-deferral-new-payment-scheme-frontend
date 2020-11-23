@@ -18,21 +18,21 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{KnownFactsSession, RequestSession }
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 
 @Singleton
 class VatPeriodController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
-  http: HttpClient,
   enterLatestVatPeriodPage: EnterLatestVatPeriodPage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  def get(): Action[AnyContent] = Action.async { implicit request =>
+  def get(): Action[AnyContent] = auth.authoriseForMatchingVrn { implicit request =>
     Future.successful(Ok(enterLatestVatPeriodPage()))
   }
 
-  def post(): Action[AnyContent] = Action.async { implicit request =>
+  def post(): Action[AnyContent] = auth.authoriseForMatchingVrn { implicit request =>
 
     val form = request.body.asFormUrlEncoded.map { m =>
       m.mapValues(_.last)

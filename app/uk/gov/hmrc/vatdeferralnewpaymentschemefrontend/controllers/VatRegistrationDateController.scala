@@ -19,6 +19,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{KnownFactsSession, RequestSession, RootInterface, KnownFacts }
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 
 @Singleton
 class VatRegistrationDateController @Inject()(
@@ -29,11 +30,11 @@ class VatRegistrationDateController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  def get(): Action[AnyContent] = Action.async { implicit request =>
+  def get(): Action[AnyContent] = auth.authoriseForMatchingVrn { implicit request =>
     Future.successful(Ok(enterVatRegistrationDatePage()))
   }
 
-  def post(): Action[AnyContent] = Action.async { implicit request =>
+  def post(): Action[AnyContent] = auth.authoriseForMatchingVrn { implicit request =>
 
     val form = request.body.asFormUrlEncoded.map { m =>
       m.mapValues(_.last)
@@ -43,8 +44,6 @@ class VatRegistrationDateController @Inject()(
       RequestSession.getObject(request.session) match {
 
         case Some(knownFactsSession) => {
-
-          Console.println(s"knownFactsSession $knownFactsSession & $date")
 
           val kf = Seq[KnownFacts] (
             KnownFacts("VRN", knownFactsSession.vrn),
