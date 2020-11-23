@@ -33,7 +33,6 @@ import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 
 @Singleton
 class HelloWorldController @Inject()(
-  appConfig: AppConfig,
   mcc: MessagesControllerComponents,
   auth: Auth,
   http: HttpClient,
