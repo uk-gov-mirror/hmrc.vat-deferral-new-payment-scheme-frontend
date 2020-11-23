@@ -59,8 +59,8 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
                 {
                   var sessionVrn = RequestSession.getObject(request.session)
                   sessionVrn match {
-                    case Some(sessionVrn) => action(request)(Vrn(sessionVrn.vrn))
-                    case None => Future.successful(Redirect("enter-vrn"))
+                    case Some(sessionVrn) if sessionVrn.isUserEnrolled => action(request)(Vrn(sessionVrn.vrn))
+                    case _ => Future.successful(Redirect("enter-vrn"))
                   }
                 }
               }

@@ -9,7 +9,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.EnterVatRegistrationDatePage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{ EnterVatRegistrationDatePage, VatDetailsNotValidPage }
 import scala.concurrent.Future
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import play.api.i18n.I18nSupport
@@ -20,13 +20,15 @@ import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{KnownFactsSession, RequestSession, RootInterface, KnownFacts }
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.EnrolmentStoreConnector
 
 @Singleton
 class VatRegistrationDateController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
-  http: HttpClient,
-  enterVatRegistrationDatePage: EnterVatRegistrationDatePage)
+  enrolmentStoreConnector: EnrolmentStoreConnector,
+  enterVatRegistrationDatePage: EnterVatRegistrationDatePage,
+  vatDetailsNotValidPage: VatDetailsNotValidPage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
@@ -47,27 +49,23 @@ class VatRegistrationDateController @Inject()(
 
           val kf = Seq[KnownFacts] (
             KnownFacts("VRN", knownFactsSession.vrn),
-            KnownFacts("Postcode", knownFactsSession.postCode.get),
-            KnownFacts("BoxFiveValue", knownFactsSession.lastestVatAmount.get),
-            KnownFacts("LastMonthLatestStagger", knownFactsSession.latestAccountPeriodMonth.get),
+            KnownFacts("Postcode", knownFactsSession.postCode.getOrElse("")),
+            KnownFacts("BoxFiveValue", knownFactsSession.lastestVatAmount.getOrElse("")),
+            KnownFacts("LastMonthLatestStagger", knownFactsSession.latestAccountPeriodMonth.getOrElse("")),
             KnownFacts("VATRegistrationDate", date))
 
           val ri = RootInterface("HMRC-MTD-VAT", kf)
 
-          val data = {
-            for {
-              kfa <- http.POST[RootInterface, HttpResponse]("http://localhost:9595/enrolment-store-proxy/enrolment-store/enrolments", ri)
-            } yield {
-              kfa
+          enrolmentStoreConnector.checkEnrolments(ri).flatMap { httpResponse =>
+            httpResponse.status match {
+              case OK => Future.successful(Redirect(routes.TermsAndConditionsController.get())
+                .withSession(request.session + ("knownFactsSession" -> KnownFactsSession.convertToJson(
+                  KnownFactsSession(knownFactsSession.vrn, knownFactsSession.postCode, knownFactsSession.lastestVatAmount, knownFactsSession.latestAccountPeriodMonth, Some(date), true)))
+              ))
+              case 204 => Future.successful(Ok(vatDetailsNotValidPage()))
+              case _ => Future.successful(Ok("Api Failed")) // TODO: Add content here
             }
           }
-
-          data map {
-            a => Redirect(routes.TermsAndConditionsController.get())
-          }
-//          Future.successful(Redirect(routes.TermsAndConditionsController.get())
-//            .withSession(request.session + ("knownFactsSession" -> KnownFactsSession.convertToJson(
-//              KnownFactsSession(knownFactsSession.vrn, knownFactsSession.postCode, knownFactsSession.lastestVatAmount, knownFactsSession.latestAccountPeriodMonth, Some(date)))))
         }
         case None => Future.successful(Redirect(routes.VrnController.get()))
       }

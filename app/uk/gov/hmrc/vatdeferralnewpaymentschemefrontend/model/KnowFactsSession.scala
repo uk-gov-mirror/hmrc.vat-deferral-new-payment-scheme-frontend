@@ -7,7 +7,7 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 import play.api.libs.json.Json
 import play.api.mvc
 
-case class KnownFactsSession(vrn: String, postCode: Option[String] = None, lastestVatAmount: Option[String] = None, latestAccountPeriodMonth: Option[String] = None, date: Option[String] = None)
+case class KnownFactsSession(vrn: String, postCode: Option[String] = None, lastestVatAmount: Option[String] = None, latestAccountPeriodMonth: Option[String] = None, date: Option[String] = None, isUserEnrolled: Boolean = false)
 
 object KnownFactsSession {
   implicit val formats = Json.format[KnownFactsSession]
