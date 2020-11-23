@@ -46,13 +46,13 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
-          var vrnDec = getEnrolement(enrolments, "HMCE-VATDEC-ORG", "VATRegNo")
+          var vrnDec = getEnrolment(enrolments, "HMCE-VATDEC-ORG", "VATRegNo")
 
           vrnDec match {
             case Some(vrnDec) => action(request)(Vrn(vrnDec))
             case None =>
             {
-              var vrnMtd = getEnrolement(enrolments, "HMRC-MTD-VAT", "VRN")
+              var vrnMtd = getEnrolment(enrolments, "HMRC-MTD-VAT", "VRN")
               vrnMtd match {
                 case Some(vrnMtd) => action(request)(Vrn(vrnMtd))
                 case None =>
@@ -94,7 +94,7 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       }
     }
 
-  private def getEnrolement(enrolments: Enrolments, serviceKey: String, enrolmentKey: String) =
+  private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String) =
     for {
       enrolment <- enrolments.getEnrolment(serviceKey)
       identifier <- enrolment.getIdentifier(enrolmentKey)
