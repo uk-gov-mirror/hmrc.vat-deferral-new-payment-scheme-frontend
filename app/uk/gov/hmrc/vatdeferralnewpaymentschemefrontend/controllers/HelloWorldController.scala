@@ -25,14 +25,11 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 class HelloWorldController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
-  http: HttpClient,
   helloWorldPage: HelloWorldPage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  val helloWorld: Action[AnyContent] = auth.authorise { implicit request =>
-    implicit vrn =>
-
+  val helloWorld: Action[AnyContent] = auth.authorise { implicit request => implicit vrn =>
     Future.successful(Ok(helloWorldPage()))
   }
 
