@@ -20,7 +20,6 @@ class EnrolmentStoreConnector @Inject()(http: HttpClient)(implicit val appConfig
 
   def checkEnrolments(rootInterface: RootInterface)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     val url = appConfig.enrolmentStoreUrl
-    Console.println(s"Hello::: $url")
     http.POST[RootInterface, HttpResponse](url, rootInterface)
   }
 }
