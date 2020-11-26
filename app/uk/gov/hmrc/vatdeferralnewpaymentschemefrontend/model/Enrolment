@@ -1,0 +1,13 @@
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth
+
+import play.api.libs.json.Json
+
+case class AllEnrolments (key: String, identifiers: Seq[Identifiers], state: String)
+
+case class Identifiers (key: String, value: String)
+
+case class Enrolment (allEnrolments: Seq[AllEnrolments])
+
+object Enrolments {
+  implicit val formats = Json.format[Enrolment]
+}

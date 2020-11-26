@@ -1,3 +1,8 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ */
+
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import org.scalatest.matchers.should.Matchers
@@ -23,18 +28,9 @@ class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAp
 
   val helloWorldPage: HelloWorldPage = app.injector.instanceOf[HelloWorldPage]
 
-  private val controller = new HelloWorldController(appConfig, stubMessagesControllerComponents(), helloWorldPage)
-
   "GET /" should {
     "return 200" in {
-      val result = controller.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
 
-    "return HTML" in {
-      val result = controller.helloWorld(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result)     shouldBe Some("utf-8")
     }
   }
 }

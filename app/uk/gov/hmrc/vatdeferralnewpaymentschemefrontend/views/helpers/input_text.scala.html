@@ -1,0 +1,57 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ *@
+
+@(id: String,
+  label: String,
+  value: String = "",
+  secondaryLabel: Option[String] = None,
+  inputClass: Option[String] = None,
+  hint: Option[String] = None,
+  name: String = "value",
+  containerClass: Option[String] = None,
+  labelClass: Option[String] = None,
+  errorMessage: Option[String] = None,
+  inputType: String = "text",
+  readOnly: Boolean = false,
+  isQuestionPage: Boolean = false
+)(implicit messages: Messages)
+@hasErrors=@{errorMessage.isDefined}
+@defining((hint.isDefined, hasErrors) match {
+  case (true, true) => s"$id-hint $id-error"
+  case (true, false) => s"$id-hint"
+  case (false, true) => s"$id-error"
+  case _ => ""
+}){ ariaDescribe =>
+<div class="form-group @if(hasErrors){form-group-error} @if(containerClass.nonEmpty){@containerClass}">
+  @if(isQuestionPage){<h1 class="flush--bottom">}
+  <label class="form-label @if(labelClass.nonEmpty){@labelClass}@if(isQuestionPage){ govuk-label--xl flush--bottom}" for="@id">
+    @label
+    
+
+    
+    @errorMessage.map(
+      e ⇒ Html(s"""<span class="error-message" id="""" + id + """-error"><span class="govuk-visually-hidden">Error:</span> """ + messages(e) + """</span>""")
+    )
+  </label>
+
+  @hint.map { h =>
+    <span class="govuk-hint" id="@{id}-hint">@h</span>
+  }
+
+  @if(isQuestionPage){</h1>}
+
+  <div class="form-control-wrapper" data-type="@secondaryLabel">
+    <input
+      class="form-control @inputClass @if(hasErrors){form-control-error}"
+      type="@inputType"
+      id="@id"
+      name="@name"
+      value="@value"
+      @if(ariaDescribe.nonEmpty){aria-describedby="@ariaDescribe"}
+      @if(readOnly) { readonly }
+    />
+  </div>
+</div>
+} 

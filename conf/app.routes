@@ -3,4 +3,24 @@
 ->         /govuk-frontend          govuk.Routes
 ->         /hmrc-frontend           hmrcfrontend.Routes
 GET        /hello-world             uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.HelloWorldController.helloWorld
+
+GET        /enter-vrn              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.get
+POST       /enter-vrn              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.post
+
+GET        /enter-post-code        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.get
+POST       /enter-post-code        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.post
+
+GET        /enter-latest-vat-return-total        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.get
+POST       /enter-latest-vat-return-total        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.post
+
+GET        /enter-latest-vat-accounting-period        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatPeriodController.get
+POST       /enter-latest-vat-accounting-period        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatPeriodController.post
+
+GET        /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.get
+POST       /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.post
+
+GET        /terms-and-conditions        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.TermsAndConditionsController.get
+
+GET        /iv/journey-result        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.IVController.get(journeyId: Option[String])
+
 GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)
