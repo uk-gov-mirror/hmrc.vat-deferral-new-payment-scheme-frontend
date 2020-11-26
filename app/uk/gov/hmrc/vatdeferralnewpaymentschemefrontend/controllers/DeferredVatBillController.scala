@@ -33,9 +33,11 @@ class DeferredVatBillController @Inject()(
   def get(): Action[AnyContent] = auth.authorise { implicit request => vrn =>
 
     vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map { e =>
-      e match
-      {
-        case FinancialData(_, _) => Ok(deferredVatBillPage(e.originalAmount.toString, e.outstandingAmount.toString, (e.originalAmount - e.outstandingAmount).toString))
+      e match {
+        case FinancialData(_, _) => {
+          Ok(deferredVatBillPage(e.originalAmount.toString, e.outstandingAmount.toString, (e.originalAmount - e.outstandingAmount).toString))
+            .withSession(request.session + ("amount" -> e.outstandingAmount.toString))
+        }
         case _ => Ok("error")
       }
     }

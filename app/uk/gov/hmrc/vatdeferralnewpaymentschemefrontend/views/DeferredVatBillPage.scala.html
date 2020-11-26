@@ -4,7 +4,7 @@
  *@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-@import play.twirl.api.HtmlFormat.escape
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 @this(layout: Layout)
 
@@ -32,7 +32,7 @@
                     </tr>
                 </tbody>
             </table>
-            <a href="/" class="govuk-button" data-module="govuk-button">
+            <a href="@controllers.routes.MonthsController.get()" class="govuk-button" data-module="govuk-button">
                 @messages("global.button.continue")
             </a>
         </div>
