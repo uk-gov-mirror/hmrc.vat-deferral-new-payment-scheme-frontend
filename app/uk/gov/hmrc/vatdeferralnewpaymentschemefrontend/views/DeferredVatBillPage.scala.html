@@ -4,6 +4,7 @@
  *@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+@import play.twirl.api.HtmlFormat.escape
 
 @this(layout: Layout)
 
@@ -13,25 +14,27 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Your deferred VAT bill is £@deferredVatAmount</h1>
-
-            <h2 class="govuk-heading-m">How we worked out your deferred VAT bill</h2>
+            <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1") £@deferredVatAmount</h1>
+            <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
             <table class="govuk-table">
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">VAT payable for 20 March to 30 June 2020</th>
+                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.total.payable")</th>
                         <td class="govuk-table__cell ">£@totalDeferredVatAmount</td>
                     </tr>
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">VAT paid to date</th>
+                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.paid")</th>
                         <td class="govuk-table__cell ">£@deferredVatAmountPaid</td>
                     </tr>
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Deferred VAT left to pay by 31 March 2022</th>
+                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.payable")</th>
                         <td class="govuk-table__cell ">£@deferredVatAmount</td>
                     </tr>
                 </tbody>
             </table>
+            <a href="/" class="govuk-button" data-module="govuk-button">
+                @messages("global.button.continue")
+            </a>
         </div>
     </div>
 }
