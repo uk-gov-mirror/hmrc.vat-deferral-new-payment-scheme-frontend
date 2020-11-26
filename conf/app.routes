@@ -23,6 +23,8 @@ GET        /terms-and-conditions        uk.gov.hmrc.vatdeferralnewpaymentschemef
 
 GET        /eligibility              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.EligibilityController.get
 
+GET        /deferred-vat-bill        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.DeferredVatBillController.get
+
 GET        /iv/journey-result        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.IVController.get(journeyId: Option[String])
 
 GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)

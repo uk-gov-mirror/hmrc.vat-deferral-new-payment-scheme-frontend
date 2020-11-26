@@ -12,7 +12,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.iv._
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Eligibility
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{ Eligibility, FinancialData }
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 
@@ -25,5 +25,10 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(http: HttpClient, servicesC
   def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext)= {
     val url = s"${serviceURL}/vat-deferral-new-payment-scheme/eligibility/$vrn"
     http.GET[Eligibility](url)
+  }
+
+  def financialData(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext)= {
+    val url = s"${serviceURL}/vat-deferral-new-payment-scheme/financialData/$vrn"
+    http.GET[FinancialData](url)
   }
 }

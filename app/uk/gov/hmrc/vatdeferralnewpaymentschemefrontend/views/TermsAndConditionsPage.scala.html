@@ -4,6 +4,7 @@
  *@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 @this(layout: Layout)
 
@@ -32,10 +33,9 @@
                     I agree to the terms and conditions of this payment plan. I confirm that this is the earliest I am able to settle this debt.
                 </p>
 
-
-                <button class="govuk-button" data-module="govuk-button">
+                <a href="@controllers.routes.DeferredVatBillController.get()" class="govuk-button" data-module="govuk-button">>
                     Accept and continue
-                </button>
+                </a>
             </form>
 
         </div>
