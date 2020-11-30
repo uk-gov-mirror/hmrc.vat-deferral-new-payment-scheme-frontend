@@ -58,7 +58,7 @@ class VatRegistrationDateController @Inject()(
 
           enrolmentStoreConnector.checkEnrolments(ri).flatMap { httpResponse =>
             httpResponse.status match {
-              case OK => Future.successful(Redirect(routes.TermsAndConditionsController.get())
+              case OK => Future.successful(Redirect(routes.EligibilityController.get())
                 .withSession(request.session + ("knownFactsSession" -> KnownFactsSession.convertToJson(
                   KnownFactsSession(knownFactsSession.vrn, knownFactsSession.postCode, knownFactsSession.lastestVatAmount, knownFactsSession.latestAccountPeriodMonth, Some(date), true)))
               ))

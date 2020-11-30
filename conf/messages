@@ -43,4 +43,13 @@ enter.vatRegistrationDate.heading = When did you become VAT registered?
 enter.vatRegistrationDate.hint1 = You can find this date on your VAT registration certificate.
 enter.vatRegistrationDate.hint2 = For example, 31 3 2018
 
+deferred.vat.bill.heading.1 = Your deferred VAT bill is
+deferred.vat.bill.heading.2 = How we worked out your deferred VAT bill
+deferred.vat.bill.vat.total.payable = VAT payable for 20 March to 30 June 2020
+deferred.vat.bill.vat.paid = VAT paid to date
+deferred.vat.bill.payable = Deferred VAT left to pay by 31 March 2022
+
+how.many.months.heading = How many months do you want to pay over?
+
 global.button.continue = Continue
+global.button.accept.and.continue = Accept and continue
