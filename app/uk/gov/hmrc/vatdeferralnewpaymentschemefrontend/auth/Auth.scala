@@ -6,20 +6,16 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import controllers.routes
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Mode}
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AuthProvider.PrivilegedApplication
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.{AuthProviders, ConfidenceLevel}
-import java.net.{URLDecoder, URLEncoder}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{ Vrn, RequestSession }
 
@@ -95,9 +91,6 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
     }
   }
 
-  private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String) =
-    for {
-      enrolment <- enrolments.getEnrolment(serviceKey)
-      identifier <- enrolment.getIdentifier(enrolmentKey)
-    } yield identifier.value
+  private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String): Option[String] =
+    enrolments.getEnrolment(serviceKey).map(a => a.getIdentifier(enrolmentKey)).flatMap(b => b.map(enrolment => enrolment.value))
 }
