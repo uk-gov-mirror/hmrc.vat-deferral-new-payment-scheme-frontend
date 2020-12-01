@@ -30,14 +30,10 @@ class DeferredVatBillController @Inject()(
     extends FrontendController(mcc) with I18nSupport {
 
   def get(): Action[AnyContent] = auth.authorise { implicit request => vrn =>
-
     request.session.get("sessionId").map(sessionId => {
-      vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map {
-        case e@FinancialData(_, _) => {
-          sessionStore.store[String](sessionId, "amount", e.outstandingAmount.toString)
-          Ok(deferredVatBillPage(e.originalAmount.toString, e.outstandingAmount.toString, (e.originalAmount - e.outstandingAmount).toString))
-        }
-        case _ => Ok("Financial data issue")
+      vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map { e =>
+        sessionStore.store[String](sessionId, "amount", e.outstandingAmount.toString)
+        Ok(deferredVatBillPage(e.originalAmount, e.outstandingAmount, e.originalAmount - e.outstandingAmount))
       }
     }).getOrElse(Future.successful(Ok("Session id not set")))
   }

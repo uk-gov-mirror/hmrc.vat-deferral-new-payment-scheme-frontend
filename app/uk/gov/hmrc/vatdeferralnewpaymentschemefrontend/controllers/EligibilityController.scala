@@ -10,13 +10,10 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.NotEligiblePage
-import scala.concurrent.Future
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import play.api.i18n.I18nSupport
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Eligibility
 
@@ -31,14 +28,9 @@ class EligibilityController @Inject()(
 
   val get: Action[AnyContent] = auth.authorise { implicit request =>
     implicit vrn =>
-
-      // check eligibility
-      vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn) map { e =>
-        e match
-        {
-          case Eligibility(false, false, true) => Redirect(routes.TermsAndConditionsController.get())
-          case _ => Ok(notEligiblePage(e))
-        }
+      vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn) map {
+        case Eligibility(false, false, true) => Redirect(routes.TermsAndConditionsController.get())
+        case e => Ok(notEligiblePage(e))
       }
   }
 }

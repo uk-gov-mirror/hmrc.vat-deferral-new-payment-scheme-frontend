@@ -34,11 +34,9 @@ class SessionStoreImpl @Inject()(mongo: ReactiveMongoComponent, serviceConfig: S
       case Some(cache) => cache.data flatMap {
         json =>
           Logger.debug(s"[SessionStore][get] $cache")
-          if ((json \ key).validate[T].isSuccess) {
-            Some((json \ key).as[T])
-          } else {
-            None
-          }
+          Some((json \ key))
+            .filter(_.validate[T].isSuccess)
+            .map(_.as[T])
       }
       case None => None
     }
