@@ -27,15 +27,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[AuthImpl])
 trait Auth extends AuthorisedFunctions with AuthRedirects with Results {
-  def authorise(action: Request[AnyContent] ⇒ Vrn ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
-  def authoriseForMatchingVrn(action: Request[AnyContent] ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
+  def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
+  def authoriseForMatchingVrn(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
 }
 
 @Singleton
 class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment, val config: Configuration, val appConfig: AppConfig) extends Auth {
 
-  def authorise(action: Request[AnyContent] ⇒ Vrn ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request ⇒
+  def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+    Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
@@ -69,13 +69,13 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments ⇒ SeeOther(appConfig.ivUrl(currentUrl))
+        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
         case ex => Ok("Error")
       }
     }
 
-  def authoriseForMatchingVrn(action: Request[AnyContent] ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request ⇒
+  def authoriseForMatchingVrn(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+    Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
@@ -89,7 +89,7 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments ⇒ SeeOther(appConfig.ivUrl(currentUrl))
+        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
         case ex => Ok("Error")
       }
     }

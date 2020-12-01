@@ -30,14 +30,14 @@ class IvConnectorImpl @Inject() (http: HttpClient)(implicit val appConfig: AppCo
   override def getJourneyStatus(journeyId: JourneyId)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[IvResponse]] =
     http.GET(appConfig.ivJourneyResultUrl(journeyId))
       .flatMap {
-        case r if r.status == OK ⇒
+        case r if r.status == OK =>
           val result = (r.json \ "result").as[String]
           IvSuccessResponse.fromString(result)
-        case r ⇒
+        case r =>
           Some(IvUnexpectedResponse(r))
       }
       .recoverWith {
-        case e: Exception ⇒
+        case e: Exception =>
           Some(IvErrorResponse(e))
       }
 }
