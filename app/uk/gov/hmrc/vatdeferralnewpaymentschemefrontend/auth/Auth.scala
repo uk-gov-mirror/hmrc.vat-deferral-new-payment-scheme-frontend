@@ -46,26 +46,14 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
-          var vrnDec = getEnrolment(enrolments, "HMCE-VATDEC-ORG", "VATRegNo")
+          val enrolmentTypes = Seq(
+            getVrnFromEnrolment(enrolments, "HMRC-MTD-VAT", "VRN"),
+            getVrnFromEnrolment(enrolments, "HMCE-VATDEC-ORG", "VATRegNo"),
+            getVrnFromSession(request.session)
+          )
 
-          vrnDec match {
-            case Some(vrnDec) => action(request)(Vrn(vrnDec))
-            case None =>
-            {
-              var vrnMtd = getEnrolment(enrolments, "HMRC-MTD-VAT", "VRN")
-              vrnMtd match {
-                case Some(vrnMtd) => action(request)(Vrn(vrnMtd))
-                case None =>
-                {
-                  var sessionVrn = RequestSession.getObject(request.session)
-                  sessionVrn match {
-                    case Some(sessionVrn) if sessionVrn.isUserEnrolled => action(request)(Vrn(sessionVrn.vrn))
-                    case _ => Future.successful(Redirect("enter-vrn"))
-                  }
-                }
-              }
-            }
-          }
+          val vrn = enrolmentTypes.collectFirst { case Some(i) => i }
+          vrn.map(v => action(request)(v)).getOrElse { Future.successful(Redirect("enter-vrn")) }
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
@@ -84,15 +72,28 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
-        credentialRole => {
-          action(request)
-        }
+        _ => action(request)
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
         case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
         case ex => Ok("Error")
       }
     }
+
+  private def getVrnFromEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String): Option[Vrn] = {
+    getEnrolment(enrolments, serviceKey, enrolmentKey)
+      .map(vrnDec => {
+        Vrn(vrnDec)
+      }).orElse { None }
+  }
+
+  private def getVrnFromSession(session: Session): Option[Vrn] = {
+    val sessionVrn = RequestSession.getObject(session)
+    sessionVrn match {
+      case Some(sessionVrn) if sessionVrn.isUserEnrolled => Some(Vrn(sessionVrn.vrn))
+      case _ => None
+    }
+  }
 
   private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String) =
     for {
