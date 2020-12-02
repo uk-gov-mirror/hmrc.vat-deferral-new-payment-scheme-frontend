@@ -31,14 +31,14 @@ class IVController @Inject()(
 
   def get(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     journeyId match {
-      case Some(id) ⇒
+      case Some(id) =>
         ivConnector.getJourneyStatus(JourneyId(id)).flatMap {
-          case Some(Success) ⇒
+          case Some(Success) =>
             Future.successful(Redirect(routes.TermsAndConditionsController.get()))
           case _ =>
             Future.successful(Ok("IV Failed"))
         }
-      case None ⇒
+      case None =>
         Future.successful(Ok("No Journey id"))
     }
   }

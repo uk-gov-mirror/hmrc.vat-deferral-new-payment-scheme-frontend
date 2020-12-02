@@ -8,7 +8,7 @@
 
 @this(layout: Layout)
 
-@(totalDeferredVatAmount: String, deferredVatAmount: String, deferredVatAmountPaid: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(totalDeferredVatAmount: BigDecimal, deferredVatAmount: BigDecimal, deferredVatAmountPaid: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
 

@@ -6,20 +6,16 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import controllers.routes
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Mode}
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AuthProvider.PrivilegedApplication
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.{AuthProviders, ConfidenceLevel}
-import java.net.{URLDecoder, URLEncoder}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{ Vrn, RequestSession }
 
@@ -27,15 +23,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[AuthImpl])
 trait Auth extends AuthorisedFunctions with AuthRedirects with Results {
-  def authorise(action: Request[AnyContent] ⇒ Vrn ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
-  def authoriseForMatchingVrn(action: Request[AnyContent] ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
+  def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
+  def authoriseForMatchingVrn(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
 }
 
 @Singleton
 class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment, val config: Configuration, val appConfig: AppConfig) extends Auth {
 
-  def authorise(action: Request[AnyContent] ⇒ Vrn ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request ⇒
+  def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+    Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
@@ -46,36 +42,35 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
-          var vrnDec = getEnrolment(enrolments, "HMCE-VATDEC-ORG", "VATRegNo")
+          def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
+            for {
+              e <- enrolments.getEnrolment(serviceKey)
+              i <- e.getIdentifier(enrolmentKey)
+            } yield Vrn(i.value)
 
-          vrnDec match {
-            case Some(vrnDec) => action(request)(Vrn(vrnDec))
-            case None =>
-            {
-              var vrnMtd = getEnrolment(enrolments, "HMRC-MTD-VAT", "VRN")
-              vrnMtd match {
-                case Some(vrnMtd) => action(request)(Vrn(vrnMtd))
-                case None =>
-                {
-                  var sessionVrn = RequestSession.getObject(request.session)
-                  sessionVrn match {
-                    case Some(sessionVrn) if sessionVrn.isUserEnrolled => action(request)(Vrn(sessionVrn.vrn))
-                    case _ => Future.successful(Redirect("enter-vrn"))
-                  }
-                }
-              }
+          def getVrnFromSession: Option[Vrn] = {
+            val sessionVrn = RequestSession.getObject(request.session)
+            sessionVrn match {
+              case Some(sessionVrn) if sessionVrn.isUserEnrolled => Some(Vrn(sessionVrn.vrn))
+              case _ => None
             }
           }
+
+          (
+            getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
+            getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo") orElse
+            getVrnFromSession
+          ).fold(Future.successful(Redirect("enter-vrn")))(action(request))
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments ⇒ SeeOther(appConfig.ivUrl(currentUrl))
+        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
         case ex => Ok("Error")
       }
     }
 
-  def authoriseForMatchingVrn(action: Request[AnyContent] ⇒ Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request ⇒
+  def authoriseForMatchingVrn(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+    Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
@@ -84,19 +79,11 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
-        credentialRole => {
-          action(request)
-        }
+        _ => action(request)
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments ⇒ SeeOther(appConfig.ivUrl(currentUrl))
+        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
         case ex => Ok("Error")
       }
     }
-
-  private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String) =
-    for {
-      enrolment <- enrolments.getEnrolment(serviceKey)
-      identifier <- enrolment.getIdentifier(enrolmentKey)
-    } yield identifier.value
 }
