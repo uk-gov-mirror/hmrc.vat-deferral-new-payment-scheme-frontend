@@ -42,14 +42,25 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
       authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
-          val enrolmentTypes = Seq(
-            getVrnFromEnrolment(enrolments, "HMRC-MTD-VAT", "VRN"),
-            getVrnFromEnrolment(enrolments, "HMCE-VATDEC-ORG", "VATRegNo"),
-            getVrnFromSession(request.session)
-          )
+          def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
+            for {
+              e <- enrolments.getEnrolment(serviceKey)
+              i <- e.getIdentifier(enrolmentKey)
+            } yield Vrn(i.value)
 
-          val vrn = enrolmentTypes.collectFirst { case Some(i) => i }
-          vrn.map(v => action(request)(v)).getOrElse { Future.successful(Redirect("enter-vrn")) }
+          def getVrnFromSession: Option[Vrn] = {
+            val sessionVrn = RequestSession.getObject(request.session)
+            sessionVrn match {
+              case Some(sessionVrn) if sessionVrn.isUserEnrolled => Some(Vrn(sessionVrn.vrn))
+              case _ => None
+            }
+          }
+
+          (
+            getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
+            getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo") orElse
+            getVrnFromSession
+          ).fold(Future.successful(Redirect("enter-vrn")))(action(request))
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
@@ -75,22 +86,4 @@ class AuthImpl @Inject()(val authConnector: AuthConnector, val env: Environment,
         case ex => Ok("Error")
       }
     }
-
-  private def getVrnFromEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String): Option[Vrn] = {
-    getEnrolment(enrolments, serviceKey, enrolmentKey)
-      .map(vrnDec => {
-        Vrn(vrnDec)
-      }).orElse { None }
-  }
-
-  private def getVrnFromSession(session: Session): Option[Vrn] = {
-    val sessionVrn = RequestSession.getObject(session)
-    sessionVrn match {
-      case Some(sessionVrn) if sessionVrn.isUserEnrolled => Some(Vrn(sessionVrn.vrn))
-      case _ => None
-    }
-  }
-
-  private def getEnrolment(enrolments: Enrolments, serviceKey: String, enrolmentKey: String): Option[String] =
-    enrolments.getEnrolment(serviceKey).map(a => a.getIdentifier(enrolmentKey)).flatMap(b => b.map(enrolment => enrolment.value))
 }
