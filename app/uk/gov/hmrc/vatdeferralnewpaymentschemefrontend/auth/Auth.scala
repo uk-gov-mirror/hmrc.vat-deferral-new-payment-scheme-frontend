@@ -132,7 +132,12 @@ class AuthImpl @Inject()(
       val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
 
       val newAction = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
-        case Some(a) => action(request)(a)
+        case Some(a) => {
+          if (a.failedMatchingAttempts <= 3)
+            action(request)(a)
+          else
+            Future.successful(Redirect(routes.NotMatchedController.get()))
+        }
         case _ => {
           sessionStore.store[MatchingJourneySession](sessionId, "MatchingJourneySession", MatchingJourneySession(sessionId))
           action(request)(MatchingJourneySession(sessionId))

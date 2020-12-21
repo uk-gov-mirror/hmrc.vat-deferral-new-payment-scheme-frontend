@@ -61,8 +61,10 @@ class VatRegistrationDateController @Inject()(
               sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(isUserEnrolled = true))
               Future.successful(Redirect(routes.EligibilityController.get()))
             }
-            case 204 => Future.successful(Ok(vatDetailsNotValidPage()))
-            case _ => Future.successful(Ok("Api Failed")) // TODO: Add content here
+            case 204 => {
+              sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1))
+              Future.successful(Redirect(routes.NotMatchedController.get()))
+            }
           }
         }
       }
