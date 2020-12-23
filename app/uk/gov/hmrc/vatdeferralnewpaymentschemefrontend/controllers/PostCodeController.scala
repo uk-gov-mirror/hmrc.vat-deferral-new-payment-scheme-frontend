@@ -6,10 +6,10 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.I18nSupport
+import play.api.data.Form
+import play.api.data.Forms.mapping
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
@@ -26,31 +26,23 @@ class PostCodeController @Inject()(
   sessionStore: SessionStore,
   enterPostCodePage: EnterPostCodePage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends FrontendController(mcc) with I18nSupport {
+    extends BaseController(mcc) {
 
-  def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => _ =>
-    Future.successful(Ok(enterPostCodePage()))
+  def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
+    Future.successful(Ok(enterPostCodePage(frm)))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
-
-    val form = request.body.asFormUrlEncoded.map { m =>
-      m.mapValues(_.last)
-    }.flatMap(parseFromMap)
-
-    form match {
-      case Some(postCode) => {
-        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(postCode = Some(postCode)))
+    frm.bindFromRequest().fold(
+      errors => Future(BadRequest(enterPostCodePage(errors))),
+      postCode => {
+        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(postCode = Some(postCode.value)))
         Future.successful(Redirect(routes.VatReturnController.get()))
       }
-      case None => Future.successful(BadRequest(""))
-    }
+    )
   }
 
-  private def parseFromMap(in: Map[String, String]): Option[String] = {
-    for {postCode <- in.get("post-code")}
-      yield {
-        postCode
-      }
-  }
+  val frm: Form[PostCode] = Form(mapping("post-code" -> mandatoryAndValid("postcode",  appConfig.postCodeRegex))(PostCode.apply)(PostCode.unapply))
+
+  case class PostCode(value: String)
 }

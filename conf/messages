@@ -4,7 +4,7 @@ service.text = This is your new service
 error.summary.heading=There is a problem
 
 global.month.1 = January
-global.month.2 = Feburary
+global.month.2 = February
 global.month.3 = March
 global.month.4 = April
 global.month.5 = May
@@ -34,7 +34,7 @@ enter.postcode.heading = What is the postcode where your business is registered 
 enter.postcode.hint = For example, AB1 2YZ
 
 enter.latestVatReturn.heading = What is your latest VAT Return total?
-enter.latestVatReturn.hint = You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. <br /> The format of this number needs to be two decimal places, for example &#163;123.00
+enter.latestVatReturn.hint = You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example £123.00
 
 enter.latestVatPeriod.heading = Select the last month of your latest VAT accounting period
 enter.latestVatPeriod.hint = You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
@@ -76,3 +76,18 @@ confirmation.vat.helpline.href = contact the VAT helpline
 
 global.button.continue = Continue
 global.button.accept.and.continue = Accept and continue
+
+vatcheck.common.errorSummary=There is a problem
+vatcheck.common.error.title=Error:
+
+error.vrn.required = Vat number is required
+error.vrn.invalid = Vat number is invalid
+error.postcode.required = Post code is required
+error.postcode.invalid = Post code is invalid
+error.vatamount.required = Latest VAT amount is required
+error.vatamount.invalid = Latest VAT amount is invalid
+error.day.required = Day is required
+error.month.required = Month is required
+error.year.required = Year is required
+error.date.invalid = Date is invalid
+

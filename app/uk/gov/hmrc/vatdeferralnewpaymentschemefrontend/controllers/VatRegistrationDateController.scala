@@ -5,11 +5,14 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.I18nSupport
+import play.api.data.Form
+import play.api.data.Forms.mapping
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.EnrolmentStoreConnector
@@ -29,29 +32,24 @@ class VatRegistrationDateController @Inject()(
   enterVatRegistrationDatePage: EnterVatRegistrationDatePage,
   vatDetailsNotValidPage: VatDetailsNotValidPage)
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends FrontendController(mcc) with I18nSupport {
+    extends BaseController(mcc) {
 
-  def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
-    Future.successful(Ok(enterVatRegistrationDatePage()))
+  def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
+    Future.successful(Ok(enterVatRegistrationDatePage(frm)))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
+    frm.bindFromRequest().fold(
+      errors => Future(BadRequest(enterVatRegistrationDatePage(errors))),
+      formValues => {
+        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(date = Some(formValues.day)))
 
-    val form = request.body.asFormUrlEncoded.map { m =>
-      m.mapValues(_.last)
-    }.flatMap(parseFromMap)
-
-    form match {
-      case Some(date) => {
-
-        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(date = Some(date)))
-
-        val kf = Seq[KnownFacts] (
+        val kf = Seq[KnownFacts](
           KnownFacts("VRN", matchingJourneySession.vrn.getOrElse("")),
           KnownFacts("Postcode", matchingJourneySession.postCode.getOrElse("")),
           KnownFacts("BoxFiveValue", matchingJourneySession.latestVatAmount.getOrElse("")),
           KnownFacts("LastMonthLatestStagger", matchingJourneySession.latestAccountPeriodMonth.getOrElse("")),
-          KnownFacts("VATRegistrationDate", date))
+          KnownFacts("VATRegistrationDate", formValues.day))
 
         val ri = RootInterface("HMRC-MTD-VAT", kf)
 
@@ -68,18 +66,25 @@ class VatRegistrationDateController @Inject()(
           }
         }
       }
-      case None => Future.successful(BadRequest(""))
-    }
+    )
   }
 
-  private def parseFromMap(in: Map[String, String]): Option[String] = {
-    for {
-      day <- in.get("day")
-      month <- in.get("month")
-      year <- in.get("year")
+  val frm: Form[FormValues] = Form(
+    mapping(
+      "day" -> mandatory("day"),
+      "month" -> mandatory("month"),
+      "year" -> mandatory("year")
+    )(FormValues.apply)(FormValues.unapply)
+      .verifying("error.date.invalid", a =>  a.isValidDate)
+  )
+
+  case class FormValues(day: String, month: String, year: String) {
+    def isValidDate = try{
+      LocalDate.parse(s"$day/$month/$year", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+      true
     }
-      yield {
-        s"$day/$month/$year"
-      }
+    catch {
+      case _ => false
+    }
   }
 }

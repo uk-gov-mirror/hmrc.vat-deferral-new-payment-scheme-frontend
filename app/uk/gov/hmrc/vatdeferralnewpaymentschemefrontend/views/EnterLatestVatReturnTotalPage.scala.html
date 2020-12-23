@@ -9,9 +9,11 @@
 
 @this(layout: Layout)
 
-@(vatAmount: String = "", errorMsg: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @vatReturnFieldId=@{"vat-amount"}
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+
+    @helpers.error_summary(form)
 
     <form action="enter-latest-vat-return-total" method="POST">
         @CSRF.formField(request)
@@ -19,11 +21,11 @@
         @helpers.input_text(
             id = vatReturnFieldId,
             label = messages("enter.latestVatReturn.heading"),
-            value = vatAmount,
+            value =  form("vat-amount").value.getOrElse(""),
             inputType = "text",
             inputClass = Some("form-control-1-3"),
             name = vatReturnFieldId,
-            errorMessage = errorMsg,
+            errorMessage = form.error("vat-amount").map(x => Some(x.message)).getOrElse(None),
             isQuestionPage = true,
             hint = Some(messages("enter.latestVatReturn.hint"))
         )

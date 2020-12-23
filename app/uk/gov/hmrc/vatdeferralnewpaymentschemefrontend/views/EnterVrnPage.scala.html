@@ -7,17 +7,14 @@
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 @import views.html.helper.CSRF
 
+
 @this(layout: Layout)
 
-@(vrn: String = "", errorMsg: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @vrnFieldId=@{"vrn"}
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
 
-    @errorMsg.map { err =>
-        @helpers.error_summary(
-            errorsList = Some(List((messages(err),vrnFieldId)))
-        )
-    }
+    @helpers.error_summary(form)
 
     <form action="enter-vrn" method="POST">
         @CSRF.formField(request)
@@ -25,11 +22,11 @@
         @helpers.input_text(
             id = vrnFieldId,
             label = messages("enter.vrn.heading"),
-            value = vrn,
+            value = form("vrn").value.getOrElse(""),
             inputType = "text",
             inputClass = Some("form-control-1-3"),
             name = vrnFieldId,
-            errorMessage = errorMsg,
+            errorMessage = form.error("vrn").map(x => Some(x.message)).getOrElse(None),
             isQuestionPage = true,
             hint = Some(messages("enter.vrn.hint"))
         )

@@ -44,4 +44,8 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   val bavfApiBaseUrl = servicesConfig.baseUrl("bank-account-verification-api")
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")
+
+  val vrnRegex = servicesConfig.getString(s"regex.vrn")
+  val decimalRegex = servicesConfig.getString(s"regex.decimal")
+  val postCodeRegex = servicesConfig.getString(s"regex.postCode")
 }

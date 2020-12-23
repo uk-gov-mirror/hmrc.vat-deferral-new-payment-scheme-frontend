@@ -25,6 +25,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait Auth extends AuthorisedFunctions with AuthRedirects with Results {
   def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
   def authoriseWithJourneySession(action: Request[AnyContent] => Vrn => JourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
+  def authoriseForMatchingJourney(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
   def authoriseWithMatchingJourneySession(action: Request[AnyContent] => MatchingJourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
 }
 
@@ -114,7 +115,25 @@ class AuthImpl @Inject()(
             getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
             getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo")
           ).fold(getVrnFromSession)(vrn => withJourneySession(vrn))
-      }}.recover {
+        }
+      }.recover {
+        case _: NoActiveSession => toGGLogin(currentUrl)
+        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
+      }
+    }
+
+  def authoriseForMatchingJourney(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+    Action.async { implicit request =>
+
+      val currentUrl = {
+        if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
+      }
+
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+
+      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
+        _ => action(request)
+      }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
         case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
       }

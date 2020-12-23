@@ -4,7 +4,5 @@
  */
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
-import play.api.libs.json.Json
-import play.api.mvc
 
 case class Vrn(vrn: String)
