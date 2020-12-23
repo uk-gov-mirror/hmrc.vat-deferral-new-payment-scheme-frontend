@@ -25,8 +25,11 @@ GET        /eligibility              uk.gov.hmrc.vatdeferralnewpaymentschemefron
 
 GET        /deferred-vat-bill        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.DeferredVatBillController.get
 
-GET        /how-many-months       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.get
-POST       /how-many-months       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.post
+GET        /installments       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.get
+POST       /installments       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.post
+
+GET        /installments-breakdown uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.getInstallmentBreakdown
+POST       /installments-breakdown       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.postInstallmentBreakdown
 
 GET        /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.get
 POST       /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.post

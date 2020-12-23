@@ -81,7 +81,17 @@ deferred.vat.bill.vat.total.payable = VAT payable for 20 March to 30 June 2020
 deferred.vat.bill.vat.paid = VAT paid to date
 deferred.vat.bill.payable = Deferred VAT left to pay by 31 March 2022
 
-how.many.months.heading = How many months do you want to pay over?
+installments.h1 = Do you want to pay in 11 monthly instalments?
+installments.p1 = If you select yes, your monthly payments will be
+installments.p2.1 = The remaining balance of
+installments.p2.2 = will be added to your first payment.
+installments.option.1 = Yes
+installments.option.2 = No - I want to pay in fewer instalments
+
+how.many.months.h1 = How many months do you want to pay over?
+how.many.months.p1 = Months at
+how.many.months.p2.1 = With remaining
+how.many.months.p2.2 = added to first payment
 
 when.to.pay.heading = When do you want to pay each month?
 when.to.pay.item1 = 28th day of the month or next working day
