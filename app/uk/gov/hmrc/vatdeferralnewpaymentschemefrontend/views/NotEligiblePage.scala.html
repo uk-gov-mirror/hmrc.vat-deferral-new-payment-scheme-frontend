@@ -10,8 +10,21 @@
 
 @(eligibility: Eligibility)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
-    <h1 class="govuk-heading-xl">vat-deferral-new-payment-scheme-frontend</h1>
-    <p class="govuk-body">You are not eligible</p>
-    <p>@eligibility</p>
+@layout(pageTitle = Some(messages("eligibility.not.eligible.heading.1"))) {
+    <h1>@messages("eligibility.not.eligible.heading.1")</h1>
+    <p>@messages("eligibility.not.eligible.p1")</p>
+    <p>@messages("eligibility.not.eligible.p2")</p>
+    <ul>
+        <li>@messages("eligibility.not.eligible.li1")</li>
+        <li>@messages("eligibility.not.eligible.li2")</li>
+        <li>@messages("eligibility.not.eligible.li3")</li>
+        <li>@messages("eligibility.not.eligible.li4")</li>
+    </ul>
+    <p>@messages("eligibility.not.eligible.p3") <a href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("eligibility.not.eligible.link1")</a>.</p>
+    <h2>@messages("eligibility.not.eligible.h2.1")</h2>
+    <p>@messages("eligibility.not.eligible.p4")<p>
+    <p>@messages("eligibility.not.eligible.p5.1")<a href="">@messages("eligibility.not.eligible.link2")</a> @messages("eligibility.not.eligible.p5.2")
+    <p>@messages("eligibility.not.eligible.p6")<p>
+    <h2>@messages("eligibility.not.eligible.h2.2")</h2>
+    <p>@messages("eligibility.not.eligible.p8.1") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("eligibility.not.eligible.link3")</a>.</p>
 }

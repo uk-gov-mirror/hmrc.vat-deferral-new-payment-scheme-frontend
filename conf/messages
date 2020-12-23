@@ -1,4 +1,4 @@
-service.name = vat-deferral-new-payment-scheme-frontend
+service.name = Pay VAT deferred due to coronavirus (COVID-19)
 service.homePageUrl = /vat-deferral-new-payment-scheme-frontend
 service.text = This is your new service
 error.summary.heading=There is a problem
@@ -42,6 +42,25 @@ enter.latestVatPeriod.hint = You can find this by signing into your online VAT a
 enter.vatRegistrationDate.heading = When did you become VAT registered?
 enter.vatRegistrationDate.hint1 = You can find this date on your VAT registration certificate.
 enter.vatRegistrationDate.hint2 = For example, 31 3 2018
+
+eligibility.not.eligible.heading.1 = You are not eligible to join the scheme
+eligibility.not.eligible.p1 = Our records show you are not eligible to join the VAT deferral payment scheme at this time.
+eligibility.not.eligible.p2 = You may not be eligible because you:
+eligibility.not.eligible.li1 = have no deferred VAT to pay
+eligibility.not.eligible.li2 = are not up to date with your VAT Returns
+eligibility.not.eligible.li3 = already make advance payments towards your VAT bill and are applying before 1 March 2020
+eligibility.not.eligible.li4 = already have a time to pay arrangement with HMRC that includes your deferred VAT
+eligibility.not.eligible.p3 = Find out about 
+eligibility.not.eligible.link1 = who can join the scheme
+eligibility.not.eligible.h2.1 = If your VAT Returns are not up to date
+eligibility.not.eligible.p4 = Before you can join the scheme, you must submit any outstanding VAT Returns from the last 4 years.
+eligibility.not.eligible.p5.1 = Go to your
+eligibility.not.eligible.link2 = business tax account
+eligibility.not.eligible.p5.2 = to find any VAT Returns you need to submit.
+eligibility.not.eligible.p6 = If you think you are eligible
+eligibility.not.eligible.h2.2 = If you think you are eligible
+eligibility.not.eligible.p8.1 = If you think you are eligible to join the scheme,
+eligibility.not.eligible.link3 = contact the VAT helpline
 
 deferred.vat.bill.heading.1 = Your deferred VAT bill is
 deferred.vat.bill.heading.2 = How we worked out your deferred VAT bill

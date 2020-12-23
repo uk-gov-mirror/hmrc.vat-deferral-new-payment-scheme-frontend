@@ -34,11 +34,16 @@ class EligibilityController @Inject()(
   val get: Action[AnyContent] = auth.authorise { implicit request =>
     implicit vrn =>
       vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn) map {
+
         case Eligibility(false, false, true) => {
           request.session.get("sessionId").map(sessionId => {
+
+
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.TermsAndConditionsController.get())
-          }).getOrElse(Ok("Session id not set"))
+
+
+          }).getOrElse(InternalServerError)
         }
         case e => Ok(notEligiblePage(e))
       }
