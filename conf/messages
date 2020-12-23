@@ -93,10 +93,11 @@ how.many.months.p1 = Months at
 how.many.months.p2.1 = With remaining
 how.many.months.p2.2 = added to first payment
 
-when.to.pay.heading = When do you want to pay each month?
-when.to.pay.item1 = 28th day of the month or next working day
-when.to.pay.item2 = A different day
-when.to.pay.item3 = Enter a day between 1 and 28
+when.to.pay.h1 = Choose when your payments will be collected
+when.to.pay.p1 = We will collect your first payment on 1 March 2021.
+when.to.pay.h2 = On which day do you want the remaining monthly payments to be collected?
+when.to.pay.p2 = If the payment due date falls on a weekend, we will take your payment on the next working day.
+when.to.pay.label = Enter a day from 1 to 28
 
 direct.debit.header = The Direct Debit Guarantee
 direct.debit.p1 = This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.

@@ -42,7 +42,7 @@ class WhenToPayController @Inject()(
 
   val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
-      val days = request.body.asFormUrlEncoded.map(a => a.mapValues(_.last)).flatMap(b => b.get("alt-day"))
+      val days = request.body.asFormUrlEncoded.map(a => a.mapValues(_.last)).flatMap(b => b.get("day"))
 
       days.fold(Future.successful(BadRequest("error occured")))(day => {
 
