@@ -40,7 +40,7 @@ class EligibilityController @Inject()(
 
 
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
-            Redirect(routes.TermsAndConditionsController.get())
+            Redirect(routes.CheckBeforeYouStartController.get())
 
 
           }).getOrElse(InternalServerError)

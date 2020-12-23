@@ -19,7 +19,7 @@ POST       /enter-latest-vat-accounting-period        uk.gov.hmrc.vatdeferralnew
 GET        /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.get
 POST       /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.post
 
-GET        /terms-and-conditions        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.TermsAndConditionsController.get
+GET        /check-before-you-start        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.CheckBeforeYouStartController.get
 
 GET        /eligibility              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.EligibilityController.get
 

@@ -62,6 +62,19 @@ eligibility.not.eligible.h2.2 = If you think you are eligible
 eligibility.not.eligible.p8.1 = If you think you are eligible to join the scheme,
 eligibility.not.eligible.link3 = contact the VAT helpline
 
+check.before.you.start.h1 = Before you start
+check.before.you.start.h2.1 = Check you can use this service
+check.before.you.start.p1 = To use this service you must:
+check.before.you.start.li1 = have a UK bank account
+check.before.you.start.li2 = be able to set up a Direct Debit
+check.before.you.start.li3 = be able to pay the first instalment on 1 March 2021
+check.before.you.start.h2.2 = Before you opt in
+check.before.you.start.p2 = Make sure you know how much you owe, including:
+check.before.you.start.li4 = the amount you originally deferred
+check.before.you.start.li5 = how much you may have already paid
+check.before.you.start.warning = Warning
+check.before.you.start.p3 = You must pay all instalments on time. If you do not, we may remove you from the scheme and you may need to pay a penalty. If you are unable to pay, contact us to arrange other ways to clear your debt.
+
 deferred.vat.bill.heading.1 = Your deferred VAT bill is
 deferred.vat.bill.heading.2 = How we worked out your deferred VAT bill
 deferred.vat.bill.vat.total.payable = VAT payable for 20 March to 30 June 2020
