@@ -9,9 +9,11 @@
 
 @this(layout: Layout)
 
-@(vatPeriod: String = "", errorMsg: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @vatPeriodFieldId=@{"vat-period"}
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+
+    @helpers.error_summary(form)
 
     <label class="govuk-label govuk-label--l" for="postcode">
     @messages("enter.latestVatPeriod.heading")

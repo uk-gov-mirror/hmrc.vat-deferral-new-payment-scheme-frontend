@@ -3,22 +3,29 @@
  *
  *@
 
-@(errorsList: Option[List[(String, String)]] = None)(implicit messages: Messages)
-@errorsList.map{ errors =>
-  <div 
-    class="error-summary" 
-    role="alert" 
-    aria-labelledby="error-summary-heading" 
-    tabindex="-1">
-    
-    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
-      @messages("error.summary.heading")
-    </h2>
-    
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+
+@(form: Form[_])(implicit request: Request[_], messages: Messages, config: AppConfig)
+
+@* the play-ui version uses the wrong classes *@
+@if(form.hasErrors) {
+  <div class="error-summary"
+  id="error-summary-display"
+  role="alert"
+  aria-labelledby="error-summary-heading"
+  tabindex="-1">
+    <h2 id="error-summary-heading" class="heading-medium error-summary-heading">@Messages("vatcheck.common.errorSummary")</h2>
     <ul class="error-summary-list">
-      @errors.map { error =>
-        <li><a href="#@error._2">@error._1</a></li>
-      }
+    @form.errors.map { error =>
+      <li>
+        <a href="#@error.key"
+        id="@{error.key}-error-summary"
+        data-focuses="@error.key">
+        @Messages(error.message.split("[|]"), error.args: _*)
+        </a>
+
+      </li>
+    }
     </ul>
   </div>
 }

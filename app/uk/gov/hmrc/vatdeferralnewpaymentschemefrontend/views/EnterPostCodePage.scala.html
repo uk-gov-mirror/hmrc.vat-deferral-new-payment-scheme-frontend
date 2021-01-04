@@ -9,9 +9,11 @@
 
 @this(layout: Layout)
 
-@(postCode: String = "", errorMsg: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @postCodeFieldId=@{"post-code"}
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+
+    @helpers.error_summary(form)
 
     <form action="enter-post-code" method="POST">
         @CSRF.formField(request)
@@ -19,11 +21,11 @@
         @helpers.input_text(
             id = postCodeFieldId,
             label = messages("enter.postcode.heading"),
-            value = postCode,
+            value = form("post-code").value.getOrElse(""),
             inputType = "text",
             inputClass = Some("form-control-1-3"),
             name = postCodeFieldId,
-            errorMessage = errorMsg,
+            errorMessage = form.error("post-code").map(x => Some(x.message)).getOrElse(None),
             isQuestionPage = true,
             hint = Some(messages("enter.postcode.hint"))
         )

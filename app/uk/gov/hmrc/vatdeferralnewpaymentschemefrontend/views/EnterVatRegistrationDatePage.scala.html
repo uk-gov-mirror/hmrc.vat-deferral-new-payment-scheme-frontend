@@ -9,9 +9,11 @@
 
 @this(layout: Layout)
 
-@(vatAmount: String = "", errorMsg: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @vatReturnFieldId=@{"vat-amount"}
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+
+    @helpers.error_summary(form)
 
     <form action="enter-vat-registration-date" method="POST">
         @CSRF.formField(request)
@@ -27,26 +29,48 @@
         </div>
 
         <div class="govuk-date-input" id="passport-issued">
+
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     <label class="govuk-label govuk-date-input__label" for="day">
                         Day
                     </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="day" name="day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                            id="day"
+                            name="day"
+                            type="text"
+                            pattern="[0-9]*"
+                            inputmode="numeric"
+                            value="@form("day").value.getOrElse("")"></div>
             </div>
+
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     <label class="govuk-label govuk-date-input__label" for="passport-issued-month">
                         Month
                     </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="month" name="month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                            id="month"
+                            name="month"
+                            type="text"
+                            pattern="[0-9]*"
+                            inputmode="numeric"
+                            value="@form("month").value.getOrElse("")"></div>
             </div>
+
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     <label class="govuk-label govuk-date-input__label" for="passport-issued-year">
                         Year
                     </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="year" name="year" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                            id="year"
+                            name="year"
+                            type="text"
+                            pattern="[0-9]*"
+                            inputmode="numeric"
+                            value="@form("year").value.getOrElse("")">
+                </div>
             </div>
         </div>
 
