@@ -34,6 +34,9 @@ POST       /installments-breakdown       uk.gov.hmrc.vatdeferralnewpaymentscheme
 GET        /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.get
 POST       /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.post
 
+GET        /payment-plan      uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.get
+POST       /payment-plan      uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.post
+
 GET         /bank-details/:journeyId uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.get(journeyId)
 POST        /bank-details/:journeyId uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.post(journeyId)
 
