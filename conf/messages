@@ -1,4 +1,4 @@
-service.name = vat-deferral-new-payment-scheme-frontend
+service.name = Pay VAT deferred due to coronavirus (COVID-19)
 service.homePageUrl = /vat-deferral-new-payment-scheme-frontend
 service.text = This is your new service
 error.summary.heading=There is a problem
@@ -43,18 +43,63 @@ enter.vatRegistrationDate.heading = When did you become VAT registered?
 enter.vatRegistrationDate.hint1 = You can find this date on your VAT registration certificate.
 enter.vatRegistrationDate.hint2 = For example, 31 3 2018
 
+eligibility.not.eligible.heading.1 = You are not eligible to join the scheme
+eligibility.not.eligible.p1 = Our records show you are not eligible to join the VAT deferral payment scheme at this time.
+eligibility.not.eligible.p2 = You may not be eligible because you:
+eligibility.not.eligible.li1 = have no deferred VAT to pay
+eligibility.not.eligible.li2 = are not up to date with your VAT Returns
+eligibility.not.eligible.li3 = already make advance payments towards your VAT bill and are applying before 1 March 2020
+eligibility.not.eligible.li4 = already have a time to pay arrangement with HMRC that includes your deferred VAT
+eligibility.not.eligible.p3 = Find out about 
+eligibility.not.eligible.link1 = who can join the scheme
+eligibility.not.eligible.h2.1 = If your VAT Returns are not up to date
+eligibility.not.eligible.p4 = Before you can join the scheme, you must submit any outstanding VAT Returns from the last 4 years.
+eligibility.not.eligible.p5.1 = Go to your
+eligibility.not.eligible.link2 = business tax account
+eligibility.not.eligible.p5.2 = to find any VAT Returns you need to submit.
+eligibility.not.eligible.p6 = If you think you are eligible
+eligibility.not.eligible.h2.2 = If you think you are eligible
+eligibility.not.eligible.p8.1 = If you think you are eligible to join the scheme,
+eligibility.not.eligible.link3 = contact the VAT helpline
+
+check.before.you.start.h1 = Before you start
+check.before.you.start.h2.1 = Check you can use this service
+check.before.you.start.p1 = To use this service you must:
+check.before.you.start.li1 = have a UK bank account
+check.before.you.start.li2 = be able to set up a Direct Debit
+check.before.you.start.li3 = be able to pay the first instalment on 1 March 2021
+check.before.you.start.h2.2 = Before you opt in
+check.before.you.start.p2 = Make sure you know how much you owe, including:
+check.before.you.start.li4 = the amount you originally deferred
+check.before.you.start.li5 = how much you may have already paid
+check.before.you.start.warning = Warning
+check.before.you.start.p3 = You must pay all instalments on time. If you do not, we may remove you from the scheme and you may need to pay a penalty. If you are unable to pay, contact us to arrange other ways to clear your debt.
+
 deferred.vat.bill.heading.1 = Your deferred VAT bill is
 deferred.vat.bill.heading.2 = How we worked out your deferred VAT bill
 deferred.vat.bill.vat.total.payable = VAT payable for 20 March to 30 June 2020
 deferred.vat.bill.vat.paid = VAT paid to date
 deferred.vat.bill.payable = Deferred VAT left to pay by 31 March 2022
 
-how.many.months.heading = How many months do you want to pay over?
+installments.h1 = Do you want to pay in 11 monthly instalments?
+installments.p1 = If you select yes, your monthly payments will be
+installments.p2.1 = The remaining balance of
+installments.p2.2 = will be added to your first payment.
+installments.option.1 = Yes
+installments.option.2 = No - I want to pay in fewer instalments
 
-when.to.pay.heading = When do you want to pay each month?
-when.to.pay.item1 = 28th day of the month or next working day
-when.to.pay.item2 = A different day
-when.to.pay.item3 = Enter a day between 1 and 28
+how.many.months.h1 = How many months do you want to pay over?
+how.many.months.p1 = Months at
+how.many.months.p2.1 = With remaining
+how.many.months.p2.2 = added to first payment
+
+when.to.pay.h1 = Choose when your payments will be collected
+when.to.pay.p1 = We will collect your first payment on 1 March 2021.
+when.to.pay.h2 = On which day do you want the remaining monthly payments to be collected?
+when.to.pay.p2 = If the payment due date falls on a weekend, we will take your payment on the next working day.
+when.to.pay.label = Enter a day from 1 to 28
+
+payment.plan.h1 = Check your payment plan
 
 direct.debit.header = The Direct Debit Guarantee
 direct.debit.p1 = This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.
@@ -90,4 +135,7 @@ error.day.required = Day is required
 error.month.required = Month is required
 error.year.required = Year is required
 error.date.invalid = Date is invalid
+error.11-months-to-pay.required = Option is required
+error.how-many-months.required = Option is required
+error.day.invalid = Please select a valid day
 
