@@ -135,4 +135,7 @@ error.day.required = Day is required
 error.month.required = Month is required
 error.year.required = Year is required
 error.date.invalid = Date is invalid
+error.11-months-to-pay.required = Option is required
+error.how-many-months.required = Option is required
+error.day.invalid = Please select a valid day
 

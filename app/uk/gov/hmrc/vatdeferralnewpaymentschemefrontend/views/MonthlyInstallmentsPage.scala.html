@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  *@
 
@@ -10,15 +10,17 @@
 
 @this(layout: Layout)
 
-@(amount: BigDecimal, remainder: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(amount: BigDecimal, remainder: BigDecimal, form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("installments.h1"))) {
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            @helpers.error_summary(form)
             <form action="@controllers.routes.MonthsController.post()" method="post" novalidate>
                 @CSRF.formField(request)
-                <div class="govuk-form-group">
+
+                <div class="govuk-form-group" form-group-error>
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
@@ -30,14 +32,14 @@
                         <p class="govuk-body">@messages("installments.p2.1") £@remainder @messages("installments.p2.2")</p>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="where-do-you-live" name="11-months-to-pay" type="radio" value="true">
-                                <label class="govuk-label govuk-radios__label" for="11">
+                                <input class="govuk-radios__input" id="11-months-to-pay" name="11-months-to-pay" type="radio" value="true">
+                                <label class="govuk-label govuk-radios__label" for="11-months-to-pay-1">
                                 @messages("installments.option.1")
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="where-do-you-live-2" name="11-months-to-pay" type="radio" value="false">
-                                <label class="govuk-label govuk-radios__label" for="where-do-you-live-2">
+                                <input class="govuk-radios__input" id="11-months-to-pay-2" name="11-months-to-pay" type="radio" value="false">
+                                <label class="govuk-label govuk-radios__label" for="11-months-to-pay-2">
                                 @messages("installments.option.2")
                                 </label>
                             </div>
