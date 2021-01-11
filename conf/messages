@@ -7,6 +7,8 @@ common.alpha-info.p1=This is a new service – your
 common.alpha-info.link=feedback
 common.alpha-info.p2= will help us to improve it.
 
+continue.button=Continue
+
 global.month.1=January
 global.month.2=February
 global.month.3=March
