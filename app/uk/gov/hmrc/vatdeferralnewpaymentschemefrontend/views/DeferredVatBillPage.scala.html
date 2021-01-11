@@ -21,7 +21,8 @@
 @this(
         layout: Layout,
         button: Button,
-        details: Details
+        details: Details,
+        govukTable : GovukTable
 )
 
 @(totalDeferredVatAmount: BigDecimal, deferredVatAmount: BigDecimal, deferredVatAmountPaid: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -30,22 +31,37 @@
 
     <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1") £@deferredVatAmount</h1>
     <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
-    <table class="govuk-table">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.total.payable")</th>
-                <td class="govuk-table__cell ">£@totalDeferredVatAmount</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.paid")</th>
-                <td class="govuk-table__cell ">£@deferredVatAmountPaid</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.payable")</th>
-                <td class="govuk-table__cell ">£@deferredVatAmount</td>
-            </tr>
-        </tbody>
-    </table>
+
+    @{govukTable(Table(
+        rows = Seq(
+            Seq(
+                TableRow(
+                    content = Text(messages("deferred.vat.bill.vat.total.payable"))
+                ),
+                TableRow(
+                    content = Text(s"£$totalDeferredVatAmount")
+                )
+            ),
+            Seq(
+                TableRow(
+                    content = Text(messages("deferred.vat.bill.vat.paid"))
+                ),
+                TableRow(
+                    content = Text(s"£$deferredVatAmountPaid")
+                )
+            ),
+            Seq(
+                TableRow(
+                    content = Text(messages("deferred.vat.bill.payable"))
+                ),
+                TableRow(
+                    content = Text(s"£$deferredVatAmount")
+                )
+            )
+        ),
+        firstCellIsHeader = true
+    ))}
+
     @details(
         messages("deferred.vat.bill.wrong.p1"),
         s"""${messages("deferred.vat.bill.wrong.p2")} ${Html("<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline' class='govuk-link'>")} ${messages("deferred.vat.bill.wrong.p3")}${Html("</a>")}."""
