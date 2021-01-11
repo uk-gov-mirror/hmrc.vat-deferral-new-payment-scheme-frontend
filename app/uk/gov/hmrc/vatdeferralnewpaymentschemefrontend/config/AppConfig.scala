@@ -53,6 +53,12 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   val enrolmentStoreUrl = s"${servicesConfig.baseUrl("enrolment-store-proxy")}/enrolment-store-proxy/enrolment-store/enrolments"
 
+  lazy val feedbackSurveyUrl: String = servicesConfig.getConfString("feedback-survey.url", "")
+
+  val contactHost: String = servicesConfig.baseUrl(s"contact-frontend")
+  //TODO Check the service identifier for feedback
+  lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=VDNPS"
+
   val bavfApiBaseUrl = servicesConfig.baseUrl("bank-account-verification-api")
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")
 

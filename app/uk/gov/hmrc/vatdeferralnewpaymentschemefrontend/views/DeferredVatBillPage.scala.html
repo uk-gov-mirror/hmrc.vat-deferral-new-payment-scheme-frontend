@@ -16,36 +16,40 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.{Button, Details}
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        button: Button,
+        details: Details
+)
 
 @(totalDeferredVatAmount: BigDecimal, deferredVatAmount: BigDecimal, deferredVatAmountPaid: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1") £@deferredVatAmount</h1>
-            <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
-            <table class="govuk-table">
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.total.payable")</th>
-                        <td class="govuk-table__cell ">£@totalDeferredVatAmount</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.paid")</th>
-                        <td class="govuk-table__cell ">£@deferredVatAmountPaid</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.payable")</th>
-                        <td class="govuk-table__cell ">£@deferredVatAmount</td>
-                    </tr>
-                </tbody>
-            </table>
-            <a href="@controllers.routes.MonthsController.get()" class="govuk-button" data-module="govuk-button">
-                @messages("global.button.continue")
-            </a>
-        </div>
-    </div>
+    <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1") £@deferredVatAmount</h1>
+    <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.total.payable")</th>
+                <td class="govuk-table__cell ">£@totalDeferredVatAmount</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.vat.paid")</th>
+                <td class="govuk-table__cell ">£@deferredVatAmountPaid</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">@messages("deferred.vat.bill.payable")</th>
+                <td class="govuk-table__cell ">£@deferredVatAmount</td>
+            </tr>
+        </tbody>
+    </table>
+    @details(
+        messages("deferred.vat.bill.wrong.p1"),
+        s"""${messages("deferred.vat.bill.wrong.p2")} ${Html("<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline' class='govuk-link'>")} ${messages("deferred.vat.bill.wrong.p3")}${Html("</a>")}."""
+    )
+
+    @button("global.button.continue", Some(s"${controllers.routes.MonthsController.get()}"))
 }

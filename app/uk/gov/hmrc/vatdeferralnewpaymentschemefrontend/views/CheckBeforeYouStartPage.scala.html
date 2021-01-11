@@ -23,30 +23,31 @@
 
 @layout(pageTitle = Some(messages("check.before.you.start.h1"))) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">@messages("check.before.you.start.h1")</h1>
-            <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.1")</h2>
-            <p class="govuk-body">@messages("check.before.you.start.p1")</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>@messages("check.before.you.start.li1")</li>
-                <li>@messages("check.before.you.start.li2")</li>
-                <li>@messages("check.before.you.start.li3")</li>
-            </ul>
-            <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.2")</h2>
-            <p class="govuk-body">@messages("check.before.you.start.p2")</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>@messages("check.before.you.start.li4")</li>
-                <li>@messages("check.before.you.start.li5")</li>
-            </ul>
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">@messages("check.before.you.start.warning")</span>
-                    @messages("check.before.you.start.p3")
-                </strong>
-            </div>
-            <a href="@controllers.routes.DeferredVatBillController.get()" class="govuk-button" data-module="govuk-button">@messages("global.button.continue")</a>
-        </div>
+    <h1 class="govuk-heading-l">@messages("check.before.you.start.h1")</h1>
+    <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.1")</h2>
+    <p class="govuk-body">@messages("check.before.you.start.p1")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("check.before.you.start.li1")</li>
+        <li>@messages("check.before.you.start.li2")</li>
+        <li>@messages("check.before.you.start.li3")</li>
+    </ul>
+    <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.2")</h2>
+    <p class="govuk-body">@messages("check.before.you.start.p2")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("check.before.you.start.li4")</li>
+        <li>@messages("check.before.you.start.li5")</li>
+    </ul>
+    <p class="govuk-body">
+        @messages("check.before.you.start.p3")<a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline" class="govuk-link"> @messages("check.before.you.start.p4")</a>.
+    </p>
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">@messages("check.before.you.start.warning")</span>
+            @messages("check.before.you.start.p5")
+        </strong>
     </div>
+
+    <a href="@controllers.routes.DeferredVatBillController.get()" class="govuk-button" data-module="govuk-button">@messages("global.button.continue")</a>
+
 }
