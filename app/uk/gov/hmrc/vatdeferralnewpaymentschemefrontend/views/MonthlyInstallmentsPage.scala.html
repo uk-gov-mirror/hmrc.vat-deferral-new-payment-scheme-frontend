@@ -48,9 +48,9 @@
         }
 
         @govukRadios(Radios(
-            errorMessage = Some(ErrorMessage(
+            errorMessage = if(form.hasErrors) {Some(ErrorMessage(
                 content = Text(messages("error.required"))
-            )),
+            ))} else None,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
                     content = Text(messages("installments.h1")),
