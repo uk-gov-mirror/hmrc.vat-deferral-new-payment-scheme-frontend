@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.data.Forms.mapping
@@ -41,20 +44,37 @@ class WhenToPayController @Inject()(
     (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends BaseController(mcc) {
 
-  val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
+  def paymentStartDate: String = {
+    import java.time._
+    import java.time.format.DateTimeFormatter
+    val today = ZonedDateTime.now.withZoneSameInstant(ZoneId.of("Europe/London"))
+    today match {
+      case d if d.getDayOfMonth <= 15 && d.getDayOfMonth >= 22 && d.getMonthValue == 2 =>
+        d.withDayOfMonth(3).withMonth(3)
+      case d if d.plusDays(5).getDayOfWeek.getValue <= 5 =>
+        d.plusDays(5)
+      case d if d.plusDays(5).getDayOfWeek.getValue == 6 =>
+        d.plusDays(7)
+      case d if d.plusDays(5).getDayOfWeek.getValue == 7 =>
+        d.plusDays(6)
+    }
+    today.format(DateTimeFormatter.ofPattern("d MMMM YYYY"))
+  }
+
+  def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>
       journeySession =>
 
         journeySession.outStandingAmount match {
-          case Some(_) => Future.successful(Ok(whenToPagePage(frm)))
+          case Some(_) => Future.successful(Ok(whenToPagePage(frm, paymentStartDate)))
           case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
         }
   }
 
-  val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
         frm.bindFromRequest().fold(
-          errors => Future.successful(BadRequest(whenToPagePage(errors))),
+          errors => Future.successful(BadRequest(whenToPagePage(errors, paymentStartDate))),
           form => {
             sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(dayOfPayment = Some(form.value.toInt)))
             Future.successful(Redirect(routes.PaymentPlanController.get()))

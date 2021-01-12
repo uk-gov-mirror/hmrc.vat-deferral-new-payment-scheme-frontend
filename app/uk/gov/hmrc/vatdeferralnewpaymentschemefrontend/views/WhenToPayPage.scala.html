@@ -19,34 +19,57 @@
 @import views.html.helper.CSRF
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
+@import java.time.ZonedDateTime
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        govukDateInput : GovukDateInput,
+        formHelper: FormWithCSRF,
+        button: Button,
+        govukErrorSummary: GovukErrorSummary,
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)
+
+@(form: Form[_], paymentStartDate: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = PageTitle("when.to.pay.h1", form.hasErrors)) {
 
-            @helpers.error_summary(form)
-            <h1 class="govuk-heading-l">@messages("when.to.pay.h1")</h1>
+    @formHelper(action = controllers.routes.WhenToPayController.post()) {
+        @form.errors.map { err =>
+            @govukErrorSummary(ErrorSummary(
+                errorList = Seq(
+                    ErrorLink(
+                        href = Some(s"#dd-date-${err.key}"),
+                        content = Text(s"${messages(err.message)}")
+                    )
+                ),
+                title = Text(s"There is a problem")
+            ))
+        }
 
+        <h1 class="govuk-heading-l">@messages("when.to.pay.h1")</h1>
 
-            <form action="@controllers.routes.WhenToPayController.post()" method="POST">
-                @CSRF.formField(request)
+        <p class="govuk-body">@Html(messages("when.to.pay.p1", paymentStartDate))</p>
 
-                <p class="govuk-body">@messages("when.to.pay.p1")
-                    <span class="govuk-!-font-weight-bold">#####</span>.</p>
+        <h2 class="govuk-heading-m">@messages("when.to.pay.h2")</h2>
 
-                <h2 class="govuk-heading-m">@messages("when.to.pay.h2")</h2>
+        <p class="govuk-body">@messages("when.to.pay.p2")</p>
 
-                <p class="govuk-body">@messages("when.to.pay.p2")</p>
+        @govukDateInput(DateInput(
+            errorMessage = if (form.hasErrors) {
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
+            } else None,
+            items = Seq(
+                        InputItem(
+                            name = "day",
+                            label = Some(messages("when.to.pay.label")),
+                            classes = "govuk-input--width-2"
+                        )
+                    ),
+            id = "dd-date"
+        ))
 
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="dd-date">
-                    @messages("when.to.pay.label")
-                    </label>
-                    <input class="govuk-input govuk-input--width-2" id="dd-date" name="day" type="text" value="@{form("day").value.getOrElse("")}">
-                </div>
-
-                <button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>
-            </form>
+        @button("continue.button")
+    }
 }
