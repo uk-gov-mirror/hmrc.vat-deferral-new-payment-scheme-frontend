@@ -55,7 +55,7 @@ class PaymentPlanController @Inject()(
     }
 
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
-      case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(Ok(paymentPlanPage(dayOfPayment, journeySession.numberOfPaymentMonths.getOrElse(11), outStandingAmount, firstPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)), regularPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)))))
+      case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(Ok(paymentPlanPage(formattedPaymentsStartDate, dayOfPayment, journeySession.numberOfPaymentMonths.getOrElse(11), outStandingAmount, firstPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)), regularPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)))))
       case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
   }

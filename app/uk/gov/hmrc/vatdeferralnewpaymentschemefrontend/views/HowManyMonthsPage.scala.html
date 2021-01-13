@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
-@import views.html.helper.CSRF
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
@@ -42,7 +41,7 @@
                         content = Text(s"${messages(err.message)}")
                     )
                 ),
-                title = Text(s"There is a problem")
+                title = Text(messages("common.error.summary.title"))
             ))
         }
 
@@ -81,38 +80,4 @@
 
         @button("continue.button")
     }
-
-
-    @*<div class="govuk-grid-row">*@
-        @*<div class="govuk-grid-column-two-thirds">*@
-            @*@helpers.error_summary(form)*@
-            @*<h1 class="govuk-heading-l">@messages("how.many.months.h1")</h1>*@
-
-            @*<form action="@controllers.routes.MonthsController.postInstallmentBreakdown()" method="POST">*@
-                @*@CSRF.formField(request)*@
-
-            @*@months.map(item => {*@
-                @*<div>*@
-                    @*<div class="govuk-radios__item">*@
-                    @*<input class="govuk-radios__input" id="{item.month}-month" name="how-many-months" type="radio" value={item.month}></input>*@
-                    @*<label class="govuk-label govuk-radios__label govuk-!-padding-top-0 govuk-!-padding-bottom-6" for="2-months">*@
-                    @*<span class="govuk-body govuk-!-font-size-36">{item.month}</span>*@
-                    @*{messages("how.many.months.p1")}*@
-                    @*<span class="govuk-!-font-weight-bold">£{item.amount}</span>*@
-                    @*</label>*@
-                    @*<div class="govuk-hint govuk-radios__hint">*@
-                    @*{messages("how.many.months.p2.1")}*@
-                    @*<span class="govuk-!-font-weight-bold">£{item.remainder}</span>*@
-                    @*{messages("how.many.months.p2.2")}*@
-                    @*</div>*@
-                    @*<hr class="govuk-section-break govuk-section-break--visible"></hr>*@
-                    @*</div>*@
-                @*</div>*@
-            @*})*@
-
-
-            @*<button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>*@
-            @*</form>*@
-        @*</div>*@
-    @*</div>*@
 }

@@ -80,6 +80,7 @@ class VatRegistrationDateController @Inject()(
     )
   }
 
+  // TODO - think this needs more - see component page
   val frm: Form[FormValues] = Form(
     mapping(
       "day" -> mandatory("day"),

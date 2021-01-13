@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
-@import views.html.helper.CSRF
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
@@ -44,7 +43,7 @@
                         content = Text(s"${messages(err.message)}")
                     )
                 ),
-                title = Text(s"There is a problem")
+                title = Text(messages("common.error.summary.title"))
             ))
         }
 
@@ -69,11 +68,11 @@
             items = Seq(
                 RadioItem(
                     content = Text(messages("installments.option.1")),
-                    value = Some("yes")
+                    value = Some("true")
                 ),
                 RadioItem(
                     content = Text(messages("installments.option.2")),
-                    value = Some("no")
+                    value = Some("false")
                 )
             )
         ))

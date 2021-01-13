@@ -11,6 +11,8 @@ common.error.title=Error:
 common.page.title=Pay VAT deferred due to coronavirus (COVID-19) - GOV.UK
 continue.button=Continue
 
+common.error.summary.title=There is a problem
+
 global.month.1=January
 global.month.2=February
 global.month.3=March
@@ -42,7 +44,7 @@ enter.postcode.heading=What is the postcode where your business is registered fo
 enter.postcode.hint=For example, AB1 2YZ
 
 enter.latestVatReturn.heading=What is your latest VAT Return total?
-enter.latestVatReturn.hint=You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example �123.00
+enter.latestVatReturn.hint=You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example &pound;123.00
 
 enter.latestVatPeriod.heading=Select the last month of your latest VAT accounting period
 enter.latestVatPeriod.hint=You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
