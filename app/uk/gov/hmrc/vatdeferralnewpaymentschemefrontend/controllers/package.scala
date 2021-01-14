@@ -19,6 +19,10 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend
 import java.time._
 import java.time.format.DateTimeFormatter
 
+import play.api.i18n.Messages
+
+import scala.math.BigDecimal.RoundingMode
+
 package object controllers {
 
   def paymentStartDate: ZonedDateTime = {
@@ -44,5 +48,28 @@ package object controllers {
 
   def formattedPaymentsStartDate: String =
     paymentStartDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY"))
+
+  def firstPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
+    val monthlyAmount = regularPaymentAmount(amountOwed, periodOwed)
+    val remainder = amountOwed - (monthlyAmount * periodOwed)
+    monthlyAmount + remainder
+  }
+
+  def regularPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
+    (amountOwed / periodOwed).setScale(2, RoundingMode.DOWN)
+  }
+
+  def daySuffix(day: Int)(implicit messages: Messages): String = {
+    if(messages.lang.code == "cy"){
+      day.toString
+    } else{
+      day % 10 match {
+        case 1 => "st"
+        case 2 => "nd"
+        case 3 => "rd"
+        case _ => "th"
+      }
+    }
+  }
 
 }

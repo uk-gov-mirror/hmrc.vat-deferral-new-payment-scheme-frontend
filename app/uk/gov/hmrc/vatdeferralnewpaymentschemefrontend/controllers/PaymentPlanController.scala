@@ -44,18 +44,19 @@ class PaymentPlanController @Inject()(
 
   val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
-    def firstPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
-      val monthlyAmount = regularPaymentAmount(amountOwed, periodOwed)
-      val remainder = amountOwed - (monthlyAmount * periodOwed)
-      monthlyAmount + remainder
-    }
-
-    def regularPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
-      (amountOwed / periodOwed).setScale(2, RoundingMode.DOWN)
-    }
-
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
-      case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(Ok(paymentPlanPage(formattedPaymentsStartDate, dayOfPayment, journeySession.numberOfPaymentMonths.getOrElse(11), outStandingAmount, firstPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)), regularPaymentAmount(outStandingAmount,  journeySession.numberOfPaymentMonths.getOrElse(11)))))
+      case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(
+        Ok(
+          paymentPlanPage(
+            formattedPaymentsStartDate,
+            dayOfPayment,
+            journeySession.numberOfPaymentMonths.getOrElse(11),
+            outStandingAmount,
+            firstPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11)),
+            regularPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11))
+          )
+        )
+      )
       case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
   }

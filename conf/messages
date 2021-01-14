@@ -115,6 +115,8 @@ when.to.pay.p2=If the payment due date falls on a weekend, we will take your pay
 when.to.pay.label=Enter a day from 1 to 28
 
 payment.plan.h1=Check your payment plan
+payment.plan.list-key=Payments collected on
+payment.plan.list-value=or next working day
 
 direct.debit.header=The Direct Debit Guarantee
 direct.debit.p1=This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.
@@ -127,8 +129,8 @@ direct.debit.confirm.and.setup=Confirm and set up Direct Debit
 confirmation.header=You have set up a Direct Debit for your deferred VAT payments
 confirmation.header2=What happens next
 confirmation.p1=We will send you a letter confirming your payment dates. You should get this within 5 working days.
-confirmation.p2=We will collect your first payment of from your bank account between 28 March 2021 and 31 March 2021.
-confirmation.p3=After that, we will collect your payments on the 28th day of the month, or the next working day.
+confirmation.p2=We will collect your first payment of £{0} from your bank account on {1}.
+confirmation.p3=After that, we will collect your payments on the {0} day of the month, or the next working day.
 confirmation.summary.page.href=View your payment summary
 confirmation.service.help.header=Get help with this service
 confirmation.p4=If you have any questions or need to speak to someone about your payments,
