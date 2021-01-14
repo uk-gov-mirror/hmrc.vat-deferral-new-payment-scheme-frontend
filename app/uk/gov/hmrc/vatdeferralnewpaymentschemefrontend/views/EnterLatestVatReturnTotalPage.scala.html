@@ -45,6 +45,7 @@
             ))
         }
         @govukInput(Input(
+            value = form.data.get("vat-amount"),
             id = "vat-amount",
             name = "vat-amount",
             label = Label(
@@ -56,7 +57,10 @@
                 content = Text("£")
             )),
             hint = Some(Hint(content = HtmlContent(messages("enter.latestVatReturn.hint")))),
-            classes = "govuk-input--width-4"
+            classes = "govuk-input--width-4",
+            errorMessage = if (form.hasErrors) {
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
+            } else None
         ))
 
         @button("continue.button")

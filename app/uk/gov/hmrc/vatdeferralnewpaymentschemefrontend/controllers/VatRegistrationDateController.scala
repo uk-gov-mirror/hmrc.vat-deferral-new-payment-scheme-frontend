@@ -46,6 +46,7 @@ class VatRegistrationDateController @Inject()(
     extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
+    // TODO load any data from auth.authoriseWithMatchingJourneySession (used in post)
     Future.successful(Ok(enterVatRegistrationDatePage(frm)))
   }
 
@@ -60,10 +61,11 @@ class VatRegistrationDateController @Inject()(
           KnownFacts("Postcode", matchingJourneySession.postCode.getOrElse("")),
           KnownFacts("BoxFiveValue", matchingJourneySession.latestVatAmount.getOrElse("")),
           KnownFacts("LastMonthLatestStagger", matchingJourneySession.latestAccountPeriodMonth.getOrElse("")),
-          KnownFacts("VATRegistrationDate", formValues.day))
+          KnownFacts("VATRegistrationDate", s"${"%02d".format(formValues.day.toInt)}/${"%02d".format(formValues.month.toInt)}/${formValues.year}"))
 
         val ri = RootInterface("HMRC-MTD-VAT", kf)
 
+        // TODO VDNPS-73
         enrolmentStoreConnector.checkEnrolments(ri).flatMap { httpResponse =>
           httpResponse.status match {
             case OK => {
@@ -80,7 +82,6 @@ class VatRegistrationDateController @Inject()(
     )
   }
 
-  // TODO - think this needs more - see component page
   val frm: Form[FormValues] = Form(
     mapping(
       "day" -> mandatory("day"),
@@ -91,8 +92,9 @@ class VatRegistrationDateController @Inject()(
   )
 
   case class FormValues(day: String, month: String, year: String) {
-    def isValidDate = try{
-      LocalDate.parse(s"$day/$month/$year", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    def isValidDate: Boolean = try{
+      val dateText = s"${"%02d".format(day.toInt)}/${"%02d".format(month.toInt)}/$year"
+      LocalDate.parse(dateText, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
       true
     }
     catch {

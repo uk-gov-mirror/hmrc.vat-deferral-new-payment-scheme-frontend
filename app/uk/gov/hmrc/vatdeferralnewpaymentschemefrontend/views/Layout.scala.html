@@ -16,13 +16,15 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.FooterLinks
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 @import uk.gov.hmrc.hmrcfrontend.views.config._
 
 @this(
         govukLayout: GovukLayout,
         head: Head,
-        beforeContentBlock: BeforeContent
+        beforeContentBlock: BeforeContent,
+        scripts: Scripts
 )
 @(pageTitle: Option[String] = None,
         headBlock: Option[Html] = None,
@@ -34,5 +36,6 @@
     headBlock = Some(head(headBlock)),
     scriptsBlock = scriptsBlock,
     beforeContentBlock = Some(beforeContentBlock()),
-    footerItems = FooterLinks()
+    footerItems = FooterLinks(),
+    bodyEndBlock = Some(scripts())
 )(contentBlock)

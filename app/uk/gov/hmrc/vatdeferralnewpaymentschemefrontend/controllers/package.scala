@@ -23,6 +23,7 @@ package object controllers {
 
   def paymentStartDate: ZonedDateTime = {
     val now = ZonedDateTime.now.withZoneSameInstant(ZoneId.of("Europe/London"))
+    // TODO consider turning this into a config
     val serviceStart: ZonedDateTime =
       ZonedDateTime.of(
         LocalDateTime.of(2021,2,15,1,1,1),

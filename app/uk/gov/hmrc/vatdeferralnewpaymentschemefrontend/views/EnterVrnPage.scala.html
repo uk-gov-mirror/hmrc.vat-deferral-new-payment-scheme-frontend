@@ -45,6 +45,7 @@
             ))
         }
         @govukInput(Input(
+            value = form.data.get("vrn"),
             id = "vrn",
             name = "vrn",
             label = Label(
@@ -53,7 +54,10 @@
                 content = Text(messages("enter.vrn.heading"))
             ),
             hint = Some(Hint(content = Text(messages("enter.vrn.hint")))),
-            classes = "govuk-input--width-10"
+            classes = "govuk-input--width-10",
+            errorMessage = if (form.hasErrors) {
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
+            } else None
         ))
 
         @button("continue.button")
