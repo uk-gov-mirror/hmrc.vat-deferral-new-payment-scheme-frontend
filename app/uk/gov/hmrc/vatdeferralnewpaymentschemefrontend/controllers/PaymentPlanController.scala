@@ -42,7 +42,7 @@ class PaymentPlanController @Inject()(
                                      (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends FrontendController(mcc) with I18nSupport {
 
-  val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
       case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(
@@ -61,7 +61,7 @@ class PaymentPlanController @Inject()(
     }
   }
 
-  val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
+  def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     _ =>
       _ =>
         val continueUrl = s"${appConfig.frontendUrl}/bank-details"
