@@ -68,7 +68,7 @@ class MonthsController @Inject()(
             Future.successful(Redirect(routes.WhenToPayController.get()))
           }
           else {
-            if (journeySession.numberOfPaymentMonths.isEmpty) {
+            if (journeySession.numberOfPaymentMonths.isEmpty || journeySession.numberOfPaymentMonths.contains(11)) {
               sessionStore.store[JourneySession](
                 journeySession.id,
                 "JourneySession",
