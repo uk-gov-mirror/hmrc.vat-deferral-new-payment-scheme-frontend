@@ -25,7 +25,13 @@ case class JourneySession (
   outStandingAmount: Option[BigDecimal] = None,
   numberOfPaymentMonths: Option[Int] = None,
   dayOfPayment: Option[Int] = None
-)
+) {
+  def monthsQuestion: Option[Boolean] = numberOfPaymentMonths match {
+    case Some(11) => Some(true)
+    case Some(_) => Some(false)
+    case _ => None
+  }
+}
 
 object JourneySession {
   implicit val formats = Json.format[JourneySession]

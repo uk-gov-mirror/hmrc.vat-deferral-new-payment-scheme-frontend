@@ -63,7 +63,8 @@
                         InputItem(
                             name = "day",
                             label = Some(messages("when.to.pay.label")),
-                            classes = "govuk-input--width-2"
+                            classes = "govuk-input--width-2",
+                            value = form.data.get("day")
                         )
                     ),
             id = "dd-date"

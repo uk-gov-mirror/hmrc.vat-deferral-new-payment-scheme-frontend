@@ -48,8 +48,13 @@ class WhenToPayController @Inject()(
     vrn =>
       journeySession =>
 
-        journeySession.outStandingAmount match {
-          case Some(_) => Future.successful(Ok(whenToPagePage(frm, formattedPaymentsStartDate)))
+        (journeySession.outStandingAmount,journeySession.dayOfPayment) match {
+          case (Some(_),dop) =>
+            Future.successful(
+              Ok(whenToPagePage(
+                dop.fold(frm)(x => frm.fill(FormValues(x.toString))),
+                formattedPaymentsStartDate)
+              ))
           case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
         }
   }

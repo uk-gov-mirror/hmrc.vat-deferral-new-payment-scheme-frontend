@@ -30,6 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait SessionStore {
   def get[T](id: String, key: String)(implicit reads: Reads[T]): Future[Option[T]]
   def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T]): Unit
+  def drop(sessionId: String): Unit
 }
 
 @Singleton
@@ -56,4 +57,6 @@ class SessionStoreImpl @Inject()(mongo: ReactiveMongoComponent, serviceConfig: S
   def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T]): Unit = {
     cacheRepository.createOrUpdate(sessionId, key, Json.toJson(value))
   }
+
+  def drop(sessionId: String): Unit = cacheRepository.removeById(sessionId)
 }
