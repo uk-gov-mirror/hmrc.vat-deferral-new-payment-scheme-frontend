@@ -43,7 +43,7 @@ class ConfirmationController @Inject()(
             journeySession.outStandingAmount.getOrElse(0),
             journeySession.numberOfPaymentMonths.getOrElse(11)
           ),
-          journeySession.dayOfPayment.fold(throw new IllegalStateException("")){
+          journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
             dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
           }
         ))
