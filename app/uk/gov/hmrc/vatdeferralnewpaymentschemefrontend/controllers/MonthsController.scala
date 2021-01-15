@@ -135,12 +135,21 @@ class MonthsController @Inject()(
   ): Future[Result] = {
     journeySession.outStandingAmount match {
       case Some(outStandingAmount) => {
-        if (form.hasErrors) Future.successful(BadRequest(howManyMonthsPage(getMonths(outStandingAmount).reverse, form)))
-        else Future.successful(
-          Ok(howManyMonthsPage(
-            getMonths(outStandingAmount).reverse,
-            journeySession.numberOfPaymentMonths.fold(monthForm)(x => monthForm.fill(FormValues(x.toString)))
+        if (form.hasErrors) {
+          Future.successful(BadRequest(
+            howManyMonthsPage(
+              getMonths(outStandingAmount).reverse,
+              form
+            )
+          ))
+        } else {
+          Future.successful(Ok(
+            howManyMonthsPage(
+              getMonths(outStandingAmount).reverse,
+              journeySession.numberOfPaymentMonths
+                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString)))
           )))
+        }
       }
       case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
