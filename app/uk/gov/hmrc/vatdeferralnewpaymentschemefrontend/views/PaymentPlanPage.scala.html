@@ -16,29 +16,37 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
-@import views.html.helper.CSRF
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
 @import org.joda.time.LocalDate
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        button: Button,
+)
 
-@(dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(paymentStartDate: String, dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("payment.plan.h1"))) {
+@layout(pageTitle = PageTitle("payment.plan.h1")) {
 
-    <div class="govuk-grid-row">
+    @formHelper(action = controllers.routes.PaymentPlanController.post()) {
+
+
+        <div class="govuk-grid-row">
 
             <h1 class="govuk-heading-l">@messages("payment.plan.h1")</h1>
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Payments collected on
+                        @messages("payment.plan.list-key")
                     </dt>
                     <dd class="govuk-summary-list__value">
-
-
-                        @{dayOfPayment}@{dayOfPayment match { case 1 => "st" case 2 => "nd" case 3 => "rd" case _ => "th"}}  or next working day
+                        @{dayOfPayment.toString ++ daySuffix(dayOfPayment)}
+                        @messages("payment.plan.list-value")
                     </dd>
                     <dd class="govuk-summary-list__actions">
                         <a class="govuk-link" href="@controllers.routes.WhenToPayController.get()">Change</a>
@@ -55,18 +63,25 @@
 
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key govuk-!-font-weight-regular">
-
-                        @{(2 to numberOfPayments + 1).map(item => {
-                            <div>{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("d MMMM yyyy")}</div>
-                        })}
+                        <div>@paymentStartDate</div>
+                    @{
+                        (3 to numberOfPayments + 1).map(item => {
+                                <div>{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("d MMMM yyyy")}</div>
+                        })
+                    }
                     </dt>
 
                     <dd class="govuk-summary-list__value">
                         <div>£@firstPaymentAmount</div>
 
-                        @{(2 to numberOfPayments).map(item => {
-                             <div>£{regularPaymentAmount}</div>
-                        })}
+                        @{
+                            (2 to numberOfPayments).map(item => {
+                                    <div>
+                                    £
+                                    {regularPaymentAmount}
+                                    </div>
+                            })
+                        }
                     </dd>
 
                     <dd class="govuk-summary-list__actions">
@@ -81,11 +96,9 @@
                     <dd class="govuk-summary-list__actions">&nbsp;</dd>
                 </div>
             </dl>
-            <form action="@controllers.routes.PaymentPlanController.post()" method="POST">
-                @CSRF.formField(request)
-                <button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>
-            </form>
 
+            @button("continue.button")
 
-    </div>
+        </div>
+    }
 }

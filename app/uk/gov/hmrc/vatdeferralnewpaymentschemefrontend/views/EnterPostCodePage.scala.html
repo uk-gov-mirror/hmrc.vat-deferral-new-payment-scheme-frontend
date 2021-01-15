@@ -16,31 +16,50 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.Layouts
-@import views.html.helper.CSRF
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        button: Button,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput : GovukInput
+)
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-@postCodeFieldId=@{"post-code"}
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
 
-    @helpers.error_summary(form)
+@layout(pageTitle = PageTitle("enter.postcode.heading", form.hasErrors)) {
 
-    <form action="enter-post-code" method="POST">
-        @CSRF.formField(request)
+    @formHelper(action = controllers.routes.PostCodeController.post()) {
+        @form.errors.map { err =>
+            @govukErrorSummary(ErrorSummary(
+                errorList = Seq(
+                    ErrorLink(
+                        href = Some(s"#${err.key}"),
+                        content = Text(s"${messages(err.message)}")
+                    )
+                ),
+                title = Text(messages("common.error.summary.title"))
+            ))
+        }
+        @govukInput(Input(
+            value = form.data.get("post-code"),
+            id = "post-code",
+            name = "post-code",
+            label = Label(
+                isPageHeading = true,
+                classes = "govuk-label--l",
+                content = Text(messages("enter.postcode.heading"))
+            ),
+            hint = Some(Hint(content = Text(messages("enter.postcode.hint")))),
+            classes = "govuk-input--width-10",
+            errorMessage = if (form.hasErrors) {
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
+            } else None
+        ))
 
-        @helpers.input_text(
-            id = postCodeFieldId,
-            label = messages("enter.postcode.heading"),
-            value = form("post-code").value.getOrElse(""),
-            inputType = "text",
-            inputClass = Some("form-control-1-3"),
-            name = postCodeFieldId,
-            errorMessage = form.error("post-code").map(x => Some(x.message)).getOrElse(None),
-            isQuestionPage = true,
-            hint = Some(messages("enter.postcode.hint"))
-        )
-
-        <button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>
-    </form>
+        @button("continue.button")
+    }
 }

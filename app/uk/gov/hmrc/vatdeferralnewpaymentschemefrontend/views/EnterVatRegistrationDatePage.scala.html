@@ -16,75 +16,75 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.Layouts
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 @import views.html.helper.CSRF
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        govukDateInput : GovukDateInput,
+        formHelper: FormWithCSRF,
+        button: Button,
+        govukErrorSummary: GovukErrorSummary,
+
+)
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-@vatReturnFieldId=@{"vat-amount"}
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
 
-    @helpers.error_summary(form)
+@formData = @{
+    val fields =  Seq("day", "month", "year")
+    val errKeys = form.errors.map(x => x.key)
+    val data:Seq[InputItem] = form.data.filter(x => fields.contains(x._1)).map {x =>
+        InputItem(
+            name = x._1,
+            classes = s"govuk-input--width-${if(x._1=="year") "4" else "2"} ${if(errKeys.contains(x._1)) "govuk-input--error"}",
+            value = Some(x._2)
+        )
+    }.toSeq
+    data
+}
 
-    <form action="enter-vat-registration-date" method="POST">
-        @CSRF.formField(request)
+@layout(pageTitle = PageTitle("enter.vatRegistrationDate.heading", form.hasErrors)) {
 
-        <h1 class="govuk-label-wrapper">
-            <label class="govuk-label govuk-label--l" for="postcode">
-            @messages("enter.vatRegistrationDate.heading")
-            </label>
-        </h1>
-        <p>@messages("enter.vatRegistrationDate.hint1")</p>
-        <div id="passport-issued-hint" class="govuk-hint">
-            @messages("enter.vatRegistrationDate.hint2")
-        </div>
+    @formHelper(action = controllers.routes.VatRegistrationDateController.post()) {
 
-        <div class="govuk-date-input" id="passport-issued">
+        @if(form.hasErrors) {
+            @govukErrorSummary(
+                ErrorSummary(
+                    errorList = form.errors.map { err =>
+                        ErrorLink(
+                            href = Some(s"#${err.key}"),
+                            content = Text(s"${messages(err.message)}"),
+                            attributes = Map("class" ->"govuk-link")
+                        )
+                    },
+                    title = Text(messages("common.error.summary.title"))
+                )
+            )
+        }
 
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="day">
-                        Day
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
-                            id="day"
-                            name="day"
-                            type="text"
-                            pattern="[0-9]*"
-                            inputmode="numeric"
-                            value="@form("day").value.getOrElse("")"></div>
-            </div>
+        @govukDateInput(DateInput(
+            errorMessage = if (form.hasErrors) {
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message)))) // TODO implement after ux/content review
+            } else None,
+            hint = Some(Hint(
+                content = Text(
+                    s"""${messages("enter.vatRegistrationDate.hint1")} ${messages("enter.vatRegistrationDate.hint2")}"""
+                )
+            )),
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(messages("enter.vatRegistrationDate.heading")),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
+                ))
+            )),
+            id = "vat-amount",
+            items = formData
+        ))
 
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="passport-issued-month">
-                        Month
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2"
-                            id="month"
-                            name="month"
-                            type="text"
-                            pattern="[0-9]*"
-                            inputmode="numeric"
-                            value="@form("month").value.getOrElse("")"></div>
-            </div>
+        @button("continue.button")
+    }
 
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="passport-issued-year">
-                        Year
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-4"
-                            id="year"
-                            name="year"
-                            type="text"
-                            pattern="[0-9]*"
-                            inputmode="numeric"
-                            value="@form("year").value.getOrElse("")">
-                </div>
-            </div>
-        </div>
-
-        <button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>
-    </form>
 }

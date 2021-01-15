@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers
 
-import play.api.libs.json.Json
-import play.api.mvc
+import play.api.i18n.Messages
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 
-case class JourneySession (
-  id: String,
-  eligible: Boolean = false,
-  outStandingAmount: Option[BigDecimal] = None,
-  numberOfPaymentMonths: Option[Int] = None,
-  dayOfPayment: Option[Int] = None
-)
-
-object JourneySession {
-  implicit val formats = Json.format[JourneySession]
+object PageTitle {
+  def apply(pageHeadingKey: String, hasErrors: Boolean = false)(implicit messages: Messages, appConfig: AppConfig): Option[String] = {
+    Some(s"${if(hasErrors){messages("common.error.title")}else{""}} ${messages(pageHeadingKey)} - ${messages("common.page.title")}")
+  }
 }

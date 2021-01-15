@@ -16,29 +16,35 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
-@import views.html.helper.CSRF
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        button: Button,
+)
 
 @(journeyId: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+@layout(pageTitle = PageTitle("direct.debit.confirm.and.setup")) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">@messages("direct.debit.header")</h1>
-            <p>@messages("direct.debit.p1")</p>
-            <p>@messages("direct.debit.p2")</p>
-            <p>@messages("direct.debit.p3")</p>
-            <p>@messages("direct.debit.p4")</p>
-            <p>@messages("direct.debit.p5")</p>
-            <form action="@controllers.routes.BankDetailsController.post(journeyId)" method="post" novalidate>
-                @CSRF.formField(request)
-                <button class="govuk-button" data-module="govuk-button">
-                    @messages("direct.debit.confirm.and.setup")
-                </button>
-            </form>
+    @formHelper(action = controllers.routes.BankDetailsController.post(journeyId)) {
 
-        </div>
-    </div>
+        <h1 class="govuk-heading-l">@messages("direct.debit.confirm.and.setup")</h1>
+
+        <img src="@routes.Assets.at("images/dd-logo.jpeg")"
+             alt="Direct Debit"
+             style="width: 100px;height: 120px;"/>
+
+        <br/>
+        <br/>
+        <h2 class="govuk-heading-m">@messages("direct.debit.header")</h2>
+        <p class="govuk-body">@messages("direct.debit.p1")</p>
+        <p class="govuk-body">@messages("direct.debit.p2")</p>
+        <p class="govuk-body">@messages("direct.debit.p3")</p>
+        <p class="govuk-body">@messages("direct.debit.p4")</p>
+        <p class="govuk-body">@messages("direct.debit.p5")</p>
+        @button("direct.debit.confirm.and.setup")
+    }
 }

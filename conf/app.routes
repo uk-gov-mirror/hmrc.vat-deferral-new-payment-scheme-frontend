@@ -2,6 +2,10 @@
 
 ->         /govuk-frontend          govuk.Routes
 ->         /hmrc-frontend           hmrcfrontend.Routes
+
+GET        /assets/*file                              controllers.Assets.at(path="/public", file)
+
+
 GET        /hello-world             uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.HelloWorldController.helloWorld
 
 GET        /enter-vrn              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.get
@@ -46,4 +50,4 @@ GET        /confirmation       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.c
 
 GET        /not-matched       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get
 
-GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)
+#GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)

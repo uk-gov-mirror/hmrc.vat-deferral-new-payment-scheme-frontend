@@ -15,34 +15,48 @@
  *@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import java.time.ZonedDateTime
+@import java.time.format.DateTimeFormatter
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        govukPanel : GovukPanel
+)
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+@layout(pageTitle = PageTitle("confirmation.header")) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">
-                    @messages("confirmation.header")
-                </h1>
-            </div>
-            <h2 class="govuk-heading-m">@messages("confirmation.header2")</h2>
-            <p class="govuk-body">@messages("confirmation.p1")</p>
-            <p class="govuk-body">@messages("confirmation.p2")</p>
-            <p class="govuk-body">@messages("confirmation.p3").replace("##", "")</p>
-            <p class="govuk-body">
-                <a href="print-summary" class="govuk-link">@messages("confirmation.summary.page.href")</a>
-            </p>
-            <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
-            <p class="govuk-body">
-                @messages("confirmation.p4")
-                <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("confirmation.vat.helpline.href")</a>.
-            </p>
+    @govukPanel(Panel(
+        title = Text(messages("confirmation.header"))
+    ))
 
-        </div>
-    </div>
+    <h2 class="govuk-heading-m">@messages("confirmation.header2")</h2>
+    <p class="govuk-body">@messages("confirmation.p1")</p>
+    <p class="govuk-body">
+        @messages(
+            "confirmation.p2",
+            firstPaymentAmount.setScale(2).toString(),
+            startDate.format(DateTimeFormatter.ofPattern(s"d'${daySuffix(startDate.getDayOfMonth)}' MMMM yyyy"))
+        )
+    </p>
+    <p class="govuk-body">
+        @messages(
+            "confirmation.p3",
+            regularPaymentDate.getDayOfMonth.toString() ++ daySuffix(regularPaymentDate.getDayOfMonth)
+        )
+    </p>
+    <p class="govuk-body">
+        <a href="print-summary" class="govuk-link">@messages("confirmation.summary.page.href")</a>
+    </p>
+
+    @* TODO confirm if this is coming out, if not update content to reflect prototype *@
+    <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
+    <p class="govuk-body">
+        @messages("confirmation.p4")
+        <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("confirmation.vat.helpline.href")</a>.
+    </p>
+
 }

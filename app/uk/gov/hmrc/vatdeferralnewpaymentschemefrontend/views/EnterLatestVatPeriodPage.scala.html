@@ -16,34 +16,56 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.Layouts
-@import views.html.helper.CSRF
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        formHelper: FormWithCSRF,
+        button: Button,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios : GovukRadios
+)
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
 @vatPeriodFieldId=@{"vat-period"}
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+@layout(pageTitle = PageTitle("enter.latestVatPeriod.heading", form.hasErrors)) {
 
-    @helpers.error_summary(form)
-
-    <label class="govuk-label govuk-label--l" for="postcode">
-    @messages("enter.latestVatPeriod.heading")
-    </label>
-
-    <p class="govuk-body">@messages("enter.latestVatPeriod.hint")</p>
-
-    <form action="enter-latest-vat-accounting-period" method="POST">
-        @CSRF.formField(request)
-
-        @for(item <- 1 to 12) {
-            <div class="multiple-choice">
-                <input id="month-@item" name="month" type="radio" value="@{"%02d".format(item)}">
-                <label class="govuk-label govuk-radios__label" for="month-@item">
-                @messages(s"global.month.$item")
-                </label>
-            </div>
+    @formHelper(action = controllers.routes.VatPeriodController.post()) {
+        @form.errors.map { err =>
+            @govukErrorSummary(ErrorSummary(
+                errorList = Seq(
+                    ErrorLink(
+                        href = Some(s"#how-many-months"),
+                        content = Text(s"${messages(err.message)}")
+                    )
+                ),
+                title = Text(messages("common.error.summary.title"))
+            ))
         }
-
-        <button class="govuk-button button" data-module="govuk-button">@messages("global.button.continue")</button>
-    </form>
+        @govukRadios(Radios(
+            errorMessage = if(form.hasErrors) {Some(ErrorMessage(
+                content = Text(messages("error.required"))
+            ))} else None,
+            hint = Some(Hint(content = Text(messages("enter.latestVatPeriod.hint")))),
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(messages("enter.latestVatPeriod.heading")),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
+                ))
+            )),
+            idPrefix = Some("how-many-months"),
+            name = "month",
+            items = (1 to 12).map(item => {
+                RadioItem(
+                    content = HtmlContent(messages(s"global.month.$item")),
+                    value = Some("%02d".format(item))
+                )
+            })
+        ))
+        @button("continue.button")
+    }
 }

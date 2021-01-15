@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.data.Forms.mapping
@@ -41,20 +44,20 @@ class WhenToPayController @Inject()(
     (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends BaseController(mcc) {
 
-  val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
+  def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>
       journeySession =>
 
         journeySession.outStandingAmount match {
-          case Some(_) => Future.successful(Ok(whenToPagePage(frm)))
+          case Some(_) => Future.successful(Ok(whenToPagePage(frm, formattedPaymentsStartDate)))
           case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
         }
   }
 
-  val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
         frm.bindFromRequest().fold(
-          errors => Future.successful(BadRequest(whenToPagePage(errors))),
+          errors => Future.successful(BadRequest(whenToPagePage(errors, formattedPaymentsStartDate))),
           form => {
             sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(dayOfPayment = Some(form.value.toInt)))
             Future.successful(Redirect(routes.PaymentPlanController.get()))

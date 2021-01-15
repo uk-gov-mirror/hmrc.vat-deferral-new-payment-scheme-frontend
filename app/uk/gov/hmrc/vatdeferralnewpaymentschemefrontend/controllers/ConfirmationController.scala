@@ -36,6 +36,17 @@ class ConfirmationController @Inject()(
   extends FrontendController(mcc) with I18nSupport {
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-      Future.successful(Ok(confirmationPage()))
+      Future.successful(
+        Ok(confirmationPage(
+          paymentStartDate,
+          firstPaymentAmount(
+            journeySession.outStandingAmount.getOrElse(0),
+            journeySession.numberOfPaymentMonths.getOrElse(11)
+          ),
+          journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
+            dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
+          }
+        ))
+      )
   }
 }

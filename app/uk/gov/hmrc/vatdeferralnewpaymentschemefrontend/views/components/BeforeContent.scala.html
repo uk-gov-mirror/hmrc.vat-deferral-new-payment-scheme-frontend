@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
-
-import play.api.libs.json.Json
-import play.api.mvc
-
-case class JourneySession (
-  id: String,
-  eligible: Boolean = false,
-  outStandingAmount: Option[BigDecimal] = None,
-  numberOfPaymentMonths: Option[Int] = None,
-  dayOfPayment: Option[Int] = None
+@this(
+    govUkBetaBanner: GovUkBetaBanner
 )
 
-object JourneySession {
-  implicit val formats = Json.format[JourneySession]
-}
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+<nav id="navigation-content" role="navigation">
+    @govUkBetaBanner("BETA")
+
+    @*TODO add in when we have welsh*@
+    @*@if(appConfig.languageTranslationEnabled) {*@
+        @*@language_selection(*@
+                @*appConfig.languageMap,*@
+                @*appConfig.routeToSwitchLanguage,*@
+                @*Some("lang")*@
+        @*)*@
+    @*}*@
+</nav>
+

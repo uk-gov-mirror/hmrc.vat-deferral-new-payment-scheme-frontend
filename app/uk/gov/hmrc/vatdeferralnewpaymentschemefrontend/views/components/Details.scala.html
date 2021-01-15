@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-import play.api.libs.json.Json
-import play.api.mvc
+@this(govukDetails : GovukDetails)
+@(linkText: String, content: String)(implicit messages: Messages)
 
-case class JourneySession (
-  id: String,
-  eligible: Boolean = false,
-  outStandingAmount: Option[BigDecimal] = None,
-  numberOfPaymentMonths: Option[Int] = None,
-  dayOfPayment: Option[Int] = None
+@govukDetails(
+    Details(
+        summary = Text(linkText),
+        content = HtmlContent(content)
+    )
 )
-
-object JourneySession {
-  implicit val formats = Json.format[JourneySession]
-}
