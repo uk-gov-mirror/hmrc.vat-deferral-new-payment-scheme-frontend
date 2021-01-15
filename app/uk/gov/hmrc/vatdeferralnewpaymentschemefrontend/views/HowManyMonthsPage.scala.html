@@ -29,7 +29,7 @@
 )
 
 @(months: Seq[Month], form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-
+@fieldName = @{"how-many-months"}
 @layout(pageTitle = PageTitle("how.many.months.h1", form.hasErrors)) {
 
     @formHelper(action = controllers.routes.MonthsController.postInstallmentBreakdown()) {
@@ -57,8 +57,8 @@
                     isPageHeading = true
                 ))
             )),
-            idPrefix = Some("how-many-months"),
-            name = "how-many-months",
+            idPrefix = Some(fieldName),
+            name = fieldName,
             items = months.map(item => {
                         RadioItem(
                             label = Some(Label(classes = "govuk-!-padding-top-0")),
@@ -71,7 +71,8 @@
                                             ${messages("how.many.months.p2.2")}
                                         <hr class="govuk-section-break govuk-section-break--visible" style="margin-top:10px"></hr>""")
                             )),
-                            value = Some(item.month)
+                            value = Some(item.month),
+                            checked = form.data.get(fieldName).fold(false)(x => x == item.month)
                         )
                     }
                 )
