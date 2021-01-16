@@ -47,19 +47,22 @@ class WhenToPayController @Inject()(
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>
       journeySession =>
-
-        journeySession.outStandingAmount match {
-          case Some(_) =>
+        (journeySession.outStandingAmount,journeySession.dayOfPayment) match {
+          case (Some(_),dop) =>
             Future.successful(
               Ok(
                 whenToPagePage(
-                  frm,
+                  dop.fold(frm)(x => frm.fill(FormValues(x.toString))),
                   formattedPaymentsStartDate,
                   journeySession.numberOfPaymentMonths.getOrElse(11)
                 )
+              ))
+          case _ =>
+            Future.successful(
+              Redirect(
+                routes.DeferredVatBillController.get()
               )
             )
-          case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
         }
   }
 

@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.ConfirmationPage
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,21 +33,23 @@ import scala.concurrent.Future
 class ConfirmationController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
-  confirmationPage: ConfirmationPage)(implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-  extends FrontendController(mcc) with I18nSupport {
+  confirmationPage: ConfirmationPage,
+  sessionStore: SessionStore
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig
+) extends FrontendController(mcc)
+  with I18nSupport {
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-      Future.successful(
-        Ok(confirmationPage(
-          paymentStartDate,
-          firstPaymentAmount(
-            journeySession.outStandingAmount.getOrElse(0),
-            journeySession.numberOfPaymentMonths.getOrElse(11)
-          ),
-          journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
-            dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
-          }
-        ))
-      )
+    val fpa: BigDecimal = firstPaymentAmount(
+      journeySession.outStandingAmount.getOrElse(0),
+      journeySession.numberOfPaymentMonths.getOrElse(11)
+    )
+    val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
+      dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
+    }
+    request.session.get("sessionId").fold(())(sessionStore.drop)
+    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop)))
   }
 }

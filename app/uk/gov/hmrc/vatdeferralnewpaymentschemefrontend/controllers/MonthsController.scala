@@ -44,7 +44,14 @@ class MonthsController @Inject()(
     extends BaseController(mcc) {
 
   val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-    displayInstalmentsPage(journeySession, instalmentsForm)
+    displayInstalmentsPage(
+      journeySession,
+      journeySession.monthsQuestion.fold(
+        instalmentsForm
+      )(
+        x => instalmentsForm.fill(FormValues(x.toString))
+      )
+    )
   }
 
   val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
@@ -53,21 +60,32 @@ class MonthsController @Inject()(
       errors => displayInstalmentsPage(journeySession, errors),
       formValue => {
           if(formValue.value == "true") {
-            sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(numberOfPaymentMonths = Some(11)))
+            sessionStore.store[JourneySession](
+              journeySession.id,
+              "JourneySession",
+              journeySession.copy(numberOfPaymentMonths = Some(11))
+            )
             Future.successful(Redirect(routes.WhenToPayController.get()))
           }
           else {
+            if (journeySession.numberOfPaymentMonths.isEmpty || journeySession.numberOfPaymentMonths.contains(11)) {
+              sessionStore.store[JourneySession](
+                journeySession.id,
+                "JourneySession",
+                journeySession.copy(numberOfPaymentMonths = Some(-1))
+              )
+            }
             Future.successful(Redirect(routes.MonthsController.getInstallmentBreakdown()))
           }
       }
     )
   }
 
-  val getInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>vrn =>journeySession =>
+  def getInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>vrn =>journeySession =>
     displayMonthsSelectionPage(journeySession, monthForm)
   }
 
-  val postInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def postInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     monthForm.bindFromRequest().fold(
       errors => displayMonthsSelectionPage(journeySession, errors),
@@ -88,12 +106,18 @@ class MonthsController @Inject()(
     }
   }
 
-  def displayInstalmentsPage(journeySession: JourneySession, form: Form[FormValues])(implicit request: Request[_], messages: MessagesApi, appConfig: AppConfig) = {
+  def displayInstalmentsPage(
+    journeySession: JourneySession,
+    form: Form[FormValues]
+  )(
+    implicit request: Request[_],
+    messages: MessagesApi,
+    appConfig: AppConfig
+  ): Future[Result] = {
     journeySession.outStandingAmount match {
       case Some(outStandingAmount) => {
         val monthlyAmount = (outStandingAmount / 11).setScale(2, RoundingMode.DOWN)
         val remainder = outStandingAmount - (monthlyAmount * 11)
-
         if (form.hasErrors) Future.successful(BadRequest(monthlyInstallmentsPage(monthlyAmount, remainder, form)))
         else Future.successful(Ok(monthlyInstallmentsPage(monthlyAmount, remainder, form)))
       }
@@ -101,20 +125,40 @@ class MonthsController @Inject()(
     }
   }
 
-  def displayMonthsSelectionPage(journeySession: JourneySession, form: Form[FormValues])(implicit request: Request[_], messages: MessagesApi, appConfig: AppConfig) = {
+  def displayMonthsSelectionPage(
+    journeySession: JourneySession,
+    form: Form[FormValues]
+  )(
+    implicit request: Request[_],
+    messages: MessagesApi,
+    appConfig: AppConfig
+  ): Future[Result] = {
     journeySession.outStandingAmount match {
       case Some(outStandingAmount) => {
-        if (form.hasErrors) Future.successful(BadRequest(howManyMonthsPage(getMonths(outStandingAmount).reverse, form)))
-        else Future.successful(Ok(howManyMonthsPage(getMonths(outStandingAmount).reverse, form)))
+        if (form.hasErrors) {
+          Future.successful(BadRequest(
+            howManyMonthsPage(
+              getMonths(outStandingAmount).reverse,
+              form
+            )
+          ))
+        } else {
+          Future.successful(Ok(
+            howManyMonthsPage(
+              getMonths(outStandingAmount).reverse,
+              journeySession.numberOfPaymentMonths
+                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString)))
+          )))
+        }
       }
       case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
   }
 
-  val instalmentsForm: Form[FormValues] = Form(
+  lazy val instalmentsForm: Form[FormValues] = Form(
     mapping("11-months-to-pay" -> mandatory("11monthstopay"))(FormValues.apply)(FormValues.unapply))
 
-  val monthForm: Form[FormValues] = Form(
+  lazy val monthForm: Form[FormValues] = Form(
     mapping("how-many-months" -> mandatory("how-many-months"))(FormValues.apply)(FormValues.unapply))
 
   case class FormValues(value: String)

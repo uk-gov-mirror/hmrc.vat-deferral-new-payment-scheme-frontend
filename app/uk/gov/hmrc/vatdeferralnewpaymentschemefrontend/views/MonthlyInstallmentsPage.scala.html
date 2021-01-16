@@ -72,11 +72,13 @@
             items = Seq(
                 RadioItem(
                     content = Text(messages("installments.option.1")),
-                    value = Some("true")
+                    value = Some("true"),
+                    checked = form.data.exists(_._2 == "true")
                 ),
                 RadioItem(
                     content = Text(messages("installments.option.2")),
-                    value = Some("false")
+                    value = Some("false"),
+                    checked = form.data.exists(_._2 == "false")
                 )
             )
         ))
