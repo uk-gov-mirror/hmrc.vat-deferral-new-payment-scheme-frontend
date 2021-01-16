@@ -30,10 +30,17 @@
 
 )
 
-@(form: Form[_], paymentStartDate: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_], paymentStartDate: String, numberOfMonths: Int)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = PageTitle("when.to.pay.h1", form.hasErrors)) {
-
+@layout(
+    pageTitle = PageTitle("when.to.pay.h1", form.hasErrors),
+    backLinkEnabled = true,
+    backLink = if(numberOfMonths == 11) {
+        Some(s"${controllers.routes.MonthsController.get()}")
+    } else {
+        Some(s"${controllers.routes.MonthsController.getInstallmentBreakdown()}")
+    }
+) {
     @formHelper(action = controllers.routes.WhenToPayController.post()) {
         @form.errors.map { err =>
             @govukErrorSummary(ErrorSummary(

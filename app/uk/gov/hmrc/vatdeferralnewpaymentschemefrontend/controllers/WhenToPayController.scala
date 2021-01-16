@@ -49,7 +49,16 @@ class WhenToPayController @Inject()(
       journeySession =>
 
         journeySession.outStandingAmount match {
-          case Some(_) => Future.successful(Ok(whenToPagePage(frm, formattedPaymentsStartDate)))
+          case Some(_) =>
+            Future.successful(
+              Ok(
+                whenToPagePage(
+                  frm,
+                  formattedPaymentsStartDate,
+                  journeySession.numberOfPaymentMonths.getOrElse(11)
+                )
+              )
+            )
           case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
         }
   }
@@ -57,7 +66,15 @@ class WhenToPayController @Inject()(
   def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
         frm.bindFromRequest().fold(
-          errors => Future.successful(BadRequest(whenToPagePage(errors, formattedPaymentsStartDate))),
+          errors => Future.successful(
+            BadRequest(
+              whenToPagePage(
+                errors,
+                formattedPaymentsStartDate,
+                journeySession.numberOfPaymentMonths.getOrElse(11)
+              )
+            )
+          ),
           form => {
             sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(dayOfPayment = Some(form.value.toInt)))
             Future.successful(Redirect(routes.PaymentPlanController.get()))

@@ -32,7 +32,11 @@
 
 @*/ TODO get right copy for error messages /*@
 
-@layout(pageTitle = PageTitle("installments.h1", form.hasErrors)) {
+@layout(
+    pageTitle = PageTitle("installments.h1", form.hasErrors),
+    backLinkEnabled = true,
+    backLink = Some(s"${controllers.routes.DeferredVatBillController.get()}")
+) {
 
     @formHelper(action = controllers.routes.MonthsController.post()) {
         @form.errors.map { err =>

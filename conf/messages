@@ -2,6 +2,7 @@ service.name=Pay VAT deferred due to coronavirus (COVID-19)
 service.homePageUrl=/vat-deferral-new-payment-scheme-frontend
 service.text=This is your new service
 error.summary.heading=There is a problem
+back=Back
 
 common.alpha-info.p1=This is a new service – your
 common.alpha-info.link=feedback

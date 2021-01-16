@@ -30,7 +30,11 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = PageTitle("enter.latestVatReturn.heading", form.hasErrors)) {
+@layout(
+    pageTitle = PageTitle("enter.latestVatReturn.heading", form.hasErrors),
+    backLinkEnabled = true,
+    backLink = Some(s"${controllers.routes.PostCodeController.get()}")
+) {
 
     @formHelper(action = controllers.routes.VatReturnController.post()) {
         @form.errors.map { err =>
