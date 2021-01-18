@@ -15,14 +15,30 @@
  *@
 
 @this(
-    govUkBetaBanner: GovUkBetaBanner
+    govUkBetaBanner: GovUkBetaBanner,
+        govukBackLink: GovukBackLink
 )
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(backLinkEnabled: Boolean = false, backLink: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-<nav id="navigation-content" role="navigation">
-    @govUkBetaBanner("BETA")
+@govUkBetaBanner("BETA")
 
+@{
+    if(backLinkEnabled) {
+        Some(
+            govukBackLink(
+                BackLink(
+                    href = backLink.getOrElse("javascript:window.history.back()"),
+                    classes = "govuk-!-display-none-print",
+                    content = Text(messages("back")
+                    )
+                )
+            )
+        )
+    } else {
+        None
+    }
+}
     @*TODO add in when we have welsh*@
     @*@if(appConfig.languageTranslationEnabled) {*@
         @*@language_selection(*@
@@ -31,5 +47,5 @@
                 @*Some("lang")*@
         @*)*@
     @*}*@
-</nav>
+
 

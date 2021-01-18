@@ -30,74 +30,74 @@
 
 @(paymentStartDate: String, dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = PageTitle("payment.plan.h1")) {
+@layout(
+    pageTitle = PageTitle("payment.plan.h1"),
+    backLinkEnabled = true,
+    backLink = Some(s"${controllers.routes.WhenToPayController.get()}")
+) {
 
     @formHelper(action = controllers.routes.PaymentPlanController.post()) {
 
+        <h1 class="govuk-heading-l">@messages("payment.plan.h1")</h1>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
-        <div class="govuk-grid-row">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("payment.plan.list-key")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @{dayOfPayment.toString ++ daySuffix(dayOfPayment)}
+                    @messages("payment.plan.list-value")
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@controllers.routes.WhenToPayController.get()">Change</a>
+                </dd>
+            </div>
 
-            <h1 class="govuk-heading-l">@messages("payment.plan.h1")</h1>
-            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Monthly payments
+                </dt>
+                <dd class="govuk-summary-list__value">&nbsp;</dd>
+                <dd class="govuk-summary-list__actions">&nbsp;</dd>
+            </div>
 
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        @messages("payment.plan.list-key")
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @{dayOfPayment.toString ++ daySuffix(dayOfPayment)}
-                        @messages("payment.plan.list-value")
-                    </dd>
-                    <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link" href="@controllers.routes.WhenToPayController.get()">Change</a>
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-font-weight-regular">
+                    <div>@paymentStartDate</div>
+                @{
+                    (3 to numberOfPayments + 1).map(item => {
+                            <div>{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("d MMMM yyyy")}</div>
+                    })
+                }
+                </dt>
 
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Monthly payments
-                    </dt>
-                    <dd class="govuk-summary-list__value">&nbsp;</dd>
-                    <dd class="govuk-summary-list__actions">&nbsp;</dd>
-                </div>
+                <dd class="govuk-summary-list__value">
+                    <div>£@firstPaymentAmount</div>
 
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-font-weight-regular">
-                        <div>@paymentStartDate</div>
                     @{
-                        (3 to numberOfPayments + 1).map(item => {
-                                <div>{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("d MMMM yyyy")}</div>
+                        (2 to numberOfPayments).map(item => {
+                                <div>
+                                £{regularPaymentAmount}
+                                </div>
                         })
                     }
-                    </dt>
+                </dd>
 
-                    <dd class="govuk-summary-list__value">
-                        <div>£@firstPaymentAmount</div>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@controllers.routes.MonthsController.get()">Change</a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("payment.plan.total.pay")
+                </dt>
+                <dd class="govuk-summary-list__value">£@outstandingAmount.setScale(2).toString</dd>
+                <dd class="govuk-summary-list__actions">&nbsp;</dd>
+            </div>
+        </dl>
 
-                        @{
-                            (2 to numberOfPayments).map(item => {
-                                    <div>
-                                    £{regularPaymentAmount}
-                                    </div>
-                            })
-                        }
-                    </dd>
+        @button("continue.button")
 
-                    <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link" href="@controllers.routes.MonthsController.get()">Change</a>
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Total to pay
-                    </dt>
-                    <dd class="govuk-summary-list__value">£@outstandingAmount</dd>
-                    <dd class="govuk-summary-list__actions">&nbsp;</dd>
-                </div>
-            </dl>
-
-            @button("continue.button")
-
-        </div>
     }
 }

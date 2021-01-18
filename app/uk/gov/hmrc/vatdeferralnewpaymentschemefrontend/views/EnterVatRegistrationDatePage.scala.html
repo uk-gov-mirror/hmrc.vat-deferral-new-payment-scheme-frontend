@@ -45,7 +45,11 @@
     data
 }
 
-@layout(pageTitle = PageTitle("enter.vatRegistrationDate.heading", form.hasErrors)) {
+@layout(
+    pageTitle = PageTitle("enter.vatRegistrationDate.heading", form.hasErrors),
+    backLinkEnabled = true,
+    backLink = Some(s"${controllers.routes.VatPeriodController.get()}")
+) {
 
     @formHelper(action = controllers.routes.VatRegistrationDateController.post()) {
 

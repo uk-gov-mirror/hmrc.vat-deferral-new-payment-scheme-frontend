@@ -27,7 +27,10 @@
 
 @(journeyId: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = PageTitle("direct.debit.confirm.and.setup")) {
+@layout(
+    pageTitle = PageTitle("direct.debit.confirm.and.setup"),
+    backLinkEnabled = true
+) {
 
     @formHelper(action = controllers.routes.BankDetailsController.post(journeyId)) {
 

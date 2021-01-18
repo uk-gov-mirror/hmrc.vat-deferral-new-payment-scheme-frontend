@@ -29,8 +29,13 @@
 )
 
 @(months: Seq[Month], form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
 @fieldName = @{"how-many-months"}
-@layout(pageTitle = PageTitle("how.many.months.h1", form.hasErrors)) {
+@layout(
+    pageTitle = PageTitle("how.many.months.h1", form.hasErrors),
+    backLinkEnabled = true,
+    backLink = Some(s"${controllers.routes.MonthsController.get()}")
+) {
 
     @formHelper(action = controllers.routes.MonthsController.postInstallmentBreakdown()) {
         @form.errors.map { err =>

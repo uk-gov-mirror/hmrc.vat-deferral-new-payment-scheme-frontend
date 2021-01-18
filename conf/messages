@@ -2,6 +2,7 @@ service.name=Pay VAT deferred due to coronavirus (COVID-19)
 service.homePageUrl=/vat-deferral-new-payment-scheme-frontend
 service.text=This is your new service
 error.summary.heading=There is a problem
+back=Back
 
 common.alpha-info.p1=This is a new service – your
 common.alpha-info.link=feedback
@@ -117,6 +118,7 @@ when.to.pay.label=Enter a day from 1 to 28
 payment.plan.h1=Check your payment plan
 payment.plan.list-key=Payments collected on
 payment.plan.list-value=or next working day
+payment.plan.total.pay=Total to pay
 
 direct.debit.header=The Direct Debit Guarantee
 direct.debit.p1=This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.
