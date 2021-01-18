@@ -43,7 +43,6 @@ class VatRegistrationDateController @Inject()(
     extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
-    // TODO load any data from auth.authoriseWithMatchingJourneySession (used in post)
     Future.successful(Ok(
       enterVatRegistrationDatePage(
         matchingJourneySession.date.fold(frm) (x =>
@@ -96,7 +95,6 @@ class VatRegistrationDateController @Inject()(
             }
           }
         }
-
       }
     )
   }
