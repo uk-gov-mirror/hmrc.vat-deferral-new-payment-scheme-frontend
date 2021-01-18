@@ -39,8 +39,14 @@ class VrnController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends BaseController(mcc) {
 
-  def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
-    Future.successful(Ok(enterVrnPage(frm)))
+  def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
+    Future.successful(Ok(
+      enterVrnPage(
+        matchingJourneySession.vrn.fold(frm){ x =>
+          frm.fill(Vrn(x))
+        }
+      )
+    ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
