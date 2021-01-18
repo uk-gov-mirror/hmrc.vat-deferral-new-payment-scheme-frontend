@@ -30,6 +30,8 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 @Singleton
 class BankDetailsController @Inject()(
@@ -60,8 +62,21 @@ class BankDetailsController @Inject()(
         accountNumber,
         accountName
       )
-      vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, directDebitArrangementRequest)
-      Redirect(routes.ConfirmationController.get())
+//       vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, directDebitArrangementRequest).map {
+//         case foo if foo.status == INTERNAL_SERVER_ERROR => Redirect(routes.PostCodeController.get())
+//       }
+//
+
+
+
+//      try{
+        vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, directDebitArrangementRequest)
+        Redirect(routes.PostCodeController.get())
+//      } catch{
+//        case _ => Redirect(routes.PostCodeController.get())
+//      }
+
+
     }
 
     connector.complete(journeyId).map {
