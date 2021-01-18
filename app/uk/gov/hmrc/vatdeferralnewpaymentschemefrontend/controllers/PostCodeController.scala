@@ -39,8 +39,14 @@ class PostCodeController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends BaseController(mcc) {
 
-  def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
-    Future.successful(Ok(enterPostCodePage(frm)))
+  def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
+    Future.successful(Ok(
+      enterPostCodePage(
+        matchingJourneySession.postCode.fold(frm){ x =>
+          frm.fill(PostCode(x))
+        }
+      )
+    ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
