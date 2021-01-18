@@ -66,8 +66,7 @@
             items = (1 to 12).map(item => {
                 RadioItem(
                     content = HtmlContent(messages(s"global.month.$item")),
-                    value = Some("%02d".format(item)),
-                    checked = form.data.exists(x => x._2 == "%02d".format(item))
+                    value = Some("%02d".format(item))
                 )
             })
         ))

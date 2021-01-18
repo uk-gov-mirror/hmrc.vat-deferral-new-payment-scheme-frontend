@@ -39,14 +39,8 @@ class VatPeriodController @Inject()(
   (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
     extends BaseController(mcc) {
 
-  def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
-    Future.successful(Ok(
-      enterLatestVatPeriodPage(
-        matchingJourneySession.latestAccountPeriodMonth.fold(frm){ x =>
-          frm.fill(FormValues(x))
-        }
-      )
-    ))
+  def get(): Action[AnyContent] = auth.authoriseForMatchingJourney { implicit request =>
+    Future.successful(Ok(enterLatestVatPeriodPage(frm)))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>

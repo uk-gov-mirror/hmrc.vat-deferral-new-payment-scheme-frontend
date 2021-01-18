@@ -16,26 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import play.api.libs.json.Json
-
-case class DateFormValues(day: String, month: String, year: String) {
-  def isValidDate: Boolean = try{
-    val dateText = s"${"%02d".format(day.toInt)}/${"%02d".format(month.toInt)}/$year"
-    LocalDate.parse(dateText, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    true
-  }
-  catch {
-    case _ => false
-  }
-}
-
-case object DateFormValues {
-  implicit val format = Json.format[DateFormValues]
-
-}
 
 case class MatchingJourneySession (
   id: String,
@@ -43,11 +24,10 @@ case class MatchingJourneySession (
   postCode: Option[String] = None,
   latestVatAmount: Option[String] = None,
   latestAccountPeriodMonth: Option[String] = None,
-  date: Option[DateFormValues] = None,
+  date: Option[String] = None,
   isUserEnrolled: Boolean = false,
   failedMatchingAttempts: Int = 0)
 
 object MatchingJourneySession {
   implicit val formats = Json.format[MatchingJourneySession]
 }
-

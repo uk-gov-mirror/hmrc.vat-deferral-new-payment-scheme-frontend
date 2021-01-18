@@ -21,9 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.{Json, Reads, Writes}
 import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.commands.LastError
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
-import uk.gov.hmrc.mongo.DatabaseUpdate
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,8 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @ImplementedBy(classOf[SessionStoreImpl])
 trait SessionStore {
   def get[T](id: String, key: String)(implicit reads: Reads[T]): Future[Option[T]]
-  def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T], reads: Reads[T]): Future[Either[LastError,Option[T]]]
-  def storeFoo[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T], reads: Reads[T]): Future[T]
+  def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T]): Unit
   def drop(sessionId: String): Unit
 }
 
@@ -57,20 +54,8 @@ class SessionStoreImpl @Inject()(mongo: ReactiveMongoComponent, serviceConfig: S
     }
   }
 
-  def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T], reads: Reads[T]): Future[Either[LastError,Option[T]]] = {
-    cacheRepository.createOrUpdate(sessionId, key, Json.toJson(value)).map {
-      case DatabaseUpdate(e,r) if e.writeErrors.isEmpty =>
-        Right[LastError,Option[T]](r.savedValue.data.map(_.as[T]))
-      case DatabaseUpdate(e,_) => Left(e)
-    }
-  }
-
-  def storeFoo[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T], reads: Reads[T]): Future[T] = {
-    cacheRepository.createOrUpdate(sessionId, key, Json.toJson(value)).map {
-      case DatabaseUpdate(e,r) =>
-        r.savedValue.data.map (x => (x \ key).as[T])
-          .fold(throw new IllegalStateException(s"Problem getting state from cache: ${e.message}"))(identity)
-    }
+  def store[T](sessionId: String, key: String, value: T)(implicit writes: Writes[T]): Unit = {
+    cacheRepository.createOrUpdate(sessionId, key, Json.toJson(value))
   }
 
   def drop(sessionId: String): Unit = cacheRepository.removeById(sessionId)
