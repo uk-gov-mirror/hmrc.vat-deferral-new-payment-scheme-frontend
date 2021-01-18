@@ -97,52 +97,6 @@ class VatRegistrationDateController @Inject()(
           }
         }
 
-//        foo
-//        sessionStore.store[MatchingJourneySession](
-//          matchingJourneySession.id,
-//          "MatchingJourneySession",
-//          matchingJourneySession.copy(date = Some(formValues))) flatMap  {
-//            case Right(Some(journeyState)) =>
-//              enrolmentStoreConnector.checkEnrolments(ri).flatMap { httpResponse =>
-//                httpResponse.status match {
-//                  case OK => {
-//                    sessionStore.store[MatchingJourneySession](
-//                      journeyState.id,
-//                      "MatchingJourneySession",
-//                      journeyState.copy(isUserEnrolled = true)
-//                    )
-//                    Future.successful(Redirect(routes.EligibilityController.get()))
-//                  }
-//                  case 204 => {
-//                    sessionStore.store[MatchingJourneySession](
-//                      journeyState.id,
-//                      "MatchingJourneySession",
-//                      journeyState.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1)
-//                    )
-//                    Future.successful(Redirect(routes.NotMatchedController.get()))
-//                  }
-//                }
-//              }
-//            case _ => throw new Exception("state not returned from cache") // TODO this should live in the repo class
-//          }
-
-
-
-
-//        // TODO VDNPS-73
-//        enrolmentStoreConnector.checkEnrolments(ri).flatMap { httpResponse =>
-//          httpResponse.status match {
-//            case OK => {
-//              sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(isUserEnrolled = true))
-//              Future.successful(Redirect(routes.EligibilityController.get()))
-//            }
-//            case 204 => {
-//              sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1))
-//              Future.successful(Redirect(routes.NotMatchedController.get()))
-//            }
-//          }
-//        }
-
       }
     )
   }
