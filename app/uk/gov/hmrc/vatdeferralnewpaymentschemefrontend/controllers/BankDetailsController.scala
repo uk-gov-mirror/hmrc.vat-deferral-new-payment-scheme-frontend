@@ -24,12 +24,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.{BusinessCompleteResponse, PersonalCompleteResponse}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.{Account, BusinessCompleteResponse, PersonalCompleteResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BankDetailsController @Inject()(
@@ -39,7 +39,7 @@ class BankDetailsController @Inject()(
   connector: BavfConnector,
   sessionStore: SessionStore,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
+  (implicit ec:ExecutionContext, val appConfig: AppConfig, val serviceConfig: ServicesConfig)
   extends FrontendController(mcc) with I18nSupport {
 
   def get(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
@@ -51,23 +51,34 @@ class BankDetailsController @Inject()(
 
   def post(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
-    def submitDirectDebitArrangement(sortCode: String, accountNumber: String, accountName: String) = {
-      val directDebitArrangementRequest = DirectDebitArrangementRequest(
-        journeySession.dayOfPayment.getOrElse(throw new RuntimeException(s"Day of payment is not set")),
-        journeySession.numberOfPaymentMonths.getOrElse(throw new RuntimeException(s"Number of payment months not set")),
-        journeySession.outStandingAmount.getOrElse(throw new RuntimeException(s"Outstanding amount is not set")),
-        sortCode,
-        accountNumber,
-        accountName
+    val dayOfPayment:Int =
+      journeySession.dayOfPayment.getOrElse(
+        throw new IllegalStateException("journeySession missing dayOfPayment")
       )
-      vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, directDebitArrangementRequest)
-      Redirect(routes.ConfirmationController.get())
+    val numberOfPaymentMonths:Int =
+      journeySession.numberOfPaymentMonths.getOrElse(
+        throw new IllegalStateException("journeySession missing numberOfPaymentMonths")
+      )
+    val outStandingAmount: BigDecimal =
+      journeySession.outStandingAmount.getOrElse(
+        throw new IllegalStateException("journeySession missing outStandingAmount")
+      )
+
+    lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
+      x <- connector.complete(journeyId)
+    } yield x match {
+      case Some(PersonalCompleteResponse(a,b,c)) =>
+        DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
+      case Some(BusinessCompleteResponse(a,b,c)) =>
+        DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
+      case None => throw new Exception("nothing from bank-account-verification-api")
     }
 
-    connector.complete(journeyId).map {
-      case Some(r: PersonalCompleteResponse) => submitDirectDebitArrangement(r.sortCode, r.accountNumber, r.accountName)
-      case Some(r: BusinessCompleteResponse) => submitDirectDebitArrangement(r.sortCode, r.accountNumber, r.companyName)
-      case None => InternalServerError
+    for {
+      a <- ddArrangementAPICall
+      _ <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
+    } yield {
+        Redirect(routes.ConfirmationController.get())
     }
   }
 }
