@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config
 
-import java.net.URI
+import java.net.{URI, URLEncoder}
+
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import java.net.{URLDecoder, URLEncoder}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.iv.{ IvResponse, JourneyId }
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.iv.JourneyId
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
@@ -45,6 +45,16 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
         "&confidenceLevel=200"
     ).toString
   }
+
+  val ggContinueUrlPrefix: String =
+    servicesConfig.getString("microservice.services.bas-gateway-frontend.continue-url-prefix")
+
+  val ggUserUrl: String =
+    s"${getUrlFor("government-gateway-registration")}/government-gateway-registration-frontend?" +
+      "accountType=individual&" +
+      s"continue=${URLEncoder.encode(ggContinueUrlPrefix, "UTF-8")}%2Fvat-deferral-new-payment-scheme%2Feligibility&" +
+      "origin=vat-deferral-new-payment-scheme-frontend&" +
+      "registerForSa=skip"
 
   val ivJourneyResultUrl: String =
     s"${servicesConfig.baseUrl("identity-verification-journey-result")}/mdtp/journey/journeyId"
