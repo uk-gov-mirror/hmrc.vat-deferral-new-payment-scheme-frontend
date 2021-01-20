@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse}
 
@@ -25,8 +25,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject()(http: HttpClient)(implicit val appConfig: AppConfig) {
 
-  def checkEnrolments(enrolmentRequest: EnrolmentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EnrolmentResponse] = {
+  def checkEnrolments(enrolmentRequest: EnrolmentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EnrolmentResponse]] = {
     val url = appConfig.enrolmentStoreUrl
-    http.POST[EnrolmentRequest, EnrolmentResponse](url, enrolmentRequest) // TODO: Check number of items
+    http.POST[EnrolmentRequest, Option[EnrolmentResponse]](url, enrolmentRequest)
   }
 }
