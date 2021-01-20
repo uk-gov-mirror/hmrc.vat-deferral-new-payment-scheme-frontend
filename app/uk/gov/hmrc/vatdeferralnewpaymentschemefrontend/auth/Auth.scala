@@ -57,7 +57,7 @@ class AuthImpl @Inject()(
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
+      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
           def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
@@ -82,7 +82,6 @@ class AuthImpl @Inject()(
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
       }
     }
 
@@ -95,7 +94,7 @@ class AuthImpl @Inject()(
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
+      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
         enrolments => {
 
           def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
@@ -129,7 +128,6 @@ class AuthImpl @Inject()(
         }
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
       }
     }
 
@@ -142,11 +140,10 @@ class AuthImpl @Inject()(
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
+      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
         _ => action(request)
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
       }
     }
 
@@ -174,11 +171,10 @@ class AuthImpl @Inject()(
         }
       }
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L200).retrieve(Retrievals.allEnrolments) {
+      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
         _ => newAction
       }.recover {
         case _: NoActiveSession => toGGLogin(currentUrl)
-        case _: InsufficientConfidenceLevel | _: InsufficientEnrolments => SeeOther(appConfig.ivUrl(currentUrl))
       }
     }
 }
