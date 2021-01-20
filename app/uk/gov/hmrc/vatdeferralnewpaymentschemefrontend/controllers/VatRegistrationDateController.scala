@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.EnrolmentStoreConnector
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, KnownFacts}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse, KnownFacts}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegistrationDatePage, VatDetailsNotValidPage}
@@ -64,25 +64,49 @@ class VatRegistrationDateController @Inject()(
 
         val ri = EnrolmentRequest("HMRC-MTD-VAT", kf)
 
-
         for {
-          journeyState <- sessionStore
-                            .store[MatchingJourneySession](
-                              matchingJourneySession.id,
-                         "MatchingJourneySession",
-                              matchingJourneySession.copy(date = Some(formValues))
-                            )
+          journeyState <- sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(date = Some(formValues)))
           enrolmentResponse <- enrolmentStoreConnector.checkEnrolments(ri) // TODO VDNPS-73
         } yield {
-            sessionStore.store[MatchingJourneySession](
-              journeyState.id,
-              "MatchingJourneySession",
-              journeyState.copy(isUserEnrolled = true)
-            )
-            Redirect(routes.EligibilityController.get())
+            if (enrolmentMatches(enrolmentResponse, journeyState)) {
+              sessionStore.store[MatchingJourneySession](journeyState.id, "MatchingJourneySession", journeyState.copy(isUserEnrolled = true))
+              Redirect(routes.EligibilityController.get())
+            } else {
+              Redirect(routes.NotMatchedController.get())
+            }
         }
       }
     )
+  }
+
+  // TODO: Refactor this code and sanitize enrolment store data
+  private def enrolmentMatches(enrolmentResponse: Option[EnrolmentResponse], journeyState: MatchingJourneySession) = {
+    enrolmentResponse match {
+      case Some(er) => {
+        if (er.enrolments.isEmpty)
+          false
+        else if (er.enrolments.length > 1)
+          throw new RuntimeException("To many enrolments returned from the enrolment store, which one should we use?") // TODO: How should we handle multiple enrolments?
+        else {
+          val items: List[Boolean] = er.enrolments.head.verifiers.map { a =>
+            if(a.key == "BoxFiveValue") {
+              a.value == journeyState.latestVatAmount.getOrElse("")
+            }
+            else if (a.key == "LastMonthLatestStagger") {
+              a.value == journeyState.latestAccountPeriodMonth.getOrElse("")
+            }
+            else if (a.key == "VATRegistrationDate") {
+              val dt = journeyState.date.getOrElse(throw new RuntimeException(""))
+              a.value == s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year}"
+            }
+            else true
+          }
+
+          !items.contains(false)
+        }
+      }
+      case _ => false
+    }
   }
 
   val frm: Form[DateFormValues] = Form(
