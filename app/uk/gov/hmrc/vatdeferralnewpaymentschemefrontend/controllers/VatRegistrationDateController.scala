@@ -24,7 +24,8 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.EnrolmentStoreConnector
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, KnownFacts, MatchingJourneySession, RootInterface}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, KnownFacts}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegistrationDatePage, VatDetailsNotValidPage}
 
@@ -59,12 +60,9 @@ class VatRegistrationDateController @Inject()(
 
         val kf = Seq[KnownFacts](
           KnownFacts("VRN", matchingJourneySession.vrn.getOrElse("")),
-          KnownFacts("Postcode", matchingJourneySession.postCode.getOrElse("")),
-          KnownFacts("BoxFiveValue", matchingJourneySession.latestVatAmount.getOrElse("")),
-          KnownFacts("LastMonthLatestStagger", matchingJourneySession.latestAccountPeriodMonth.getOrElse("")),
-          KnownFacts("VATRegistrationDate", s"${"%02d".format(formValues.day.toInt)}/${"%02d".format(formValues.month.toInt)}/${formValues.year}"))
+          KnownFacts("Postcode", matchingJourneySession.postCode.getOrElse("")))
 
-        val ri = RootInterface("HMRC-MTD-VAT", kf)
+        val ri = EnrolmentRequest("HMRC-MTD-VAT", kf)
 
 
         for {
@@ -74,26 +72,14 @@ class VatRegistrationDateController @Inject()(
                          "MatchingJourneySession",
                               matchingJourneySession.copy(date = Some(formValues))
                             )
-          httpResponse <- enrolmentStoreConnector.checkEnrolments(ri) // TODO VDNPS-73
+          enrolmentResponse <- enrolmentStoreConnector.checkEnrolments(ri) // TODO VDNPS-73
         } yield {
-          httpResponse.status match {
-            case OK => {
-              sessionStore.store[MatchingJourneySession](
-                journeyState.id,
-                "MatchingJourneySession",
-                journeyState.copy(isUserEnrolled = true)
-              )
-              Redirect(routes.EligibilityController.get())
-            }
-            case 204 => {
-              sessionStore.store[MatchingJourneySession](
-                journeyState.id,
-                "MatchingJourneySession",
-                journeyState.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1)
-              )
-              Redirect(routes.NotMatchedController.get())
-            }
-          }
+            sessionStore.store[MatchingJourneySession](
+              journeyState.id,
+              "MatchingJourneySession",
+              journeyState.copy(isUserEnrolled = true)
+            )
+            Redirect(routes.EligibilityController.get())
         }
       }
     )
@@ -107,5 +93,4 @@ class VatRegistrationDateController @Inject()(
     )(DateFormValues.apply)(DateFormValues.unapply)
       .verifying("error.date.invalid", a =>  a.isValidDate)
   )
-
 }
