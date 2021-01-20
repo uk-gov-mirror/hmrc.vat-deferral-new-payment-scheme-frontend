@@ -31,7 +31,9 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   val frontendUrl: String = getUrlFor("frontend")
 
-  val ivUpliftUrl: String = s"${getUrlFor("identity-verification-uplift")}/uplift"
+  private val ivUpliftServiceUrl:String = servicesConfig.baseUrl("identity-verification-uplift")
+  private val ivUpliftServicePath:String = servicesConfig.getConfString("identity-verification-uplift.path","mdtp")
+  val ivUpliftUrl: String = s"${ivUpliftServiceUrl ++ "/" ++ ivUpliftServicePath}/uplift"
 
   def ivUrl(redirectOnLoginURL: String): String = {
 
