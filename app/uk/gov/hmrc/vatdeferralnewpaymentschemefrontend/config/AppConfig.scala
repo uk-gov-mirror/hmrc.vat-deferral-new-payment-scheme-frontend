@@ -21,7 +21,6 @@ import java.net.{URI, URLEncoder}
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.iv.JourneyId
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
@@ -30,23 +29,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   private def getUrlFor(service: String) = servicesConfig.getString(s"microservice.services.$service.url")
 
   val frontendUrl: String = getUrlFor("frontend")
-
-  private val ivUpliftServiceUrl:String = servicesConfig.baseUrl("identity-verification-uplift")
-  private val ivUpliftServicePath:String = servicesConfig.getConfString("identity-verification-uplift.path","mdtp")
-  val ivUpliftUrl: String = s"${ivUpliftServiceUrl ++ "/" ++ ivUpliftServicePath}/uplift"
-
-  def ivUrl(redirectOnLoginURL: String): String = {
-
-    def encodedCallbackUrl(redirectOnLoginURL: String): String = URLEncoder.encode(s"$frontendUrl/iv/journey-result?continueURL==$redirectOnLoginURL")
-
-    new URI(
-      s"$ivUpliftUrl" +
-        s"?origin=VRNPS" +
-        s"&completionURL=${encodedCallbackUrl(redirectOnLoginURL)}" +
-        s"&failureURL=${encodedCallbackUrl(redirectOnLoginURL)}" +
-        "&confidenceLevel=200"
-    ).toString
-  }
 
   val ggContinueUrlPrefix: String =
     servicesConfig.getString("microservice.services.bas-gateway-frontend.continue-url-prefix")
@@ -57,11 +39,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
       s"continue=${URLEncoder.encode(ggContinueUrlPrefix, "UTF-8")}%2Fvat-deferral-new-payment-scheme%2Feligibility&" +
       "origin=vat-deferral-new-payment-scheme-frontend&" +
       "registerForSa=skip"
-
-  val ivJourneyResultUrl: String =
-    s"${servicesConfig.baseUrl("identity-verification-journey-result")}/mdtp/journey/journeyId"
-
-  def ivJourneyResultUrl(journeyId: JourneyId): String = new URI(s"$ivJourneyResultUrl/${journeyId.Id}").toString
 
   val enrolmentStoreUrl = s"${servicesConfig.baseUrl("enrolment-store-proxy")}/enrolment-store-proxy/enrolment-store/enrolments"
 
