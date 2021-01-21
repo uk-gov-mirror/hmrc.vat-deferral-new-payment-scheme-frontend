@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
-import java.time.{LocalDate, ZoneId, ZonedDateTime}
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.Json
