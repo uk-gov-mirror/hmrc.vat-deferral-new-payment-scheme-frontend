@@ -48,6 +48,12 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   //TODO Check the service identifier for feedback
   lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=VDNPS"
 
+  //nuance Webchat
+
+  lazy val prodMode: Boolean = servicesConfig.getBoolean(s"nuance.prod")
+  lazy val nuanceUrl: String = if(prodMode) servicesConfig.getString("nuance.prodUrl") else servicesConfig.getString("nuance.testUrl")
+  lazy val nuanceWebchatEnabled: Boolean = servicesConfig.getBoolean("nuance.enabled")
+
   val bavfApiBaseUrl = servicesConfig.baseUrl("bank-account-verification-api")
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")
 

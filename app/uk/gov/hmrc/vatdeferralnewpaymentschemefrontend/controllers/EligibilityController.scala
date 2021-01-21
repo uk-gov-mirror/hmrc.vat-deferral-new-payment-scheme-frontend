@@ -46,13 +46,13 @@ class EligibilityController @Inject()(
     implicit vrn =>
       vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn) map {
 
-        case Eligibility(false, false, true) =>
+        case _ =>
           request.session.get("sessionId").map{ sessionId =>
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
 
-        case e => Ok(notEligiblePage(e))
+//        case e => Ok(notEligiblePage(e))
       }
   }
 }
