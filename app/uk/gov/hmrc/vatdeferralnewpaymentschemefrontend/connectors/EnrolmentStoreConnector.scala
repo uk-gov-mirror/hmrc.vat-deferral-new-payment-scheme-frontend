@@ -17,16 +17,16 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.RootInterface
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject()(http: HttpClient)(implicit val appConfig: AppConfig) {
 
-  def checkEnrolments(rootInterface: RootInterface)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+  def checkEnrolments(enrolmentRequest: EnrolmentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EnrolmentResponse]] = {
     val url = appConfig.enrolmentStoreUrl
-    http.POST[RootInterface, HttpResponse](url, rootInterface)
+    http.POST[EnrolmentRequest, Option[EnrolmentResponse]](url, enrolmentRequest)
   }
 }
