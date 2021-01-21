@@ -72,6 +72,7 @@ class VatRegistrationDateController @Inject()(
               sessionStore.store[MatchingJourneySession](journeyState.id, "MatchingJourneySession", journeyState.copy(isUserEnrolled = true))
               Redirect(routes.EligibilityController.get())
             } else {
+              sessionStore.store[MatchingJourneySession](journeyState.id, "MatchingJourneySession", journeyState.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1))
               Redirect(routes.NotMatchedController.get())
             }
         }
