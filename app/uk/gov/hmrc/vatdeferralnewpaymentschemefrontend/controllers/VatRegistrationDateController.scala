@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, Ma
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegistrationDatePage, VatDetailsNotValidPage}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
@@ -39,9 +39,12 @@ class VatRegistrationDateController @Inject()(
   sessionStore: SessionStore,
   enrolmentStoreConnector: EnrolmentStoreConnector,
   enterVatRegistrationDatePage: EnterVatRegistrationDatePage,
-  vatDetailsNotValidPage: VatDetailsNotValidPage)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  vatDetailsNotValidPage: VatDetailsNotValidPage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
@@ -65,17 +68,30 @@ class VatRegistrationDateController @Inject()(
         val ri = EnrolmentRequest("HMRC-MTD-VAT", kf)
 
         for {
-          journeyState <- sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(date = Some(formValues)))
+          journeyState <- sessionStore.store[MatchingJourneySession](
+            matchingJourneySession.id,
+            "MatchingJourneySession",
+            matchingJourneySession.copy(date = Some(formValues))
+          )
           enrolmentResponse <- enrolmentStoreConnector.checkEnrolments(ri) // TODO VDNPS-73
-        } yield {
-            if (enrolmentMatches(enrolmentResponse, journeyState)) {
-              sessionStore.store[MatchingJourneySession](journeyState.id, "MatchingJourneySession", journeyState.copy(isUserEnrolled = true))
-              Redirect(routes.EligibilityController.get())
-            } else {
-              sessionStore.store[MatchingJourneySession](journeyState.id, "MatchingJourneySession", journeyState.copy(failedMatchingAttempts = matchingJourneySession.failedMatchingAttempts + 1))
-              Redirect(routes.NotMatchedController.get())
-            }
-        }
+          matched = enrolmentMatches(enrolmentResponse, journeyState)
+          _ <- if(matched)
+            sessionStore.store[MatchingJourneySession](
+              journeyState.id,
+              "MatchingJourneySession",
+              journeyState.copy(isUserEnrolled = true)
+            )
+          else
+            sessionStore.store[MatchingJourneySession](
+              journeyState.id, "MatchingJourneySession",
+              journeyState.copy(failedMatchingAttempts = journeyState.failedMatchingAttempts +1)
+            )
+          result = if (matched)
+            Redirect(routes.EligibilityController.get())
+          else
+            Redirect(routes.NotMatchedController.get())
+        } yield result
+
       }
     )
   }

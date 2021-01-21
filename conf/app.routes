@@ -46,4 +46,4 @@ POST        /bank-details/:journeyId uk.gov.hmrc.vatdeferralnewpaymentschemefron
 
 GET        /confirmation       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.ConfirmationController.get
 
-GET        /not-matched       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get
+GET        /not-matched/       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get

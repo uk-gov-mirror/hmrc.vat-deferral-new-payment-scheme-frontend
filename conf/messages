@@ -158,66 +158,13 @@ error.11-months-to-pay.required=Option is required
 error.how-many-months.required=Option is required
 error.day.invalid=Please select a valid day
 
-# IV Locked Out
-iv.locked_out.title.h1=We were not able to verify your identity
-iv.locked_out.p1=You have tried to verify your identity too many times.
-iv.locked_out.p2=You’ll need to wait 24 hours and try again.
+matching.notMatched.title=Business not found
+matching.notMatched.p1=We cannot find any business that matches the details you entered.
+matching.notMatched.p2=Check the details are correct and try again. 
+matching.notMatched.attempts-remaining=You have <span class="govuk-!-font-weight-bold">{0}</span> attempts left to enter the correct details.
+matching.notMatched.last-attempt=For security reasons, if you enter incorrect details again, you will need to wait 15 minutes before you can try again.
+matching.notMatched.wait=You will need to wait 15 minutes before you can try again. 
 
-# IV User Aborted
-iv.were_unable_to_confirm_your_identity.title.h1=We were not able to verify your identity
-iv.were_unable_to_confirm_your_identity.p1=You have not provided enough information.
-iv.were_unable_to_confirm_your_identity.p2=To apply for a Help to Save account you’ll need to answer security questions based on the information we hold about you.
-iv.were_unable_to_confirm_your_identity.p3=This is to prevent anyone other than you accessing your personal details.
+matching.locked.title=We could not confirm your identity
 
-# Failed IV
-iv.failed_iv.title.h1=We were not able to verify your identity
-iv.failed_iv.p1=You did not answer all the questions correctly.
-iv.failed_iv.p2=Your answers to the questions need to match the answers we already have for you.
-iv.failed_iv.p3=You’ll need to try again.
-iv.failed_iv.try-again-button=Try again
-
-# Failed Matching
-iv.failed_matching.title.h1=We were not able to verify your identity
-iv.failed_matching.p=You’ll need to try again and check you entered your details correctly. This includes your:
-iv.failed_matching.li1=name
-iv.failed_matching.li2=date of birth
-iv.failed_matching.li3=National Insurance number
-
-# Insufficient Evidence
-iv.insufficient_evidence.title.h1=We were not able to verify your identity
-iv.insufficient_evidence.p1=You’ll need to call us and we’ll ask you for more details.
-iv.insufficient_evidence.telephone-title=Telephone:
-iv.insufficient_evidence.telephone-number=0300 322 7093
-iv.insufficient_evidence.h2=What happens next?
-iv.insufficient_evidence.p2=You’ll be able to apply for a Help to Save account by phone, after we’ve been able to verify your identity.
-
-# IV Timed Out
-iv.time_out.title.h1=Your session has ended
-iv.time_out.p1=You’ve been inactive for too long so we’ve ended your session.
-iv.time_out.p2=You’ll need to try again.
-
-# IV Technical Issue
-iv.there_s_a_technical_issues.title.h1=Something went wrong
-iv.there_s_a_technical_issues.p1=We’re sorry, we’re having some technical problems.
-iv.there_s_a_technical_issues.p2=You’ll need to try again later.
-
-# IV Success
-iv.we_ve_confirmed_your_identity.title.h1=We’ve verified your identity
-iv.we_ve_confirmed_your_identity.p1=If you want to apply for a Help to Save account, you should continue.
-iv.you_now_access_hts_account=What happens next?
-iv.we_ve_confirmed_your_identity.p2=We’ll check if you’re eligible for a Help to Save account. If you’re eligible, you can then go on to create an account.
-
-# IV Precondition Failed
-iv.precondition_failed.title.h1=You’re not able to use this service
-iv.precondition_failed.p1=We’ve checked the details in your Government Gateway account and you do not meet the criteria to use this service.
-iv.precondition_failed.p2=This could be for several different reasons. For example, it could be because:
-iv.precondition_failed.ul1-li1=you used the Government Gateway account that is linked to your business tax account to apply for a Help to Save account
-iv.precondition_failed.ul1-li2=you do not have a National Insurance number
-iv.precondition_failed.ul1-li3=you do not have a passport
-iv.precondition_failed.ul1-li4=we could not verify your address
-iv.precondition_failed.h2=How to apply again
-iv.precondition_failed.p3=If you want to try to apply for a Help to Save account again you’ll need to create a new Government Gateway account. This will need to be for a personal tax account.
-iv.precondition_failed.create-new-gg-account=Create a new Government Gateway account
-
-# IV Button
-iv.try_again_button=Try again
+try.again.button=Try again

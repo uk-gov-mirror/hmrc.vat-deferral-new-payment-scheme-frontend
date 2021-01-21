@@ -160,7 +160,7 @@ class AuthImpl @Inject()(
 
       val newAction = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
         case Some(a) => {
-          if (a.failedMatchingAttempts <= 3)
+          if (!a.locked)
             action(request)(a)
           else
             Future.successful(Redirect(routes.NotMatchedController.get()))
