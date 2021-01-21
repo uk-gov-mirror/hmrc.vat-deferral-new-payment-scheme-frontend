@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.directdebitarrangement
 
-class WithName(string: String) {
-  override val toString: String = string
+import play.api.libs.json.Json
+
+case class DirectDebitArrangementRequest(
+  paymentDay: Int,
+  numberOfPayments: Int,
+  totalAmountToPay: BigDecimal,
+  sortCode: String,
+  accountNumber: String,
+  accountName: String)
+
+object DirectDebitArrangementRequest {
+  implicit val format = Json.format[DirectDebitArrangementRequest]
 }

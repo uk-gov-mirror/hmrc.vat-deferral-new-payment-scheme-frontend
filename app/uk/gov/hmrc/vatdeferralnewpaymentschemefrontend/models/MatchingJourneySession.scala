@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

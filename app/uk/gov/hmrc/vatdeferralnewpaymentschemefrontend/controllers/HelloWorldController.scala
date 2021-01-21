@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Vrn
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.Vrn
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 
 @Singleton

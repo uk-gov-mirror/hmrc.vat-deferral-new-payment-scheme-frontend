@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.Bavf
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._

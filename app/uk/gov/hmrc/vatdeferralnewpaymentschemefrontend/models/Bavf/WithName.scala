@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.Bavf
 
-import play.api.libs.json._
-
-case class CompleteResponseAddress(lines: List[String], town: Option[String], postcode: Option[String]) {
-  override def toString: String = {
-    (lines ++ Seq(town, postcode).flatten).mkString("<br>")
-  }
+class WithName(string: String) {
+  override val toString: String = string
 }

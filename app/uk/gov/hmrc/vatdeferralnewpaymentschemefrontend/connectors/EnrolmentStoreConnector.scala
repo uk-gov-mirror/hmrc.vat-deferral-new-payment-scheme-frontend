@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 import com.google.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.RootInterface
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.RootInterface
 
 import scala.concurrent.{ExecutionContext, Future}
 

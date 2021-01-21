@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 import javax.inject.Inject
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.Bavf._
 import InitRequest.writes
 import HttpReads.Implicits.readRaw
 

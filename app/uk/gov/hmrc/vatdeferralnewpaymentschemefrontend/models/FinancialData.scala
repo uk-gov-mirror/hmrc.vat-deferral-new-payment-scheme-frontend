@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
 
-case class InitRequestAddress(lines: List[String], town: Option[String], postcode: Option[String])
+import play.api.libs.json.Json
+
+case class FinancialData(originalAmount: BigDecimal, outstandingAmount: BigDecimal)
+
+object FinancialData {
+  implicit val format = Json.format[FinancialData]
+}

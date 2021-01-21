@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, ServicesConfig}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, MatchingJourneySession, Vrn}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.{JourneySession, MatchingJourneySession, Vrn}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 
 import scala.concurrent.{ExecutionContext, Future}

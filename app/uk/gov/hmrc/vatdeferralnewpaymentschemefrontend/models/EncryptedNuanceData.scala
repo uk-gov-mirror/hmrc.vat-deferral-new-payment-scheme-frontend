@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
 
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.NuanceEncryptionService
 import uk.gov.hmrc.http.HeaderCarrier

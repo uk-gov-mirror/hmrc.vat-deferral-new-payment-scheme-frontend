@@ -25,7 +25,7 @@ import play.api.i18n.I18nSupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{FinancialData, JourneySession}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.{FinancialData, JourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore

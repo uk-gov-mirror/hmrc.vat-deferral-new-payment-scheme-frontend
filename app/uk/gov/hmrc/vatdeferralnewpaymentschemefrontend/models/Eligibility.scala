@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
 
-import play.api.libs.json.JsObject
+import play.api.libs.json.Json
 
-case class InitRequestMessages(en: JsObject, cy: Option[JsObject] = None)
+case class Eligibility(paymentPlanExists: Boolean, existingObligations: Boolean, outstandingBalance: Boolean)
+
+object Eligibility {
+  implicit val format = Json.format[Eligibility]
+}

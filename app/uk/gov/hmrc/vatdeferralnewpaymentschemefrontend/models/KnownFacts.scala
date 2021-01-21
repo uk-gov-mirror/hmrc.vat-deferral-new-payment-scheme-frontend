@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
-
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
 import play.api.libs.json.Json
 
-case class FinancialData(originalAmount: BigDecimal, outstandingAmount: BigDecimal)
+case class KnownFacts (key: String, value: String)
 
-object FinancialData {
-  implicit val format = Json.format[FinancialData]
+object KnownFacts {
+  implicit val formats = Json.format[KnownFacts]
+}
+
+case class RootInterface (service: String, knownFacts: Seq[KnownFacts])
+
+object RootInterface {
+  implicit val formats = Json.format[RootInterface]
 }

@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models
+
 import play.api.libs.json.Json
+import play.api.mvc
 
-case class KnownFacts (key: String, value: String)
-
-object KnownFacts {
-  implicit val formats = Json.format[KnownFacts]
+case class JourneySession (
+  id: String,
+  eligible: Boolean = false,
+  outStandingAmount: Option[BigDecimal] = None,
+  numberOfPaymentMonths: Option[Int] = None,
+  dayOfPayment: Option[Int] = None
+) {
+  def monthsQuestion: Option[Boolean] = numberOfPaymentMonths match {
+    case Some(11) => Some(true)
+    case Some(_) => Some(false)
+    case _ => None
+  }
 }
 
-case class RootInterface (service: String, knownFacts: Seq[KnownFacts])
-
-object RootInterface {
-  implicit val formats = Json.format[RootInterface]
+object JourneySession {
+  implicit val formats = Json.format[JourneySession]
 }

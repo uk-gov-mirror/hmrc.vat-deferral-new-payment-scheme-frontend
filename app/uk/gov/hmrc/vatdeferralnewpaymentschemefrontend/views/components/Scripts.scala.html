@@ -14,9 +14,32 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.models.EncryptedNuanceData
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.NuanceEncryptionService
+@import uk.gov.hmrc.play.HeaderCarrierConverter
 
-@()
+@this(nuanceEncryptionService: NuanceEncryptionService)
+
+@()(implicit request: Request[_], appConfig: AppConfig)
+
+@nuanceData = @{
+    EncryptedNuanceData.create(
+        nuanceEncryptionService,
+        HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, request = Some(request))
+    )
+}
 <script src='@routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
 <script src='@routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
 <script src='@routes.Assets.at("javascripts/application.js")'></script>
+
+@if(appConfig.nuanceWebchatEnabled) {
+    <div id="HMRC_Anchored_1"></div>
+    <script type="text/javascript">
+            var nuanceData = {
+                "sessionID" : "@{nuanceData.nuanceSessionId}",
+                "mdtpSessionID" : "@{nuanceData.mdtpSessionID}",
+                "deviceID" : "@{nuanceData.deviceID}"
+            }
+    </script>
+    <script id="webchat-tag" type="text/javascript" src=@appConfig.nuanceUrl></script>
+}
