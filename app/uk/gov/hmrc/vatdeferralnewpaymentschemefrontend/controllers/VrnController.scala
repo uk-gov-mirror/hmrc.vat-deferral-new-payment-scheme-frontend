@@ -27,17 +27,19 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{MatchingJourneySes
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.EnterVrnPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class VrnController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   sessionStore: SessionStore,
-  enterVrnPage: EnterVrnPage)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  enterVrnPage: EnterVrnPage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(

@@ -28,19 +28,20 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.BavfConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.PaymentPlanPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.math.BigDecimal.RoundingMode
-
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentPlanController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   paymentPlanPage: PaymentPlanPage,
-  connector: BavfConnector)
-                                     (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends FrontendController(mcc) with I18nSupport {
+  connector: BavfConnector
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends FrontendController(mcc)
+  with I18nSupport {
 
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
