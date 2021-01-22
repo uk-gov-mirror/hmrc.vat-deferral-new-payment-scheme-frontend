@@ -19,9 +19,12 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 
+@import uk.gov.hmrc.webchat.client.WebChatClient
+
 @this(
         layout: Layout,
-        button: Button
+        button: Button,
+        webChatClient: WebChatClient
 )
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -56,5 +59,7 @@
         </strong>
     </div>
     @button(messages("continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
+
+    @{webChatClient.loadWebChatContainer()}
 
 }
