@@ -11,6 +11,7 @@ common.alpha-info.p2= will help us to improve it.
 common.error.title=Error: 
 common.page.title=Pay VAT deferred due to coronavirus (COVID-19) - GOV.UK
 continue.button=Continue
+finish.sign-out.button=Finish and sign out
 
 common.error.summary.title=There is a problem
 
@@ -166,5 +167,10 @@ matching.notMatched.last-attempt=For security reasons, if you enter incorrect de
 matching.notMatched.wait=You will need to wait 15 minutes before you can try again. 
 
 matching.locked.title=We could not confirm your identity
+
+returning.user.heading=You have already set up your deferred VAT payments
+returning.user.p1=Our records show you have already used this service to set up a Direct Debit to pay your deferred VAT.
+returning.user.p2=If you think this is wrong,
+returning.user.p2.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 
 try.again.button=Try again

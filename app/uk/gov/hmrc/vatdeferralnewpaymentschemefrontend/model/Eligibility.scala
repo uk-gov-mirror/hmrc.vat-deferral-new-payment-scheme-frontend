@@ -18,7 +18,11 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
 import play.api.libs.json.Json
 
-case class Eligibility(paymentPlanExists: Boolean, existingObligations: Boolean, outstandingBalance: Boolean)
+case class Eligibility(
+  paymentPlanExists: Boolean,
+  existingObligations: Boolean,
+  outstandingBalance: Boolean
+)
 
 object Eligibility {
   implicit val format = Json.format[Eligibility]

@@ -48,6 +48,12 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   //TODO Check the service identifier for feedback
   lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=VDNPS"
 
+  private lazy val basGatewayFrontend = servicesConfig.getConfString("bas-gateway.url", "")
+  private lazy val basGatewaySignInPath = servicesConfig.getConfString("bas-gateway.sign-in-path", "")
+  private lazy val basGatewaySignOutPath = servicesConfig.getConfString("bas-gateway.sign-out-path", "")
+
+  lazy val signOutUrl: String = s"$basGatewayFrontend$basGatewaySignOutPath?continue=$feedbackSurveyUrl"
+
   val bavfApiBaseUrl = servicesConfig.baseUrl("bank-account-verification-api")
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")
 
