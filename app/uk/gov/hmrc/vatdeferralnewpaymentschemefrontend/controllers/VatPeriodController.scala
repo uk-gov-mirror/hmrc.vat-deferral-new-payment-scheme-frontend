@@ -27,17 +27,19 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySess
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.EnterLatestVatPeriodPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class VatPeriodController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   sessionStore: SessionStore,
-  enterLatestVatPeriodPage: EnterLatestVatPeriodPage)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  enterLatestVatPeriodPage: EnterLatestVatPeriodPage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(

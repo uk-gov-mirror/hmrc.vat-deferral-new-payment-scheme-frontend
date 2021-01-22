@@ -31,8 +31,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.JourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.WhenToPayPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class WhenToPayController @Inject()(
@@ -40,9 +39,12 @@ class WhenToPayController @Inject()(
   auth: Auth,
   whenToPagePage: WhenToPayPage,
   connector: BavfConnector,
-  sessionStore: SessionStore)
-    (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  sessionStore: SessionStore
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>

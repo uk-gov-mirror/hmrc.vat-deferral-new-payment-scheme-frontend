@@ -25,16 +25,19 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.CheckBeforeYouStartPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckBeforeYouStartController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
-  checkBeforeYouStartPage: CheckBeforeYouStartPage)
-                                             (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends FrontendController(mcc) with I18nSupport {
+  checkBeforeYouStartPage: CheckBeforeYouStartPage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends FrontendController(mcc)
+  with I18nSupport {
 
   val get: Action[AnyContent] = auth.authorise { implicit request => implicit vrn =>
     Future.successful(Ok(checkBeforeYouStartPage()))

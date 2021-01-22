@@ -29,8 +29,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{HowManyMonthsPage, MonthlyInstallmentsPage}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.math.BigDecimal.RoundingMode
 
 @Singleton
@@ -39,9 +38,12 @@ class MonthsController @Inject()(
   auth: Auth,
   monthlyInstallmentsPage: MonthlyInstallmentsPage,
   howManyMonthsPage: HowManyMonthsPage,
-  sessionStore: SessionStore)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  sessionStore: SessionStore
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
     displayInstalmentsPage(

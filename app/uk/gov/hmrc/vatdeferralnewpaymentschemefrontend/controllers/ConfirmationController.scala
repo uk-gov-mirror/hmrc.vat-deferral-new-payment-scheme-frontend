@@ -26,8 +26,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.ConfirmationPage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ConfirmationController @Inject()(
@@ -37,7 +36,8 @@ class ConfirmationController @Inject()(
   sessionStore: SessionStore
 )(
   implicit val appConfig: AppConfig,
-  val serviceConfig: ServicesConfig
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
 ) extends FrontendController(mcc)
   with I18nSupport {
 
