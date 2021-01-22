@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import java.time.{LocalDate, ZoneId}
+
 import javax.inject.{Inject, Singleton}
-import play.api.data.Form
-import play.api.data.Forms.mapping
+import play.api.data.{Form, Mapping}
 import play.api.mvc._
+import play.api.data.Forms._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
@@ -31,6 +33,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegis
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import scala.util.Try
 
 @Singleton
 class VatRegistrationDateController @Inject()(
@@ -126,12 +129,87 @@ class VatRegistrationDateController @Inject()(
     }
   }
 
+  def trim(inputStr: String) = inputStr.trim()
+
+  lazy val vatRegDateMapping: Mapping[DateFormValues] = tuple(
+    "day"   -> text,
+    "month" -> text,
+    "year"  -> text
+  ).verifying(
+    "error.date.emptyfields",
+    x =>
+      x match {
+        case (d: String, m: String, y: String) if trim(d) == "" && trim(m) == "" && trim(y) == "" => false
+        case _                                                                                      => true
+      })
+    .verifying(
+      "error.day.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) == "" && trim(m) != "" && trim(y) != "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.month.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) != "" && trim(m) == "" && trim(y) != "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.year.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) != "" && trim(m) != "" && trim(y) == "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.day-and-month.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) == "" && trim(m) == "" && trim(y) != "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.month-and-year.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) != "" && trim(m) == "" && trim(y) == "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.day-and-year.missing",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) == "" && trim(m) != "" && trim(y) == "" => false
+          case _                                                                                      => true
+        })
+    .verifying(
+      "error.date.invalid",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) != "" && trim(m) != "" && trim(y) != "" =>
+            Try(LocalDate.of(trim(y).toInt, trim(m).toInt, trim(d).toInt)).isSuccess
+          case _ => true
+        }
+    )
+    .verifying(
+      "error.date.in-future",
+      x =>
+        x match {
+          case (d: String, m: String, y: String) if trim(d) != "" && trim(m) != "" && trim(y) != "" =>
+            LocalDate.of(trim(y).toInt, trim(m).toInt, trim(d).toInt)
+              .isBefore(LocalDate.now(ZoneId.of("Europe/London")))
+          case _ => true
+        }
+    )
+    .transform(
+      { case (d, m, y) => DateFormValues(d,m,y) },
+      duy => (duy.day, duy.month, duy.year)
+    )
+
   val frm: Form[DateFormValues] = Form(
-    mapping(
-      "day" -> mandatory("day"),
-      "month" -> mandatory("month"),
-      "year" -> mandatory("year")
-    )(DateFormValues.apply)(DateFormValues.unapply)
+    vatRegDateMapping
       .verifying("error.date.invalid", a =>  a.isValidDate)
   )
 }

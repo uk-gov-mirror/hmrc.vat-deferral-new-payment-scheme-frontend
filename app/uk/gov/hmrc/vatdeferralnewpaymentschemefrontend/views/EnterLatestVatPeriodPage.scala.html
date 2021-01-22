@@ -43,7 +43,7 @@
                 errorList = Seq(
                     ErrorLink(
                         href = Some(s"#how-many-months"),
-                        content = Text(s"${messages(err.message)}")
+                        content = Text(s"${messages("latest-vat-period."++err.message)}")
                     )
                 ),
                 title = Text(messages("common.error.summary.title"))
@@ -51,7 +51,7 @@
         }
         @govukRadios(Radios(
             errorMessage = if(form.hasErrors) {Some(ErrorMessage(
-                content = Text(messages("error.required"))
+                content = Text(messages("latest-vat-period.error.required"))
             ))} else None,
             hint = Some(Hint(content = Text(messages("enter.latestVatPeriod.hint")))),
             fieldset = Some(Fieldset(
