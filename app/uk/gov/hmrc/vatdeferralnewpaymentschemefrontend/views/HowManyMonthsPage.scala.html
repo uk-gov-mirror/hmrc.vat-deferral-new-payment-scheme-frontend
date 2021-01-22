@@ -43,7 +43,7 @@
                 errorList = Seq(
                     ErrorLink(
                         href = Some(s"#${err.key}"),
-                        content = Text(s"${messages(err.message)}")
+                        content = Text(s"${messages(err.key++"." ++err.message)}")
                     )
                 ),
                 title = Text(messages("common.error.summary.title"))
@@ -53,7 +53,7 @@
 @* TODO - sort out spacing on heading and investigate seperator (in the CSS) and error message content *@
         @govukRadios(Radios(
             errorMessage = if(form.hasErrors) {Some(ErrorMessage(
-                content = Text(messages("error.required"))
+                content = Text(messages("how-many-months.error.required"))
             ))} else None,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
