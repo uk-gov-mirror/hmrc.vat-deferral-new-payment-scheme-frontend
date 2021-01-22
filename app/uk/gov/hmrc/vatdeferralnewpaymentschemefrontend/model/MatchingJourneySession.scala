@@ -45,7 +45,13 @@ case class MatchingJourneySession (
   latestAccountPeriodMonth: Option[String] = None,
   date: Option[DateFormValues] = None,
   isUserEnrolled: Boolean = false,
-  failedMatchingAttempts: Int = 0)
+  failedMatchingAttempts: Int = 0
+) {
+  // n.b. the session collection has a ttl of 900 seconds so no need to reset or compare any times
+  def locked = {
+    failedMatchingAttempts == 3
+  }
+}
 
 object MatchingJourneySession {
   implicit val formats = Json.format[MatchingJourneySession]
