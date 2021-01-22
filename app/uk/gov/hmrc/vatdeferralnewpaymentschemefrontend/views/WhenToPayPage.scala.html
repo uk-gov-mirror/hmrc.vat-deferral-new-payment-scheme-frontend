@@ -47,7 +47,7 @@
                 errorList = Seq(
                     ErrorLink(
                         href = Some(s"#dd-date-${err.key}"),
-                        content = Text(s"${messages(err.message)}")
+                        content = Text(s"${messages("when-to-pay." ++err.message)}")
                     )
                 ),
                 title = Text(messages("common.error.summary.title"))
@@ -64,7 +64,11 @@
 
         @govukDateInput(DateInput(
             errorMessage = if (form.hasErrors) {
-                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
+                Some(ErrorMessage(
+                    content = Text(messages(
+                        form.errors.headOption.fold("")(x => s"when-to-pay.${x.message}"))
+                    )
+                ))
             } else None,
             items = Seq(
                         InputItem(

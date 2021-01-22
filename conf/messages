@@ -104,17 +104,21 @@ installments.p2.1=The remaining balance of
 installments.p2.2=will be added to your first payment.
 installments.option.1=Yes
 installments.option.2=No - I want to pay in fewer instalments
+11-months-to-pay.error.required=Select yes if you want to pay in 11 monthly instalments
 
 how.many.months.h1=How many months do you want to pay over?
 how.many.months.p1=Months at
 how.many.months.p2.1=With remaining
 how.many.months.p2.2=added to first payment
+how-many-months.error.required=Select how many months you want to pay over
 
 when.to.pay.h1=Choose when your payments will be collected
 when.to.pay.p1=We will collect your first payment on <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.h2=On which day do you want the remaining monthly payments to be collected?
 when.to.pay.p2=If the payment due date falls on a weekend, we will take your payment on the next working day.
 when.to.pay.label=Enter a day from 1 to 28
+when-to-pay.error.day.required=Enter a day from 1 to 28
+when-to-pay.error.day.invalid=Enter a day from 1 to 28
 
 payment.plan.h1=Check your payment plan
 payment.plan.list-key=Payments collected on
@@ -145,16 +149,25 @@ global.button.accept.and.continue=Accept and continue
 vatcheck.common.errorSummary=There is a problem
 vatcheck.common.error.title=Error:
 
-error.vrn.required=Vat number is required
-error.vrn.invalid=Vat number is invalid
-error.postcode.required=Post code is required
-error.postcode.invalid=Post code is invalid
-error.vatamount.required=Latest VAT amount is required
-error.vatamount.invalid=Latest VAT amount is invalid
+error.vrn.required=Enter your VAT registration number
+error.vrn.invalid=Enter your VAT registration number in the correct format
+error.postcode.required=Enter the postcode where your business is registered for VAT
+error.postcode.invalid=Enter a real postcode
+error.vatamount.required=Enter your latest VAT Return total
+error.vatamount.invalid=Your latest VAT Return total must include pence, like 123.45 or 156.00
+error.date.emptyfields=Enter the date you became VAT registered
+error.day.missing=The date you became VAT registered must include a day
+error.month.missing=The date you became VAT registered must include a month
+error.year.missing=The date you became VAT registered must include a year
+error.day-and-year.missing=The date you became VAT registered must include a day and year
+error.day-and-month.missing=The date you became VAT registered must include a day and month
+error.month-and-year.missing=The date you became VAT registered must include a month and year
+error.date.invalid=The date you became VAT registered must be a real date
+error.date.in-future=The date you became VAT registered must be in the past
+latest-vat-period.error.required=Select the month of your latest VAT accounting period
 error.day.required=Day is required
 error.month.required=Month is required
 error.year.required=Year is required
-error.date.invalid=Date is invalid
 error.11-months-to-pay.required=Option is required
 error.how-many-months.required=Option is required
 error.day.invalid=Please select a valid day

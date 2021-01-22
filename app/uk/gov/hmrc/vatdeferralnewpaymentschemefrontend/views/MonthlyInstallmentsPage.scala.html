@@ -44,7 +44,7 @@
                 errorList = Seq(
                     ErrorLink(
                         href = Some(s"#${err.key}"),
-                        content = Text(s"${messages(err.message)}")
+                        content = Text(s"${messages(err.key++"." ++err.message)}")
                     )
                 ),
                 title = Text(messages("common.error.summary.title"))
@@ -53,7 +53,7 @@
 
         @govukRadios(Radios(
             errorMessage = if(form.hasErrors) {Some(ErrorMessage(
-                content = Text(messages("error.required"))
+                content = Text(messages("11-months-to-pay.error.required"))
             ))} else None,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
