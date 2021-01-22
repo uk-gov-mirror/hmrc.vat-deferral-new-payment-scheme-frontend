@@ -47,7 +47,7 @@ case class MatchingJourneySession (
   isUserEnrolled: Boolean = false,
   failedMatchingAttempts: Int = 0
 ) {
-  // n.b. the session collection has a ttl of 90 seconds so no need to reset or compare any times
+  // n.b. the session collection has a ttl of 900 seconds so no need to reset or compare any times
   def locked = {
     failedMatchingAttempts == 3
   }
