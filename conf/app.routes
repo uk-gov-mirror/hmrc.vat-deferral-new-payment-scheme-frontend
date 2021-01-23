@@ -1,49 +1,50 @@
 # microservice specific routes
 
-->         /govuk-frontend          govuk.Routes
-->         /hmrc-frontend           hmrcfrontend.Routes
+->         /govuk-frontend                            govuk.Routes
+->         /hmrc-frontend                             hmrcfrontend.Routes
 
 GET        /assets/*file                              controllers.Assets.at(path="/public", file)
 
 
-GET        /hello-world             uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.HelloWorldController.helloWorld
+GET        /hello-world                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.HelloWorldController.helloWorld
+GET        /sign-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.signOut
 
-GET        /enter-vrn              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.get
-POST       /enter-vrn              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.post
+GET        /enter-vrn                                 uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.get
+POST       /enter-vrn                                 uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.post
 
-GET        /enter-post-code        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.get
-POST       /enter-post-code        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.post
+GET        /enter-post-code                           uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.get
+POST       /enter-post-code                           uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PostCodeController.post
 
-GET        /enter-latest-vat-return-total        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.get
-POST       /enter-latest-vat-return-total        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.post
+GET        /enter-latest-vat-return-total             uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.get
+POST       /enter-latest-vat-return-total             uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatReturnController.post
 
 GET        /enter-latest-vat-accounting-period        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatPeriodController.get
 POST       /enter-latest-vat-accounting-period        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatPeriodController.post
 
-GET        /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.get
-POST       /enter-vat-registration-date        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.post
+GET        /enter-vat-registration-date               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.get
+POST       /enter-vat-registration-date               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VatRegistrationDateController.post
 
-GET        /check-before-you-start        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.CheckBeforeYouStartController.get
+GET        /check-before-you-start                    uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.CheckBeforeYouStartController.get
 
-GET        /eligibility              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.EligibilityController.get
+GET        /eligibility                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.EligibilityController.get
 
-GET        /deferred-vat-bill        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.DeferredVatBillController.get
+GET        /deferred-vat-bill                         uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.DeferredVatBillController.get
 
-GET        /installments       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.get
-POST       /installments       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.post
+GET        /installments                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.get
+POST       /installments                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.post
 
-GET        /installments-breakdown uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.getInstallmentBreakdown
-POST       /installments-breakdown       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.postInstallmentBreakdown
+GET        /installments-breakdown                    uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.getInstallmentBreakdown
+POST       /installments-breakdown                    uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.MonthsController.postInstallmentBreakdown
 
-GET        /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.get
-POST       /when-to-pay       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.post
+GET        /when-to-pay                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.get
+POST       /when-to-pay                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.WhenToPayController.post
 
-GET        /payment-plan      uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.get
-POST       /payment-plan      uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.post
+GET        /payment-plan                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.get
+POST       /payment-plan                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.PaymentPlanController.post
 
-GET         /bank-details/:journeyId uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.get(journeyId)
-POST        /bank-details/:journeyId uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.post(journeyId)
+GET        /bank-details/:journeyId                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.get(journeyId)
+POST       /bank-details/:journeyId                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.post(journeyId)
 
-GET        /confirmation       uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.ConfirmationController.get
+GET        /confirmation                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.ConfirmationController.get
 
-GET        /not-matched        uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get
+GET        /not-matched                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get
