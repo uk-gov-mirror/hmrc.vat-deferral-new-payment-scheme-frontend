@@ -115,6 +115,10 @@ class AuthImpl @Inject()(
           def withJourneySession(vrn: Vrn): Future[Result] = request.session.get("sessionId") match {
             case Some(sessionId) =>
               sessionStore.get[JourneySession](sessionId, "JourneySession").flatMap {
+                case Some(a) if a.redirect(request).isDefined =>
+                  a.redirect(request).getOrElse(
+                    throw new IllegalStateException("unable to get defined option")
+                  )
                 case Some(a) => action(request)(vrn)(a)
                 case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
               }
@@ -158,9 +162,12 @@ class AuthImpl @Inject()(
 
       val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
 
-      val newAction = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
+      val newAction: Future[Result] = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
         case Some(a) => {
-          if (!a.locked)
+          val redirect = a.redirect(request)
+          if (redirect.isDefined)
+            redirect.getOrElse(throw new IllegalStateException("unable to get defined option"))
+          else if (!a.locked)
             action(request)(a)
           else
             Future.successful(Redirect(routes.NotMatchedController.get()))
