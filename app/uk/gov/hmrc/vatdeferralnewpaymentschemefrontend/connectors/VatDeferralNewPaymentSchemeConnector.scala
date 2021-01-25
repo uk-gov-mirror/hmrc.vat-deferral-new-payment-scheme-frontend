@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.audit
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -61,7 +61,10 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(
     http.POST[DirectDebitArrangementRequest, HttpResponse](url, directDebitArrangementRequest).recover {
       case e@UpstreamErrorResponse(message, 406, _, _ ) =>
         logger.error(message)
-        audit("directDebitSetupFailed", directDebitArrangementRequest)
+        audit(
+          "directDebitSetup",
+          DirectDebitArrangementRequestAuditWrapper(success = false, vrn, directDebitArrangementRequest)
+        )
         // TODO this will result in a error - need to handle and tell user to try again??
         throw e
     }

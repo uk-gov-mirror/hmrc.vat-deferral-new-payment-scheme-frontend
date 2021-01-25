@@ -28,7 +28,7 @@ case class PersonalCompleteResponse(accountName: String, sortCode: String, accou
 
 case class AccountVerificationAuditWrapper(
   verified: Boolean,
-  vrn: Vrn,
+  vrn: String,
   account: Option[Account]
 )
 
@@ -46,7 +46,6 @@ object AccountVerificationAuditWrapper {
 }
 
 object Account {
-
 
   implicit val businessReads: Reads[BusinessCompleteResponse] = (
       (__ \ "business" \ "companyName").read[String] and
