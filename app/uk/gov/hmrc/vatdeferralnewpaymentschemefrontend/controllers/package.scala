@@ -68,9 +68,9 @@ package object controllers {
       day.toString
     } else{
       day % 10 match {
-        case 1 => "st"
-        case 2 => "nd"
-        case 3 => "rd"
+        case 1 if day != 11 => "st"
+        case 2 if day != 12 => "nd"
+        case 3 if day != 13 => "rd"
         case _ => "th"
       }
     }

@@ -160,7 +160,9 @@ class AuthImpl @Inject()(
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
-      val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
+      val sessionId = request.session.get("sessionId").getOrElse(
+        throw new RuntimeException("Session id does not exist" // TODO this should redirect them to sign in???
+        ))
 
       val newAction: Future[Result] = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
         case Some(a) => {
