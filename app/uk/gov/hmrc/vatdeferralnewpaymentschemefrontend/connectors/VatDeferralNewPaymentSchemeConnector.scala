@@ -19,8 +19,10 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 import com.google.inject.Inject
 import play.api.Logger
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.audit
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
 
@@ -30,7 +32,8 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(
   http: HttpClient,
   servicesConfig: ServicesConfig
 )(
-  implicit val appConfig: AppConfig
+  implicit val appConfig: AppConfig,
+  auditConnector: AuditConnector
 ) {
 
   val logger = Logger(this.getClass)
@@ -58,6 +61,7 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(
     http.POST[DirectDebitArrangementRequest, HttpResponse](url, directDebitArrangementRequest).recover {
       case e@UpstreamErrorResponse(message, 406, _, _ ) =>
         logger.error(message)
+        audit("directDebitSetupFailed", directDebitArrangementRequest)
         // TODO this will result in a error - need to handle and tell user to try again??
         throw e
     }
