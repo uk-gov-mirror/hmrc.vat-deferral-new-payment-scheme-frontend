@@ -17,31 +17,53 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
 import com.google.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import play.api.Logger
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.audit
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-class VatDeferralNewPaymentSchemeConnector @Inject()(http: HttpClient, servicesConfig: ServicesConfig)(implicit val appConfig: AppConfig) {
+class VatDeferralNewPaymentSchemeConnector @Inject()(
+  http: HttpClient,
+  servicesConfig: ServicesConfig
+)(
+  implicit val appConfig: AppConfig,
+  auditConnector: AuditConnector
+) {
 
-  lazy val serviceURL = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
+  val logger = Logger(this.getClass)
 
-  def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext)= {
-    val url = s"${serviceURL}/vat-deferral-new-payment-scheme/eligibility/$vrn"
+  lazy val serviceURL: String = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
+
+  def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Eligibility] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/eligibility/$vrn"
     http.GET[Eligibility](url)
   }
 
-  def financialData(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext)= {
-    val url = s"${serviceURL}/vat-deferral-new-payment-scheme/financialData/$vrn"
+  def financialData(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FinancialData] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/financialData/$vrn"
     http.GET[FinancialData](url)
   }
 
-  def createDirectDebitArrangement(vrn: String, directDebitArrangementRequest: DirectDebitArrangementRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext)= {
-    val url = s"${serviceURL}/vat-deferral-new-payment-scheme/direct-debit-arrangement/$vrn"
-    http.POST[DirectDebitArrangementRequest, HttpResponse](url, directDebitArrangementRequest)
+  def createDirectDebitArrangement(
+    vrn: String,
+    directDebitArrangementRequest: DirectDebitArrangementRequest
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[HttpResponse] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/direct-debit-arrangement/$vrn"
+    http.POST[DirectDebitArrangementRequest, HttpResponse](url, directDebitArrangementRequest).recover {
+      case e@UpstreamErrorResponse(message, 406, _, _ ) =>
+        logger.error(message)
+        audit("directDebitSetupFailed", directDebitArrangementRequest)
+        // TODO this will result in a error - need to handle and tell user to try again??
+        throw e
+    }
   }
 }
