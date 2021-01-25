@@ -16,14 +16,27 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json, Writes}
 
 case class Eligibility(
   paymentPlanExists: Boolean,
   existingObligations: Boolean,
   outstandingBalance: Boolean
-)
+) {
+  def eligible: Boolean =
+    !paymentPlanExists &&
+      !existingObligations &&
+        outstandingBalance
+}
 
 object Eligibility {
   implicit val format = Json.format[Eligibility]
+
+  val auditWrites = new Writes[Eligibility] {
+    override def writes(e: Eligibility): JsValue = Json.obj(
+      "isEligible" -> e.eligible,
+            "reasons" -> e
+    )
+  }
 }
+

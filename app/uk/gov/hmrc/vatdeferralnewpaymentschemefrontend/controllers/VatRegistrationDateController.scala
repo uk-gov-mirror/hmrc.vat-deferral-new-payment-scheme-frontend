@@ -133,7 +133,7 @@ class VatRegistrationDateController @Inject()(
           }
           else if (a.key == "VATRegistrationDate") {
             val dt = journeyState.date.getOrElse(throw new RuntimeException(""))
-            a.value == s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year}"
+            a.value == s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year.takeRight(2)}"
           }
           else true
         }
@@ -152,7 +152,7 @@ class VatRegistrationDateController @Inject()(
           }
           else if (a.key == "IREFFREGDATE") {
             val dt = journeyState.date.getOrElse(throw new RuntimeException(""))
-            a.value == s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year}"
+            a.value == s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year.takeRight(2)}"
           }
           else true
         }

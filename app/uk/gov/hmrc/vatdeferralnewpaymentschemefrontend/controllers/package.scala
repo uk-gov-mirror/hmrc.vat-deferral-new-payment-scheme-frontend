@@ -20,7 +20,11 @@ import java.time._
 import java.time.format.DateTimeFormatter
 
 import play.api.i18n.Messages
+import play.api.libs.json.Writes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import scala.concurrent.ExecutionContext
 import scala.math.BigDecimal.RoundingMode
 
 package object controllers {
@@ -72,4 +76,19 @@ package object controllers {
     }
   }
 
+  def audit[T](
+    auditType: String,
+    result: T
+  )(
+    implicit headerCarrier: HeaderCarrier,
+    auditConnector: AuditConnector,
+    ec: ExecutionContext,
+    writes: Writes[T]
+  ): Unit = {
+    import play.api.libs.json.Json
+    auditConnector.sendExplicitAudit(
+      auditType,
+      Json.toJson(result)(writes)
+    )
+  }
 }
