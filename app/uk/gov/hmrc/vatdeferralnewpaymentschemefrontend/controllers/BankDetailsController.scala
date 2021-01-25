@@ -78,19 +78,15 @@ class BankDetailsController @Inject()(
       x <- connector.complete(journeyId)
     } yield x match {
       case Some(PersonalCompleteResponse(a,b,c)) =>
-        val ddar = DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
-        audit("accountVerification", ddar)
-        ddar
+        DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
       case Some(BusinessCompleteResponse(a,b,c)) =>
-        val ddar = DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
-        audit("accountVerification", ddar)
-        ddar
+        DirectDebitArrangementRequest(dayOfPayment,numberOfPaymentMonths,outStandingAmount,a,b,c)
       case None => throw new Exception("nothing from bank-account-verification-api")
     }
 
     for {
       a <- ddArrangementAPICall
-      b <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
+      _ <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
     } yield {
         audit("directDebitSetup", a)
         Redirect(routes.ConfirmationController.get())

@@ -40,7 +40,7 @@ package object controllers {
     val today = if (now.isAfter(serviceStart)) now else serviceStart
     today match {
       case d if d.getDayOfMonth >= 15 && d.getDayOfMonth <= 22 && d.getMonthValue == 2 =>
-        d.withDayOfMonth(3).withMonth(3)
+        d.withDayOfMonth(1).withMonth(3)
       case d if d.plusDays(5).getDayOfWeek.getValue <= 5 =>
         d.plusDays(5)
       case d if d.plusDays(5).getDayOfWeek.getValue == 6 =>
