@@ -17,15 +17,17 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.Inject
-import play.api.mvc.{Action, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.TimeOutPage
 
 import scala.concurrent.ExecutionContext
 
 class AuthenticationController @Inject()(
-  mcc: MessagesControllerComponents
+  mcc: MessagesControllerComponents,
+  timeOutPage: TimeOutPage
 )(
   implicit ec:ExecutionContext,
   val appConfig: AppConfig,
@@ -35,5 +37,14 @@ class AuthenticationController @Inject()(
 
   def signOut = Action { implicit request =>
     Redirect(appConfig.signOutUrl).withNewSession
+  }
+
+
+  def timeIn(referrer: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(appConfig.signInUrl, Map("continue" -> Seq(referrer), "origin" -> Seq(appConfig.appName)))
+  }
+
+  def timeOut: Action[AnyContent] = Action { implicit request =>
+    Ok(timeOutPage()).withNewSession
   }
 }
