@@ -15,6 +15,9 @@ finish.sign-out.button=Finish and sign out
 
 common.error.summary.title=There is a problem
 
+time-out.title=For your security, we signed you out
+time-out.button=Sign in
+
 global.month.1=January
 global.month.2=February
 global.month.3=March
