@@ -65,7 +65,6 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(
           "directDebitSetup",
           DirectDebitArrangementRequestAuditWrapper(success = false, vrn, directDebitArrangementRequest)
         )
-        // TODO this will result in a error - need to handle and tell user to try again??
         throw e
     }
   }

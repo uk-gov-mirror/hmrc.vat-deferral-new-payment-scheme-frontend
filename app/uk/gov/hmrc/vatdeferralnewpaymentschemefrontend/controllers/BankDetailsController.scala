@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -48,6 +49,8 @@ class BankDetailsController @Inject()(
 ) extends FrontendController(mcc)
   with I18nSupport {
 
+  val logger = Logger(getClass)
+
   def get(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
       connector.complete(journeyId).map {
         case Some(r) =>
@@ -61,7 +64,7 @@ class BankDetailsController @Inject()(
             "bankAccountVerification",
             AccountVerificationAuditWrapper(verified = false, vrn.vrn, None)
           )
-          // TODO should we throw this error
+          logger.error(s"bank acount verification failed for ${vrn.vrn}")
           InternalServerError
       }
   }
