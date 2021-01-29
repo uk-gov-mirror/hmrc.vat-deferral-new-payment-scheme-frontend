@@ -14,9 +14,13 @@
  * limitations under the License.
  *@
 
-@this()
+@import uk.gov.hmrc.webchat.client.WebChatClient
 
-@()
+@this(webChatClient : WebChatClient)
+
+@()(implicit request: Request[_])
 <script src='@routes.Assets.at("lib/govuk-frontend/govuk/all.js")'></script>
 <script src='@routes.Assets.at("lib/hmrc-frontend/hmrc/all.js")'></script>
 <script src='@routes.Assets.at("javascripts/application.js")'></script>
+
+@{webChatClient.loadRequiredElements()}
