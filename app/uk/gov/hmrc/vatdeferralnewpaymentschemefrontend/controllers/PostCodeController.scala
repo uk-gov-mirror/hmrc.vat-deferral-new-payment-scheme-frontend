@@ -27,17 +27,19 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySess
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.EnterPostCodePage
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PostCodeController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   sessionStore: SessionStore,
-  enterPostCodePage: EnterPostCodePage)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends BaseController(mcc) {
+  enterPostCodePage: EnterPostCodePage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+) extends BaseController(mcc) {
 
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(

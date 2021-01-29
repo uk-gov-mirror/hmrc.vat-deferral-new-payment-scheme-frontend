@@ -29,3 +29,13 @@ case class DirectDebitArrangementRequest(
 object DirectDebitArrangementRequest {
   implicit val format = Json.format[DirectDebitArrangementRequest]
 }
+
+case class DirectDebitArrangementRequestAuditWrapper(
+  success: Boolean,
+  vrn: String,
+  arrangement: DirectDebitArrangementRequest
+)
+
+object DirectDebitArrangementRequestAuditWrapper {
+  implicit val format = Json.format[DirectDebitArrangementRequestAuditWrapper]
+}

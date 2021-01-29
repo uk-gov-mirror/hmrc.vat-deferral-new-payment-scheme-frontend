@@ -16,30 +16,35 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
-import javax.inject.{Inject, Singleton}
-import play.api.i18n.I18nSupport
-import play.api.mvc._
+import javax.inject.Inject
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.CheckBeforeYouStartPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.TimeOutPage
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
-@Singleton
-class CheckBeforeYouStartController @Inject()(
+class AuthenticationController @Inject()(
   mcc: MessagesControllerComponents,
-  auth: Auth,
-  checkBeforeYouStartPage: CheckBeforeYouStartPage
+  timeOutPage: TimeOutPage
 )(
-  implicit val appConfig: AppConfig,
-  val serviceConfig: ServicesConfig,
-  ec: ExecutionContext
-) extends FrontendController(mcc)
-  with I18nSupport {
+  implicit ec:ExecutionContext,
+  val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig
+)
+  extends FrontendController(mcc) {
 
-  val get: Action[AnyContent] = auth.authorise { implicit request => implicit vrn =>
-    Future.successful(Ok(checkBeforeYouStartPage()))
+  def signOut = Action { implicit request =>
+    Redirect(appConfig.signOutUrl).withNewSession
+  }
+
+
+  def timeIn(referrer: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(appConfig.signInUrl, Map("continue" -> Seq(referrer), "origin" -> Seq(appConfig.appName)))
+  }
+
+  def timeOut: Action[AnyContent] = Action { implicit request =>
+    Ok(timeOutPage()).withNewSession
   }
 }

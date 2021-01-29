@@ -20,7 +20,11 @@ import java.time._
 import java.time.format.DateTimeFormatter
 
 import play.api.i18n.Messages
+import play.api.libs.json.Writes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import scala.concurrent.ExecutionContext
 import scala.math.BigDecimal.RoundingMode
 
 package object controllers {
@@ -36,7 +40,7 @@ package object controllers {
     val today = if (now.isAfter(serviceStart)) now else serviceStart
     today match {
       case d if d.getDayOfMonth >= 15 && d.getDayOfMonth <= 22 && d.getMonthValue == 2 =>
-        d.withDayOfMonth(3).withMonth(3)
+        d.withDayOfMonth(1).withMonth(3)
       case d if d.plusDays(5).getDayOfWeek.getValue <= 5 =>
         d.plusDays(5)
       case d if d.plusDays(5).getDayOfWeek.getValue == 6 =>
@@ -64,12 +68,27 @@ package object controllers {
       day.toString
     } else{
       day % 10 match {
-        case 1 => "st"
-        case 2 => "nd"
-        case 3 => "rd"
+        case 1 if day != 11 => "st"
+        case 2 if day != 12 => "nd"
+        case 3 if day != 13 => "rd"
         case _ => "th"
       }
     }
   }
 
+  def audit[T](
+    auditType: String,
+    result: T
+  )(
+    implicit headerCarrier: HeaderCarrier,
+    auditConnector: AuditConnector,
+    ec: ExecutionContext,
+    writes: Writes[T]
+  ): Unit = {
+    import play.api.libs.json.Json
+    auditConnector.sendExplicitAudit(
+      auditType,
+      Json.toJson(result)(writes)
+    )
+  }
 }

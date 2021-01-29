@@ -18,12 +18,32 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Vrn
 
 sealed trait Account
 
 case class BusinessCompleteResponse(companyName: String, sortCode: String, accountNumber: String) extends Account
 
 case class PersonalCompleteResponse(accountName: String, sortCode: String, accountNumber: String) extends Account
+
+case class AccountVerificationAuditWrapper(
+  verified: Boolean,
+  vrn: String,
+  account: Option[Account]
+)
+
+object AccountVerificationAuditWrapper {
+  implicit val vrnFormat: OFormat[Vrn] =
+    Json.format[Vrn]
+  implicit val businessCompleteResponseFormat: OFormat[BusinessCompleteResponse] =
+    Json.format[BusinessCompleteResponse]
+  implicit val personalCompleteResponseFormat: OFormat[PersonalCompleteResponse] =
+    Json.format[PersonalCompleteResponse]
+  implicit val format: OFormat[Account] =
+    Json.format[Account]
+  implicit val accountVerificationAuditWrapperFormat: OFormat[AccountVerificationAuditWrapper] =
+    Json.format[AccountVerificationAuditWrapper]
+}
 
 object Account {
 

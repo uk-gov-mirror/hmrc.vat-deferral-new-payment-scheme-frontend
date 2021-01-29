@@ -17,20 +17,21 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.NotEligiblePage
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import play.api.i18n.I18nSupport
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.json.Writes
+import play.api.mvc._
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, JourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{NotEligiblePage, ReturningUserPage}
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class EligibilityController @Inject()(
@@ -38,21 +39,34 @@ class EligibilityController @Inject()(
   auth: Auth,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   sessionStore: SessionStore,
-  notEligiblePage: NotEligiblePage)
-  (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-    extends FrontendController(mcc) with I18nSupport {
+  notEligiblePage: NotEligiblePage,
+  returningUserPage: ReturningUserPage
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext,
+  auditConnector: AuditConnector
+) extends FrontendController(mcc)
+  with I18nSupport {
 
   val get: Action[AnyContent] = auth.authorise { implicit request =>
-    implicit vrn =>
-      vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn) map {
+    implicit vrn => {
+      implicit val auditWrites: Writes[Eligibility] = Eligibility.auditWrites
 
-        case Eligibility(false, false, true) =>
-          request.session.get("sessionId").map{ sessionId =>
+      for {
+        e <- vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn)
+        _ = audit("elibilityCheck", e)
+      } yield e match {
+        case e:Eligibility if e.eligible =>
+          request.session.get("sessionId").map { sessionId =>
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
-
-        case e => Ok(notEligiblePage(e))
+        case e:Eligibility if e.paymentPlanExists =>
+          Ok(returningUserPage())
+        case e =>
+          Ok(notEligiblePage(e))
       }
+    }
   }
 }

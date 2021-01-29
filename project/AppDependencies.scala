@@ -10,7 +10,8 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "play-frontend-hmrc"               % "0.38.0-play-27",
     "uk.gov.hmrc"             %% "play-frontend-govuk"              % "0.60.0-play-27",
     "uk.gov.hmrc"             %% "mongo-caching"                    % "6.16.0-play-27",
-    "uk.gov.hmrc"             %% "digital-engagement-platform-chat" % "0.14.0-play-27"
+    "uk.gov.hmrc"             %% "digital-engagement-platform-chat" % "0.14.0-play-27",
+    "com.chuusai"             %% "shapeless"                        % "2.3.3"
   )
 
   val test = Seq(

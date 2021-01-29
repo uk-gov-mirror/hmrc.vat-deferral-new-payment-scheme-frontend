@@ -22,16 +22,34 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.NotMatchedPage
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class NotMatchedController @Inject()(
-                                      mcc: MessagesControllerComponents,
-                                      notMatchedPage: NotMatchedPage)
-                                    (implicit val appConfig: AppConfig, val serviceConfig: ServicesConfig)
-  extends FrontendController(mcc) with I18nSupport {
+  mcc: MessagesControllerComponents,
+  notMatchedPage: NotMatchedPage,
+  sessionStore: SessionStore
+)(
+  implicit val appConfig: AppConfig,
+  val serviceConfig: ServicesConfig,
+  ec: ExecutionContext
+)
+  extends FrontendController(mcc)
+  with I18nSupport
+{
 
-  def get = Action { implicit request =>
-    Ok(notMatchedPage())
+  def get: Action[AnyContent] = Action.async { implicit request =>
+    val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
+    sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").map { x =>
+      x.fold(Redirect(routes.VrnController.get())){ y =>
+        Ok(
+          notMatchedPage(y.failedMatchingAttempts, y.locked)
+        )
+      }
+    }
   }
 }

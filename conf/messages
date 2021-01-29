@@ -11,8 +11,12 @@ common.alpha-info.p2= will help us to improve it.
 common.error.title=Error: 
 common.page.title=Pay VAT deferred due to coronavirus (COVID-19) - GOV.UK
 continue.button=Continue
+finish.sign-out.button=Finish and sign out
 
 common.error.summary.title=There is a problem
+
+time-out.title=For your security, we signed you out
+time-out.button=Sign in
 
 global.month.1=January
 global.month.2=February
@@ -79,14 +83,10 @@ check.before.you.start.p1=To use this service you must:
 check.before.you.start.li1=have a UK bank account
 check.before.you.start.li2=be able to set up a Direct Debit
 check.before.you.start.li3=be able to pay the first instalment on 1 March 2021
-check.before.you.start.h2.2=Before you opt in
-check.before.you.start.p2=Make sure you know how much you owe, including:
-check.before.you.start.li4=the amount you originally deferred
-check.before.you.start.li5=how much you may have already paid
 check.before.you.start.warning=Warning
 check.before.you.start.p3=If you need help to find out how much you owe,
 check.before.you.start.p4=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
-check.before.you.start.p5=You must pay all instalments on time. If you do not, we may remove you from the scheme and you may need to pay a penalty. If you are unable to pay, contact us to arrange other ways to clear your debt.
+check.before.you.start.p5=You must pay all instalments on time. If you are unable to pay, contact us to arrange other ways to clear your debt.
 
 deferred.vat.bill.heading.1=Your deferred VAT bill is
 deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
@@ -103,17 +103,21 @@ installments.p2.1=The remaining balance of
 installments.p2.2=will be added to your first payment.
 installments.option.1=Yes
 installments.option.2=No - I want to pay in fewer instalments
+11-months-to-pay.error.required=Select yes if you want to pay in 11 monthly instalments
 
 how.many.months.h1=How many months do you want to pay over?
 how.many.months.p1=Months at
 how.many.months.p2.1=With remaining
 how.many.months.p2.2=added to first payment
+how-many-months.error.required=Select how many months you want to pay over
 
 when.to.pay.h1=Choose when your payments will be collected
 when.to.pay.p1=We will collect your first payment on <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.h2=On which day do you want the remaining monthly payments to be collected?
 when.to.pay.p2=If the payment due date falls on a weekend, we will take your payment on the next working day.
 when.to.pay.label=Enter a day from 1 to 28
+when-to-pay.error.day.required=Enter a day from 1 to 28
+when-to-pay.error.day.invalid=Enter a day from 1 to 28
 
 payment.plan.h1=Check your payment plan
 payment.plan.list-key=Payments collected on
@@ -144,80 +148,41 @@ global.button.accept.and.continue=Accept and continue
 vatcheck.common.errorSummary=There is a problem
 vatcheck.common.error.title=Error:
 
-error.vrn.required=Vat number is required
-error.vrn.invalid=Vat number is invalid
-error.postcode.required=Post code is required
-error.postcode.invalid=Post code is invalid
-error.vatamount.required=Latest VAT amount is required
-error.vatamount.invalid=Latest VAT amount is invalid
+error.vrn.required=Enter your VAT registration number
+error.vrn.invalid=Enter your VAT registration number in the correct format
+error.postcode.required=Enter the postcode where your business is registered for VAT
+error.postcode.invalid=Enter a real postcode
+error.vatamount.required=Enter your latest VAT Return total
+error.vatamount.invalid=Your latest VAT Return total must include pence, like 123.45 or 156.00
+error.date.emptyfields=Enter the date you became VAT registered
+error.day.missing=The date you became VAT registered must include a day
+error.month.missing=The date you became VAT registered must include a month
+error.year.missing=The date you became VAT registered must include a year
+error.day-and-year.missing=The date you became VAT registered must include a day and year
+error.day-and-month.missing=The date you became VAT registered must include a day and month
+error.month-and-year.missing=The date you became VAT registered must include a month and year
+error.date.invalid=The date you became VAT registered must be a real date
+error.date.in-future=The date you became VAT registered must be in the past
+latest-vat-period.error.required=Select the month of your latest VAT accounting period
 error.day.required=Day is required
 error.month.required=Month is required
 error.year.required=Year is required
-error.date.invalid=Date is invalid
 error.11-months-to-pay.required=Option is required
 error.how-many-months.required=Option is required
 error.day.invalid=Please select a valid day
 
-# IV Locked Out
-iv.locked_out.title.h1=We were not able to verify your identity
-iv.locked_out.p1=You have tried to verify your identity too many times.
-iv.locked_out.p2=You’ll need to wait 24 hours and try again.
+matching.notMatched.title=Business not found
+matching.notMatched.p1=We cannot find any business that matches the details you entered.
+matching.notMatched.p2=Check the details are correct and try again. 
+matching.notMatched.attempts-remaining=You have <span class="govuk-!-font-weight-bold">{0}</span> attempts left to enter the correct details.
+matching.notMatched.last-attempt=For security reasons, if you enter incorrect details again, you will need to wait 15 minutes before you can try again.
+matching.notMatched.wait=You will need to wait 15 minutes before you can try again. 
 
-# IV User Aborted
-iv.were_unable_to_confirm_your_identity.title.h1=We were not able to verify your identity
-iv.were_unable_to_confirm_your_identity.p1=You have not provided enough information.
-iv.were_unable_to_confirm_your_identity.p2=To apply for a Help to Save account you’ll need to answer security questions based on the information we hold about you.
-iv.were_unable_to_confirm_your_identity.p3=This is to prevent anyone other than you accessing your personal details.
+matching.locked.title=We could not confirm your identity
 
-# Failed IV
-iv.failed_iv.title.h1=We were not able to verify your identity
-iv.failed_iv.p1=You did not answer all the questions correctly.
-iv.failed_iv.p2=Your answers to the questions need to match the answers we already have for you.
-iv.failed_iv.p3=You’ll need to try again.
-iv.failed_iv.try-again-button=Try again
+returning.user.heading=You have already set up your deferred VAT payments
+returning.user.p1=Our records show you have already used this service to set up a Direct Debit to pay your deferred VAT.
+returning.user.p2=If you think this is wrong,
+returning.user.p2.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 
-# Failed Matching
-iv.failed_matching.title.h1=We were not able to verify your identity
-iv.failed_matching.p=You’ll need to try again and check you entered your details correctly. This includes your:
-iv.failed_matching.li1=name
-iv.failed_matching.li2=date of birth
-iv.failed_matching.li3=National Insurance number
-
-# Insufficient Evidence
-iv.insufficient_evidence.title.h1=We were not able to verify your identity
-iv.insufficient_evidence.p1=You’ll need to call us and we’ll ask you for more details.
-iv.insufficient_evidence.telephone-title=Telephone:
-iv.insufficient_evidence.telephone-number=0300 322 7093
-iv.insufficient_evidence.h2=What happens next?
-iv.insufficient_evidence.p2=You’ll be able to apply for a Help to Save account by phone, after we’ve been able to verify your identity.
-
-# IV Timed Out
-iv.time_out.title.h1=Your session has ended
-iv.time_out.p1=You’ve been inactive for too long so we’ve ended your session.
-iv.time_out.p2=You’ll need to try again.
-
-# IV Technical Issue
-iv.there_s_a_technical_issues.title.h1=Something went wrong
-iv.there_s_a_technical_issues.p1=We’re sorry, we’re having some technical problems.
-iv.there_s_a_technical_issues.p2=You’ll need to try again later.
-
-# IV Success
-iv.we_ve_confirmed_your_identity.title.h1=We’ve verified your identity
-iv.we_ve_confirmed_your_identity.p1=If you want to apply for a Help to Save account, you should continue.
-iv.you_now_access_hts_account=What happens next?
-iv.we_ve_confirmed_your_identity.p2=We’ll check if you’re eligible for a Help to Save account. If you’re eligible, you can then go on to create an account.
-
-# IV Precondition Failed
-iv.precondition_failed.title.h1=You’re not able to use this service
-iv.precondition_failed.p1=We’ve checked the details in your Government Gateway account and you do not meet the criteria to use this service.
-iv.precondition_failed.p2=This could be for several different reasons. For example, it could be because:
-iv.precondition_failed.ul1-li1=you used the Government Gateway account that is linked to your business tax account to apply for a Help to Save account
-iv.precondition_failed.ul1-li2=you do not have a National Insurance number
-iv.precondition_failed.ul1-li3=you do not have a passport
-iv.precondition_failed.ul1-li4=we could not verify your address
-iv.precondition_failed.h2=How to apply again
-iv.precondition_failed.p3=If you want to try to apply for a Help to Save account again you’ll need to create a new Government Gateway account. This will need to be for a personal tax account.
-iv.precondition_failed.create-new-gg-account=Create a new Government Gateway account
-
-# IV Button
-iv.try_again_button=Try again
+try.again.button=Try again

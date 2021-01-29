@@ -16,16 +16,36 @@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 
-@this(layout: Layout)
+@this(
+        layout: Layout,
+        button: Button
+)
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(attempts: Int, locked : Boolean = false)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some("vat-deferral-new-payment-scheme-frontend")) {
+@title = @{
+    if (locked) messages("matching.locked.title")
+    else messages("matching.notMatched.title")
+}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Not matched</h1>
-        </div>
-    </div>
+@layout(pageTitle = PageTitle(title)) {
+
+    <h1 class="govuk-heading-xl">@title</h1>
+
+    @if(attempts == 1 && !locked) {
+        <p class="govuk-body">@messages("matching.notMatched.p1")</p>
+        <p class="govuk-body">@Html(messages("matching.notMatched.p2"))</p>
+        <p class="govuk-body">@Html(messages("matching.notMatched.attempts-remaining", 2))</p>
+    } else if (attempts == 2 && !locked) {
+        <p class="govuk-body">@messages("matching.notMatched.p1")</p>
+        <p class="govuk-body">@messages("matching.notMatched.p2")</p>
+        <p class="govuk-body">@messages("matching.notMatched.last-attempt")</p>
+    } else {
+        <p class="govuk-body">@messages("matching.notMatched.wait")</p>
+    }
+
+    @button(messages("try.again.button"), Some(controllers.routes.VrnController.get().toString))
 }

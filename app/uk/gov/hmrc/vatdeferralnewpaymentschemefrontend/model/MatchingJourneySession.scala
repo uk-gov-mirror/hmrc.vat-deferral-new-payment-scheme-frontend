@@ -20,6 +20,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.Json
+import play.api.mvc._
+
+import scala.concurrent.Future
 
 case class DateFormValues(day: String, month: String, year: String) {
   def isValidDate: Boolean = try{
@@ -45,7 +48,43 @@ case class MatchingJourneySession (
   latestAccountPeriodMonth: Option[String] = None,
   date: Option[DateFormValues] = None,
   isUserEnrolled: Boolean = false,
-  failedMatchingAttempts: Int = 0)
+  failedMatchingAttempts: Int = 0
+) {
+  // n.b. the session collection has a ttl of 900 seconds so no need to reset or compare any times
+  def locked = {
+    failedMatchingAttempts == 3
+  }
+
+  def redirect(request: Request[AnyContent]): Option[Future[Result]] = {
+    import shapeless.syntax.std.tuple._
+    import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
+    import scala.concurrent.Future
+    import play.api.mvc.Results.Redirect
+    val argList: List[Option[_]] =
+      MatchingJourneySession
+        .unapply(this)
+        .map(_.toList)
+        .fold(List.empty[Any])(identity)
+        .slice(1,6)
+        .map(_.asInstanceOf[Option[_]])
+    val routeList: List[String] = List(
+      routes.VrnController.get().url,
+      routes.PostCodeController.get().url,
+      routes.VatReturnController.get().url,
+      routes.VatPeriodController.get().url,
+      routes.VatRegistrationDateController.get().url
+    )
+    val route =
+      argList
+      .zip(routeList).zipWithIndex
+      .find({case (x,i) => x._1.isEmpty && i < routeList.indexOf(request.uri)})
+      .fold(request.uri)({case (a,_) => a._2})
+    if (route != request.uri)
+      Some(Future.successful(Redirect(route).withSession(request.session)))
+    else None
+  }
+
+}
 
 object MatchingJourneySession {
   implicit val formats = Json.format[MatchingJourneySession]

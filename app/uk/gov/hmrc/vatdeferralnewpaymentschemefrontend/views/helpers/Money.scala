@@ -14,29 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers
 
-import play.api.libs.json.{JsValue, Json, Writes}
-
-case class Eligibility(
-  paymentPlanExists: Boolean,
-  existingObligations: Boolean,
-  outstandingBalance: Boolean
-) {
-  def eligible: Boolean =
-    !paymentPlanExists &&
-      !existingObligations &&
-        outstandingBalance
+object Money {
+  val formatter = java.text.NumberFormat.getInstance
+  def apply(money: BigDecimal): String = s"£${formatter.format(money)}"
 }
-
-object Eligibility {
-  implicit val format = Json.format[Eligibility]
-
-  val auditWrites = new Writes[Eligibility] {
-    override def writes(e: Eligibility): JsValue = Json.obj(
-      "isEligible" -> e.eligible,
-            "reasons" -> e
-    )
-  }
-}
-

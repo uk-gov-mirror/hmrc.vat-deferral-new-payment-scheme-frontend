@@ -28,6 +28,8 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   private def getUrlFor(service: String) = servicesConfig.getString(s"microservice.services.$service.url")
 
+  lazy val appName: String = config.get[String]("appName")
+
   val frontendUrl: String = getUrlFor("frontend")
 
   val ggContinueUrlPrefix: String =
@@ -39,6 +41,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
       s"continue=${URLEncoder.encode(ggContinueUrlPrefix, "UTF-8")}%2Fvat-deferral-new-payment-scheme%2Feligibility&" +
       "origin=vat-deferral-new-payment-scheme-frontend&" +
       "registerForSa=skip"
+  lazy val sessionTimeout = config.get[String]("application.session.maxAge")
 
   val enrolmentStoreUrl = s"${servicesConfig.baseUrl("enrolment-store-proxy")}/enrolment-store-proxy/enrolment-store/enrolments"
 
@@ -47,6 +50,13 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val contactHost: String = servicesConfig.baseUrl(s"contact-frontend")
   //TODO Check the service identifier for feedback
   lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=VDNPS"
+
+  private lazy val basGatewayFrontend = servicesConfig.getConfString("bas-gateway.url", "")
+  private lazy val basGatewaySignInPath = servicesConfig.getConfString("bas-gateway.sign-in-path", "")
+  private lazy val basGatewaySignOutPath = servicesConfig.getConfString("bas-gateway.sign-out-path", "")
+
+  lazy val signInUrl: String = s"$basGatewayFrontend$basGatewaySignInPath"
+  lazy val signOutUrl: String = s"$basGatewayFrontend$basGatewaySignOutPath?continue=$feedbackSurveyUrl"
 
   val bavfApiBaseUrl = servicesConfig.baseUrl("bank-account-verification-api")
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")

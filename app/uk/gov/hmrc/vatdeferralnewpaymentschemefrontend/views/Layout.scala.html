@@ -33,11 +33,16 @@
         scriptsBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@beforeContentWrapper = {
+    @beforeContentBlock(backLinkEnabled, backLink)
+    @timeout_dialog(request.uri, "20")
+}
+
 @govukLayout(
     pageTitle = pageTitle,
     headBlock = Some(head(headBlock)),
     scriptsBlock = scriptsBlock,
-    beforeContentBlock = Some(beforeContentBlock(backLinkEnabled, backLink)),
+    beforeContentBlock = Some(beforeContentWrapper),
     footerItems = FooterLinks(),
     bodyEndBlock = Some(scripts())
 )(contentBlock)
