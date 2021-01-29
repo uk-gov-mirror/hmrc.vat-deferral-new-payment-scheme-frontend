@@ -51,6 +51,6 @@
     </div>
     @button(messages("continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
 
-    @{webChatClient.loadWebChatContainer()}
+    @{webChatClient.loadWebChatContainer("HMRC_Anchored_1")}
 
 }
