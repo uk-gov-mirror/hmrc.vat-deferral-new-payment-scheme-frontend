@@ -30,6 +30,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNew
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, JourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{NotEligiblePage, ReturningUserPage}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.NoDeferredVatToPayPage
 
 import scala.concurrent.ExecutionContext
 
@@ -40,7 +41,8 @@ class EligibilityController @Inject()(
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   sessionStore: SessionStore,
   notEligiblePage: NotEligiblePage,
-  returningUserPage: ReturningUserPage
+  returningUserPage: ReturningUserPage,
+  noDeferredVatToPayPage: NoDeferredVatToPayPage
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -62,8 +64,14 @@ class EligibilityController @Inject()(
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
+        case e:Eligibility if !e.outstandingBalance =>
+          Ok(noDeferredVatToPayPage())
+//        case e:Eligibility if e.outstandingReturns => ???
+//        case e:Eligibility if e.advancedPayments => ???
+//        case e:Eligibility if e.timeToPayAggreementSet => ???
         case e:Eligibility if e.paymentPlanExists =>
           Ok(returningUserPage())
+
         case e =>
           Ok(notEligiblePage(e))
       }
