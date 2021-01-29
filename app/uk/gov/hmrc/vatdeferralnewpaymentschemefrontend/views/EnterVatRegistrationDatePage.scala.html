@@ -70,7 +70,7 @@
 
         @govukDateInput(DateInput(
             errorMessage = if (form.hasErrors) {
-                Some(ErrorMessage(content = Text(messages(form.errors.head.message)))) // TODO implement after ux/content review
+                Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
             } else None,
             hint = Some(Hint(
                 content = Text(

@@ -48,7 +48,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val feedbackSurveyUrl: String = servicesConfig.getConfString("feedback-survey.url", "")
 
   val contactHost: String = servicesConfig.baseUrl(s"contact-frontend")
-  //TODO Check the service identifier for feedback
+  //TODO Check the service identifier for feedback - get Shep to check, AD
   lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=VDNPS"
 
   private lazy val basGatewayFrontend = servicesConfig.getConfString("bas-gateway.url", "")
