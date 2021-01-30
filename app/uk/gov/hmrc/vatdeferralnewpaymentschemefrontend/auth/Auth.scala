@@ -155,8 +155,7 @@ class AuthImpl @Inject()(
                 case Some(a) => action(request)(vrn)(a)
                 case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
               }
-            case None => //TODO Change this
-             Future.successful(Ok("Session id not set"))
+            case None => Future.successful(toGGLogin(currentUrl))
           }
 
           (
@@ -217,25 +216,24 @@ class AuthImpl @Inject()(
         Some(request)
       )
 
-      val sessionId = request.session.get("sessionId").getOrElse(
-        throw new RuntimeException("Session id does not exist" // TODO this should redirect them to sign in???
-        ))
-
-      val newAction: Future[Result] = sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
-        case Some(a) => {
-          val redirect = a.redirect(request)
-          if (redirect.isDefined)
-            redirect.getOrElse(throw new IllegalStateException("unable to get defined option"))
-          else if (!a.locked)
-            action(request)(a)
-          else
-            Future.successful(Redirect(routes.NotMatchedController.get()))
-        }
-        case _ => {
-          sessionStore.store[MatchingJourneySession](sessionId, "MatchingJourneySession", MatchingJourneySession(sessionId))
-          action(request)(MatchingJourneySession(sessionId))
-        }
-      }
+      val newAction: Future[Result] =
+        request.session.get("sessionId").map { sessionId =>
+          sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
+            case Some(a) => {
+              val redirect = a.redirect(request)
+              if (redirect.isDefined)
+                redirect.getOrElse(throw new IllegalStateException("unable to get defined option"))
+              else if (!a.locked)
+                action(request)(a)
+              else
+                Future.successful(Redirect(routes.NotMatchedController.get()))
+            }
+            case _ => {
+              sessionStore.store[MatchingJourneySession](sessionId, "MatchingJourneySession", MatchingJourneySession(sessionId))
+              action(request)(MatchingJourneySession(sessionId))
+            }
+          }
+        }.getOrElse(Future.successful(toGGLogin(currentUrl)))
 
       authorised(
         AuthProviders(GovernmentGateway) and ConfidenceLevel.L50 and (Organisation or Individual)
