@@ -1,0 +1,48 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.Layout
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
+
+@this(
+    layout: Layout,
+    button: Button
+ )
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(
+    pageTitle = PageTitle("outstanding-returns.heading")
+) {
+    <h1 class="govuk-heading-xl">@messages("outstanding-returns.heading")</h1>
+    <p class="govuk-body">@messages("outstanding-returns.p1")</p>
+    <p class="govuk-body">@messages("outstanding-returns.p2")</p>
+    <h2 class="govuk-heading-m">@messages("outstanding-returns.what-to-do.heading")</h2>
+    <p class="govuk-body">
+        @messages("outstanding-returns.what-to-do.p1.content-start")
+        <a href="https://www.tax.service.gov.uk/business-account" class="govuk-link">
+            @messages("outstanding-returns.what-to-do.p1.link")</a>
+        @messages("outstanding-returns.what-to-do.p1.content-end")
+    </p>
+    <p class="govuk-body">@messages("outstanding-returns.what-to-do.p2")</p>
+    <p class="govuk-body">
+        @messages("outstanding-returns.what-to-do.p3.content")
+        <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline" class="govuk-link">
+        @messages("outstanding-returns.what-to-do.p3.link")</a>.
+    </p>
+
+}

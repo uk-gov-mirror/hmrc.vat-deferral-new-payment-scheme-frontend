@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.TimeOutPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.TimeOutPage
 
 import scala.concurrent.ExecutionContext
 
