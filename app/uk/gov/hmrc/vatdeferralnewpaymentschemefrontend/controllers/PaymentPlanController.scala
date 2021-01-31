@@ -18,13 +18,15 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import org.joda.time.LocalDate
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.BavfConnector
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.InitRequestMessages
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.PaymentPlanPage
 
@@ -66,9 +68,32 @@ class PaymentPlanController @Inject()(
     _ =>
       _ =>
         val continueUrl = s"${appConfig.frontendUrl}/bank-details"
-        connector.init(continueUrl).map {
+        connector.init(continueUrl, messages = requestMessages).map {
           case Some(initResponse) => SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
           case None => InternalServerError
         }
+  }
+
+  private def requestMessages(implicit messagesApi: MessagesApi): Option[InitRequestMessages] = {
+    val english = messagesApi.preferred(Seq(Lang("en")))
+    val welsh = messagesApi.preferred(Seq(Lang("cy")))
+    Some(
+      InitRequestMessages(
+        en = Json.obj(
+          "service.name" -> english("service.name"),
+//          TODO: Add in a11y statement after DAC
+//          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${english("footer.accessibility.url")}",
+          "phaseBanner.tag" -> "BETA"
+        ),
+        cy = Some(
+          Json.obj(
+            "service.name" -> welsh("service.name"),
+//          TODO: Add in a11y statement after DAC
+//          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${welsh("footer.accessibility.url")}",
+            "phaseBanner.tag" -> "BETA"
+          )
+        )
+      )
+    )
   }
 }
