@@ -17,11 +17,9 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Eligibility
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.Layout
-@import uk.gov.hmrc.webchat.client.WebChatClient
 
 @this(
-        layout: Layout,
-        webChatClient: WebChatClient
+        layout: Layout
 )
 
 @(eligibility: Eligibility)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -52,7 +50,4 @@
         @messages("eligibility.not.eligible.p8.1")
         <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("eligibility.not.eligible.link3")</a>.
     </p>
-
-    @{webChatClient.loadWebChatContainer("HMRC_Anchored_1")}
-
 }
