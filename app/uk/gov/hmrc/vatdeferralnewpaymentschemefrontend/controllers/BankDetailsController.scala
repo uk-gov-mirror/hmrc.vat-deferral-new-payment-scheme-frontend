@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.{Account, AccountVerificationAuditWrapper, BusinessCompleteResponse, PersonalCompleteResponse}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
@@ -45,28 +45,14 @@ class BankDetailsController @Inject()(
   implicit ec:ExecutionContext,
   val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
-  auditConnector: AuditConnector
+    auditConnector: AuditConnector
 ) extends FrontendController(mcc)
   with I18nSupport {
 
   val logger = Logger(getClass)
 
   def get(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-      connector.complete(journeyId).map {
-        case Some(r) =>
-          audit[AccountVerificationAuditWrapper](
-            "bankAccountVerification",
-            AccountVerificationAuditWrapper(verified = true, vrn.vrn, Some(r))
-          )
-          Ok(directDebitPage(journeyId))
-        case None =>
-          audit[AccountVerificationAuditWrapper](
-            "bankAccountVerification",
-            AccountVerificationAuditWrapper(verified = false, vrn.vrn, None)
-          )
-          logger.error(s"bank acount verification failed for ${vrn.vrn}")
-          InternalServerError
-      }
+    Future.successful(Ok(directDebitPage(journeyId)))
   }
 
   def post(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
@@ -86,7 +72,7 @@ class BankDetailsController @Inject()(
     lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
       x <- connector.complete(journeyId)
     } yield x match {
-      case Some(PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber)) =>
+      case Some(PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
         DirectDebitArrangementRequest(
           paymentDay = dayOfPayment,
           numberOfPayments = numberOfPaymentMonths,
@@ -95,7 +81,7 @@ class BankDetailsController @Inject()(
           accountNumber = accountNumber,
           accountName = accountOrBusinessName
         )
-      case Some(BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber)) =>
+      case Some(BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
         DirectDebitArrangementRequest(
           paymentDay = dayOfPayment,
           numberOfPayments = numberOfPaymentMonths,

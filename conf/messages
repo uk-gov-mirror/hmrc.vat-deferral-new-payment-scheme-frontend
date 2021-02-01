@@ -124,6 +124,14 @@ payment.plan.list-key=Payments collected on
 payment.plan.list-value=or next working day
 payment.plan.total.pay=Total to pay
 
+check.direct.debit.heading=Check your Direct Debit details
+check.direct.debit.bank.account.type.heading=Bank account type
+check.direct.debit.bank.account.type.business=Business
+check.direct.debit.bank.account.type.personal=Personal
+check.direct.debit.name.on.account=Name on the account
+check.direct.debit.sort.code=Sort code
+check.direct.debit.account.number=Account number
+
 direct.debit.header=The Direct Debit Guarantee
 direct.debit.p1=This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.
 direct.debit.p2=If there are any changes to the amount, date or frequency of your Direct Debit HM Revenue & Customs will notify you 10 working days in advance of your account being debited or as otherwise agreed. If you request HM Revenue & Customs to collect a payment, application-complete of the amount and date will be given to you at the time of the request.

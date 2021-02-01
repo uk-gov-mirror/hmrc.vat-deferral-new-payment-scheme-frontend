@@ -48,6 +48,8 @@ POST       /payment-plan                              uk.gov.hmrc.vatdeferralnew
 GET        /bank-details/:journeyId                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.get(journeyId)
 POST       /bank-details/:journeyId                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.BankDetailsController.post(journeyId)
 
+GET        /check-the-account-details/:journeyId      uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.CheckBankAccountDetailsController.get(journeyId)
+
 GET        /confirmation                              uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.ConfirmationController.get
 
 GET        /not-matched                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.NotMatchedController.get
