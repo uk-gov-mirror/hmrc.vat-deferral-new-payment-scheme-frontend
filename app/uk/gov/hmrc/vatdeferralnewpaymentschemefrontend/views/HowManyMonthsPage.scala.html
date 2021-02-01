@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers._
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
 @this(
@@ -69,10 +69,10 @@
                             label = Some(Label(classes = "govuk-!-padding-top-0")),
                             content = HtmlContent(s"""<span class="govuk-body govuk-!-font-size-36">${item.month}</span>
                                                 ${messages("how.many.months.p1")}
-                                            <span class="govuk-!-font-weight-bold">£${item.amount}</span>"""),
+                                            <span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>"""),
                             hint = Some(Hint(
                                 content = HtmlContent(s"""${messages("how.many.months.p2.1")}
-                                            <span class="govuk-!-font-weight-bold">£${item.remainder}</span>
+                                            <span class="govuk-!-font-weight-bold">${Money(item.remainder)}</span>
                                             ${messages("how.many.months.p2.2")}
                                         <hr class="govuk-section-break govuk-section-break--visible" style="margin-top:10px"></hr>""")
                             )),
