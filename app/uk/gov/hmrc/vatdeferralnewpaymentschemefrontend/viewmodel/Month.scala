@@ -18,4 +18,8 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel
 import play.api.libs.json.Json
 import play.api.mvc
 
-case class Month(month: String, amount: String, remainder: String)
+case class Month(
+  month: String,
+  amount: BigDecimal,
+  remainder: BigDecimal
+)
