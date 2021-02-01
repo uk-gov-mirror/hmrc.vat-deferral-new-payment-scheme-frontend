@@ -69,9 +69,8 @@ class EligibilityController @Inject()(
           }.getOrElse(InternalServerError)
         case e:Eligibility if !e.outstandingBalance =>
           Ok(noDeferredVatToPayPage())
-//      TODO: implement logic for finding outstanding Returns in BE
-//        case e:Eligibility if e.outstandingReturns =>
-//          Ok(outstandingReturnsPage())
+        case e:Eligibility if e.existingObligations =>
+          Ok(outstandingReturnsPage())
         case e:Eligibility if e.paymentOnAccoutExists =>
           // TODO check if this needs a date check of 1st of March
           Ok(paymentOnAccountExistsPage())
