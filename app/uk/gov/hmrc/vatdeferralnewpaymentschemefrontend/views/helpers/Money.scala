@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers
 
+import java.text.NumberFormat
+import java.util.Locale.UK
+
 object Money {
-  val formatter = java.text.NumberFormat.getInstance
-  def apply(money: BigDecimal): String = s"£${formatter.format(money)}"
+  val formatter = NumberFormat.getCurrencyInstance(UK)
+  def apply(money: BigDecimal): String = s"${formatter.format(money)}"
 }

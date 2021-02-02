@@ -103,7 +103,7 @@ class MonthsController @Inject()(
       month => {
         val monthlyAmount = (amount / month).setScale(2, RoundingMode.DOWN)
         val remainder = amount - (monthlyAmount * month)
-        Month(month.toString, monthlyAmount.toString, remainder.toString)
+        Month(month.toString, monthlyAmount, remainder)
       }
     }
   }

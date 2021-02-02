@@ -88,7 +88,7 @@ check.before.you.start.p3=If you need help to find out how much you owe,
 check.before.you.start.p4=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 check.before.you.start.p5=You must pay all instalments on time. If you are unable to pay, contact us to arrange other ways to clear your debt.
 
-deferred.vat.bill.heading.1=Your deferred VAT bill is
+deferred.vat.bill.heading.1=Your deferred VAT bill is {0}
 deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
 deferred.vat.bill.vat.total.payable=VAT payable for 20 March to 30 June 2020
 deferred.vat.bill.vat.paid=VAT paid to date

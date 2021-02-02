@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.{Button, Details}
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers._
 
 @this(
         layout: Layout,
@@ -34,7 +34,7 @@
     backLink = Some(s"${controllers.routes.CheckBeforeYouStartController.get()}")
 ) {
 
-    <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1") £@deferredVatAmount</h1>
+    <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1", Money(deferredVatAmount))</h1>
     <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
 
     @{govukTable(Table(
@@ -44,7 +44,7 @@
                     content = Text(messages("deferred.vat.bill.vat.total.payable"))
                 ),
                 TableRow(
-                    content = Text(s"£$totalDeferredVatAmount")
+                    content = Text(Money(totalDeferredVatAmount))
                 )
             ),
             Seq(
@@ -52,7 +52,7 @@
                     content = Text(messages("deferred.vat.bill.vat.paid"))
                 ),
                 TableRow(
-                    content = Text(s"£$deferredVatAmountPaid")
+                    content = Text(Money(deferredVatAmountPaid))
                 )
             ),
             Seq(
@@ -60,7 +60,7 @@
                     content = Text(messages("deferred.vat.bill.payable"))
                 ),
                 TableRow(
-                    content = Text(s"£$deferredVatAmount")
+                    content = Text(Money(deferredVatAmount))
                 )
             )
         ),

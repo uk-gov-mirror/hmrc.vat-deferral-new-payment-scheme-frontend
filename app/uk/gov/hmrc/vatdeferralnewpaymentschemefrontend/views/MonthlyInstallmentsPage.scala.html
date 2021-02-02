@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers._
 
 @this(
         layout: Layout,
@@ -62,8 +62,8 @@
             )),
             hint = Some(Hint(
                 content = HtmlContent(s"""<p class="govuk-body">${messages("installments.p1")}
-                <span class="govuk-body govuk-!-font-weight-bold">£$amount</span>.</p>
-                <p class="govuk-body">${messages("installments.p2.1")} £$remainder ${messages("installments.p2.2")}</p>""")
+                <span class="govuk-body govuk-!-font-weight-bold">${Money(amount)}</span>.</p>
+                <p class="govuk-body">${messages("installments.p2.1")} ${Money(remainder)} ${messages("installments.p2.2")}</p>""")
             )),
             idPrefix = Some("11-months-to-pay"),
             name = "11-months-to-pay",
