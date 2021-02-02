@@ -19,6 +19,8 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
+@import java.time.format.DateTimeFormatter
+
 @this(
     layout: Layout,
     button: Button
@@ -28,9 +30,19 @@
 @layout(
     pageTitle = PageTitle("payment-on-account.heading")
 ) {
-    <h1 class="govuk-heading-xl">@messages("payment-on-account.heading")</h1>
+    <h1 class="govuk-heading-xl">
+        @messages(
+            "payment-on-account.heading",
+            appConfig.datePoaUsersStart.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
+        )
+    </h1>
     <p class="govuk-body">@messages("payment-on-account.p1")</p>
-    <p class="govuk-body">@messages("payment-on-account.p2")</p>
+    <p class="govuk-body">
+        @messages(
+            "payment-on-account.p2",
+            appConfig.datePoaUsersStart.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
+        )
+    </p>
     <p class="govuk-body">
      @messages("payment-on-account.p3.content")
      <a href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19" class="govuk-link">

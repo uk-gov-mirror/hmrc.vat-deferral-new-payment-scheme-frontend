@@ -203,9 +203,9 @@ time-to-pay.p3.link=who can join the scheme
 time-to-pay.p4.content=If you still think you are eligible to join now,
 time-to-pay.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 
-payment-on-account.heading=You can join the scheme from 1 March 2020
+payment-on-account.heading=You can join the scheme from {0}
 payment-on-account.p1=Our records show you already make advance payments towards your VAT bill.
-payment-on-account.p2=You will be able to join the VAT deferral payment scheme from 1 March 2020.
+payment-on-account.p2=You will be able to join the VAT deferral payment scheme from {0}.
 payment-on-account.p3.content=Find out about
 payment-on-account.p3.link=who can join the scheme
 payment-on-account.p4.content=If you think you are eligible to join now,

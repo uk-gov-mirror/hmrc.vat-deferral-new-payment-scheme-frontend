@@ -72,7 +72,6 @@ class EligibilityController @Inject()(
         case e:Eligibility if e.existingObligations =>
           Ok(outstandingReturnsPage())
         case e:Eligibility if e.paymentOnAccoutExists =>
-          // TODO check if this needs a date check of 1st of March
           Ok(paymentOnAccountExistsPage())
         case e:Eligibility if e.timeToPayExists =>
           Ok(timeToPayExistsPage())
