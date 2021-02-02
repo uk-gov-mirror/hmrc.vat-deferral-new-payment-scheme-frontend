@@ -29,7 +29,8 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, JourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{NotEligiblePage, ReturningUserPage}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.ReturningUserPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors._
 
 import scala.concurrent.ExecutionContext
 
@@ -40,7 +41,11 @@ class EligibilityController @Inject()(
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   sessionStore: SessionStore,
   notEligiblePage: NotEligiblePage,
-  returningUserPage: ReturningUserPage
+  returningUserPage: ReturningUserPage,
+  noDeferredVatToPayPage: NoDeferredVatToPayPage,
+  timeToPayExistsPage: TimeToPayExistsPage,
+  paymentOnAccountExistsPage: PaymentOnAccountExistsPage,
+  outstandingReturnsPage: OutstandingReturnsPage
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -62,8 +67,17 @@ class EligibilityController @Inject()(
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
+        case e:Eligibility if !e.outstandingBalance =>
+          Ok(noDeferredVatToPayPage())
+        case e:Eligibility if e.existingObligations =>
+          Ok(outstandingReturnsPage())
+        case e:Eligibility if e.paymentOnAccoutExists =>
+          Ok(paymentOnAccountExistsPage())
+        case e:Eligibility if e.timeToPayExists =>
+          Ok(timeToPayExistsPage())
         case e:Eligibility if e.paymentPlanExists =>
           Ok(returningUserPage())
+
         case e =>
           Ok(notEligiblePage(e))
       }

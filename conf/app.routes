@@ -12,6 +12,8 @@ GET        /time-in                                   uk.gov.hmrc.vatdeferralnew
 GET        /time-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.timeOut
 GET        /sign-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.signOut
 
+GET        /invalid-account-affinity                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.kickout.IncorrectAccountAffinityController.get
+
 GET        /enter-vrn                                 uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.get
 POST       /enter-vrn                                 uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.VrnController.post
 

@@ -17,18 +17,26 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
-import play.api.{Configuration, Environment, Mode}
+import play.api.libs
+import play.api.libs.json.Json
+import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{AuthProviders, ConfidenceLevel, _}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, ServicesConfig}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, MatchingJourneySession, Vrn}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.IncorrectAccountAffinityPage
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,55 +56,80 @@ class AuthImpl @Inject()(
   val appConfig: AppConfig,
   sessionStore: SessionStore) extends Auth {
 
-  def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request =>
+  val logger = Logger(this.getClass)
 
-      val currentUrl = {
-        if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
-      }
+  val retrieval = allEnrolments and affinityGroup
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+  def authorise(
+    action: Request[AnyContent] => Vrn => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] = Action.async { implicit request =>
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
-        enrolments => {
-
-          def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
-            for {
-              e <- enrolments.getEnrolment(serviceKey)
-              i <- e.getIdentifier(enrolmentKey)
-            } yield Vrn(i.value)
-
-          def getVrnFromSession(): Future[Result] = request.session.get("sessionId") match {
-            case Some(sessionId) =>
-              sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
-                case Some(a) if a.vrn.isDefined && a.isUserEnrolled => action(request)(Vrn(a.vrn.getOrElse(throw new RuntimeException("Vrn not set"))))
-                case _ => Future.successful(Redirect("enter-vrn"))
-              }
-            case None => Future.successful(Redirect("enter-vrn"))
-          }
-
-          (
-            getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
-            getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo")
-          ).fold(getVrnFromSession())(action(request))
-        }
-      }.recover {
-        case _: NoActiveSession => toGGLogin(currentUrl)
-      }
+    val currentUrl = {
+      if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
     }
 
-  def authoriseWithJourneySession(action: Request[AnyContent] => Vrn => JourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request =>
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(
+      request.headers,
+      Some(request.session),
+      Some(request)
+    )
+
+    authorised(
+      AuthProviders(GovernmentGateway) and ConfidenceLevel.L50 and (Organisation or Individual)
+    ).retrieve(retrieval) { case enrolments ~ affinity =>
+
+      def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
+        for {
+          e <- enrolments.getEnrolment(serviceKey)
+          i <- e.getIdentifier(enrolmentKey)
+        } yield Vrn(i.value)
+
+      def getVrnFromSession(): Future[Result] = request.session.get("sessionId") match {
+        case Some(sessionId) =>
+          sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
+            case Some(a) if a.vrn.isDefined && a.isUserEnrolled =>
+              action(request)(Vrn(a.vrn.getOrElse(throw new RuntimeException("Vrn not set"))))
+            case _ => Future.successful(Redirect("enter-vrn"))
+          }
+        case None => Future.successful(Redirect("enter-vrn"))
+      }
+
+      (
+        getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
+          getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo")
+        ).fold(getVrnFromSession())(action(request))
+    }.recover {
+      case af: UnsupportedAffinityGroup =>
+        logger.warn(s"invalid account affinity type, with message ${af.msg}, for reason ${af.reason}", af)
+        Redirect(kickout.routes.IncorrectAccountAffinityController.get())
+      case _: NoActiveSession => toGGLogin(currentUrl)
+    }
+  }
+
+  def authoriseWithJourneySession(
+    action: Request[AnyContent] => Vrn => JourneySession => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] = Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
       }
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(
+        request.headers,
+        Some(request.session),
+        Some(request)
+      )
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
-        enrolments => {
-
+      authorised(
+        AuthProviders(GovernmentGateway) and ConfidenceLevel.L50 and (Organisation or Individual)
+      ).retrieve(retrieval) {
+        case enrolments ~ affinity =>
           def getVrnFromEnrolment(serviceKey: String, enrolmentKey: String): Option[Vrn] =
             for {
               e <- enrolments.getEnrolment(serviceKey)
@@ -127,38 +160,61 @@ class AuthImpl @Inject()(
 
           (
             getVrnFromEnrolment("HMRC-MTD-VAT", "VRN") orElse
-            getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo")
-          ).fold(getVrnFromSession)(vrn => withJourneySession(vrn))
-        }
+              getVrnFromEnrolment("HMCE-VATDEC-ORG", "VATRegNo")
+            ).fold(getVrnFromSession)(vrn => withJourneySession(vrn))
       }.recover {
+        case af: UnsupportedAffinityGroup =>
+          logger.warn(s"invalid account affinity type, with message ${af.msg}, for reason ${af.reason}", af)
+          Redirect(kickout.routes.IncorrectAccountAffinityController.get())
         case _: NoActiveSession => toGGLogin(currentUrl)
       }
-    }
+  }
 
-  def authoriseForMatchingJourney(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request =>
+  def authoriseForMatchingJourney(
+    action: Request[AnyContent] => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] = Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
       }
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(
+        request.headers,
+        Some(request.session),
+        Some(request)
+      )
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
-        _ => action(request)
+      authorised(
+        AuthProviders(GovernmentGateway) and ConfidenceLevel.L50 and (Organisation or Individual)
+      ).retrieve(retrieval) { case enrolments ~ affinity =>
+        action(request)
       }.recover {
+        case af: UnsupportedAffinityGroup =>
+          logger.warn(s"invalid account affinity type, with message ${af.msg}, for reason ${af.reason}", af)
+          Redirect(kickout.routes.IncorrectAccountAffinityController.get())
         case _: NoActiveSession => toGGLogin(currentUrl)
       }
     }
 
-  def authoriseWithMatchingJourneySession(action: Request[AnyContent] => MatchingJourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
-    Action.async { implicit request =>
+  def authoriseWithMatchingJourneySession(
+    action: Request[AnyContent] => MatchingJourneySession => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] = Action.async { implicit request =>
 
       val currentUrl = {
         if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
       }
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(
+        request.headers,
+        Some(request.session),
+        Some(request)
+      )
 
       val newAction: Future[Result] =
         request.session.get("sessionId").map { sessionId =>
@@ -179,9 +235,14 @@ class AuthImpl @Inject()(
           }
         }.getOrElse(Future.successful(toGGLogin(currentUrl)))
 
-      authorised(AuthProviders(GovernmentGateway) and ConfidenceLevel.L50).retrieve(Retrievals.allEnrolments) {
-        _ => newAction
+      authorised(
+        AuthProviders(GovernmentGateway) and ConfidenceLevel.L50 and (Organisation or Individual)
+      ).retrieve(retrieval) { case enrolments ~ affinity =>
+        newAction
       }.recover {
+        case af: UnsupportedAffinityGroup =>
+          logger.warn(s"invalid account affinity type, with message ${af.msg}, for reason ${af.reason}", af)
+          Redirect(kickout.routes.IncorrectAccountAffinityController.get())
         case _: NoActiveSession => toGGLogin(currentUrl)
       }
     }

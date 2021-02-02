@@ -20,13 +20,17 @@ import play.api.libs.json.{JsValue, Json, Writes}
 
 case class Eligibility(
   paymentPlanExists: Boolean,
+  paymentOnAccoutExists: Boolean,
+  timeToPayExists: Boolean,
   existingObligations: Boolean,
   outstandingBalance: Boolean
 ) {
   def eligible: Boolean =
     !paymentPlanExists &&
+      !paymentOnAccoutExists &&
+      !timeToPayExists &&
       !existingObligations &&
-        outstandingBalance
+      outstandingBalance
 }
 
 object Eligibility {
