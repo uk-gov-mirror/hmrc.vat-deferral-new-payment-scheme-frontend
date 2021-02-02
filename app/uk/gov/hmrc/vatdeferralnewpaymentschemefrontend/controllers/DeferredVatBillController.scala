@@ -46,7 +46,12 @@ class DeferredVatBillController @Inject()(
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
       vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map { e =>
-        sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(outStandingAmount = Some(e.outstandingAmount)))
+        sessionStore.store[JourneySession](
+          journeySession.id,
+          "JourneySession",
+          journeySession.copy(outStandingAmount =
+            journeySession.outStandingAmount.copy(value = Some(e.outstandingAmount)))
+        )
         Ok(deferredVatBillPage(e.originalAmount, e.outstandingAmount, e.originalAmount - e.outstandingAmount))
       }
   }

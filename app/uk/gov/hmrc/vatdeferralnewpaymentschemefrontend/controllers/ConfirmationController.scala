@@ -43,10 +43,10 @@ class ConfirmationController @Inject()(
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
     val fpa: BigDecimal = firstPaymentAmount(
-      journeySession.outStandingAmount.getOrElse(0),
-      journeySession.numberOfPaymentMonths.getOrElse(11)
+      journeySession.outStandingAmount.value.getOrElse(0),
+      journeySession.numberOfPaymentMonths.value.getOrElse(11)
     )
-    val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
+    val dop = journeySession.dayOfPayment.value.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
       dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
     }
     request.session.get("sessionId").fold(())(sessionStore.drop)

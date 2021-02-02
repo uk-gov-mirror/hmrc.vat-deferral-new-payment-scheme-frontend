@@ -48,7 +48,7 @@ class MonthsController @Inject()(
   val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
     displayInstalmentsPage(
       journeySession,
-      journeySession.monthsQuestion.fold(
+      journeySession.monthsQuestion.value.fold(
         instalmentsForm
       )(
         x => instalmentsForm.fill(FormValues(x.toString))
@@ -65,20 +65,16 @@ class MonthsController @Inject()(
             sessionStore.store[JourneySession](
               journeySession.id,
               "JourneySession",
-              journeySession.copy(numberOfPaymentMonths = Some(11))
-            )
-            Future.successful(Redirect(routes.WhenToPayController.get()))
+              journeySession.copy(numberOfPaymentMonths = journeySession.numberOfPaymentMonths.copy(value = Some(11)))
+            ).flatMap(_.next)
           }
-          else {
-            if (journeySession.numberOfPaymentMonths.isEmpty || journeySession.numberOfPaymentMonths.contains(11)) {
+          else if (journeySession.numberOfPaymentMonths.value.isEmpty || journeySession.numberOfPaymentMonths.value.contains(11)) {
               sessionStore.store[JourneySession](
                 journeySession.id,
                 "JourneySession",
-                journeySession.copy(numberOfPaymentMonths = Some(-1))
-              )
-            }
-            Future.successful(Redirect(routes.MonthsController.getInstallmentBreakdown()))
-          }
+                journeySession.copy(numberOfPaymentMonths = journeySession.numberOfPaymentMonths.copy(value = Some(-1)))
+              ).flatMap(_.next)
+          } else journeySession.next
       }
     )
   }
@@ -92,8 +88,11 @@ class MonthsController @Inject()(
     monthForm.bindFromRequest().fold(
       errors => displayMonthsSelectionPage(journeySession, errors),
       form => {
-          sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(numberOfPaymentMonths = Some(form.value.toInt)))
-          Future.successful(Redirect(routes.WhenToPayController.get()))
+          sessionStore.store[JourneySession](
+            journeySession.id,
+            "JourneySession",
+            journeySession.copy(numberOfPaymentMonths = journeySession.numberOfPaymentMonths.copy(value =Some(form.value.toInt)))
+          ).flatMap(_.next)
       }
     )
   }
@@ -116,14 +115,14 @@ class MonthsController @Inject()(
     messages: MessagesApi,
     appConfig: AppConfig
   ): Future[Result] = {
-    journeySession.outStandingAmount match {
+    journeySession.outStandingAmount.value match {
       case Some(outStandingAmount) => {
         val monthlyAmount = (outStandingAmount / 11).setScale(2, RoundingMode.DOWN)
         val remainder = outStandingAmount - (monthlyAmount * 11)
-        if (form.hasErrors) Future.successful(BadRequest(monthlyInstallmentsPage(monthlyAmount, remainder, form)))
-        else Future.successful(Ok(monthlyInstallmentsPage(monthlyAmount, remainder, form)))
+        if (form.hasErrors) Future.successful(BadRequest(monthlyInstallmentsPage(monthlyAmount, remainder, form, journeySession.previous)))
+        else Future.successful(Ok(monthlyInstallmentsPage(monthlyAmount, remainder, form, journeySession.previous)))
       }
-      case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
+      case _ => Future.successful(Redirect(journeySession.previous))
     }
   }
 
@@ -135,21 +134,23 @@ class MonthsController @Inject()(
     messages: MessagesApi,
     appConfig: AppConfig
   ): Future[Result] = {
-    journeySession.outStandingAmount match {
+    journeySession.outStandingAmount.value match {
       case Some(outStandingAmount) => {
         if (form.hasErrors) {
           Future.successful(BadRequest(
             howManyMonthsPage(
               getMonths(outStandingAmount).reverse,
-              form
+              form,
+              journeySession.previous
             )
           ))
         } else {
           Future.successful(Ok(
             howManyMonthsPage(
               getMonths(outStandingAmount).reverse,
-              journeySession.numberOfPaymentMonths
-                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString)))
+              journeySession.numberOfPaymentMonths.value
+                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString))),
+              journeySession.previous
           )))
         }
       }

@@ -44,7 +44,7 @@ class VrnController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
       enterVrnPage(
-        matchingJourneySession.vrn.fold(frm){ x =>
+        matchingJourneySession.vrn.value.fold(frm){ x =>
           frm.fill(Vrn(x))
         }
       )
@@ -56,8 +56,11 @@ class VrnController @Inject()(
     frm.bindFromRequest().fold(
         errors => Future(BadRequest(enterVrnPage(errors))),
         vrn => {
-          sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(vrn = Some(vrn.vrn)))
-          Future.successful(Redirect(routes.PostCodeController.get()))
+          sessionStore.store[MatchingJourneySession](
+            matchingJourneySession.id,
+            "MatchingJourneySession",
+            matchingJourneySession.copy(vrn = matchingJourneySession.vrn.copy(value = Some(vrn.vrn)))
+          ).flatMap(_.next)
         }
       )
   }

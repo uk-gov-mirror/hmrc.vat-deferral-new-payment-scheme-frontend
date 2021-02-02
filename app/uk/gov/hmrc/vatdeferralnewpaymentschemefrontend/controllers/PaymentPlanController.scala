@@ -45,16 +45,16 @@ class PaymentPlanController @Inject()(
 
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
-    (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
+    (journeySession.dayOfPayment.value, journeySession.outStandingAmount.value) match {
       case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(
         Ok(
           paymentPlanPage(
             formattedPaymentsStartDate,
             dayOfPayment,
-            journeySession.numberOfPaymentMonths.getOrElse(11),
+            journeySession.numberOfPaymentMonths.value.getOrElse(11),
             outStandingAmount,
-            firstPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11)),
-            regularPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11))
+            firstPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.value.getOrElse(11)),
+            regularPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.value.getOrElse(11))
           )
         )
       )

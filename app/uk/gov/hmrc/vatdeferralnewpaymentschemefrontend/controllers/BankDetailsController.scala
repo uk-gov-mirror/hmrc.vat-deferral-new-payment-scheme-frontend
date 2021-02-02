@@ -72,15 +72,15 @@ class BankDetailsController @Inject()(
   def post(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     val dayOfPayment:Int =
-      journeySession.dayOfPayment.getOrElse(
+      journeySession.dayOfPayment.value.getOrElse(
         throw new IllegalStateException("journeySession missing dayOfPayment")
       )
     val numberOfPaymentMonths:Int =
-      journeySession.numberOfPaymentMonths.getOrElse(
+      journeySession.numberOfPaymentMonths.value.getOrElse(
         throw new IllegalStateException("journeySession missing numberOfPaymentMonths")
       )
     val outStandingAmount: BigDecimal =
-      journeySession.outStandingAmount.getOrElse(
+      journeySession.outStandingAmount.value.getOrElse(
         throw new IllegalStateException("journeySession missing outStandingAmount")
       )
     lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {

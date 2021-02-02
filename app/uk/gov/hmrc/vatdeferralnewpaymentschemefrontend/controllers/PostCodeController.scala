@@ -44,19 +44,23 @@ class PostCodeController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
       enterPostCodePage(
-        matchingJourneySession.postCode.fold(frm){ x =>
+        matchingJourneySession.postCode.value.fold(frm){ x =>
           frm.fill(PostCode(x))
-        }
+        },
+        matchingJourneySession.previous
       )
     ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     frm.bindFromRequest().fold(
-      errors => Future(BadRequest(enterPostCodePage(errors))),
-      postCode => {
-        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(postCode = Some(postCode.value)))
-        Future.successful(Redirect(routes.VatReturnController.get()))
+      errors => Future(BadRequest(enterPostCodePage(errors, matchingJourneySession.previous))),
+      postCodez => {
+        sessionStore.store[MatchingJourneySession](
+          matchingJourneySession.id,
+          "MatchingJourneySession",
+          matchingJourneySession.copy(postCode = matchingJourneySession.postCode.copy(value = Some(postCodez.value)))
+        ).flatMap(_.next)
       }
     )
   }

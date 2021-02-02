@@ -49,14 +49,14 @@ class WhenToPayController @Inject()(
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>
       journeySession =>
-        (journeySession.outStandingAmount,journeySession.dayOfPayment) match {
+        (journeySession.outStandingAmount.value,journeySession.dayOfPayment.value) match {
           case (Some(_),dop) =>
             Future.successful(
               Ok(
                 whenToPagePage(
                   dop.fold(frm)(x => frm.fill(FormValues(x.toString))),
                   formattedPaymentsStartDate,
-                  journeySession.numberOfPaymentMonths.getOrElse(11)
+                  journeySession.numberOfPaymentMonths.value.getOrElse(11)
                 )
               ))
           case _ =>
@@ -76,13 +76,16 @@ class WhenToPayController @Inject()(
               whenToPagePage(
                 errors,
                 formattedPaymentsStartDate,
-                journeySession.numberOfPaymentMonths.getOrElse(11)
+                journeySession.numberOfPaymentMonths.value.getOrElse(11)
               )
             )
           ),
           form => {
-            sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(dayOfPayment = Some(form.value.toInt)))
-            Future.successful(Redirect(routes.PaymentPlanController.get()))
+            sessionStore.store[JourneySession](
+              journeySession.id,
+              "JourneySession",
+              journeySession.copy(dayOfPayment = journeySession.dayOfPayment.copy(value = Some(form.value.toInt))))
+                .flatMap(_ => Future.successful(Redirect(routes.PaymentPlanController.get())))
           }
         )
   }

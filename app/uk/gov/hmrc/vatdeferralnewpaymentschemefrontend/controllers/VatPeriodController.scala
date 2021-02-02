@@ -44,19 +44,23 @@ class VatPeriodController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
       enterLatestVatPeriodPage(
-        matchingJourneySession.latestAccountPeriodMonth.fold(frm){ x =>
+        matchingJourneySession.latestAccountPeriodMonth.value.fold(frm){ x =>
           frm.fill(FormValues(x))
-        }
+        },
+        matchingJourneySession.previous
       )
     ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     frm.bindFromRequest().fold(
-      errors => Future(BadRequest(enterLatestVatPeriodPage(errors))),
+      errors => Future(BadRequest(enterLatestVatPeriodPage(errors, matchingJourneySession.previous))),
       formValues => {
-        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(latestAccountPeriodMonth = Some(formValues.month)))
-        Future.successful(Redirect(routes.VatRegistrationDateController.get()))
+        sessionStore.store[MatchingJourneySession](
+          matchingJourneySession.id,
+          "MatchingJourneySession",
+          matchingJourneySession.copy(latestAccountPeriodMonth = matchingJourneySession.latestAccountPeriodMonth.copy(value = Some(formValues.month)))
+        ).flatMap(_.next)
       }
     )
   }

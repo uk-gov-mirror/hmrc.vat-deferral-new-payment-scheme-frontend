@@ -69,7 +69,7 @@ class AuthImpl @Inject()(
           def getVrnFromSession(): Future[Result] = request.session.get("sessionId") match {
             case Some(sessionId) =>
               sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
-                case Some(a) if a.vrn.isDefined && a.isUserEnrolled => action(request)(Vrn(a.vrn.getOrElse(throw new RuntimeException("Vrn not set"))))
+                case Some(a) if a.vrn.value.isDefined && a.isUserEnrolled => action(request)(Vrn(a.vrn.value.getOrElse(throw new RuntimeException("Vrn not set"))))
                 case _ => Future.successful(Redirect("enter-vrn"))
               }
             case None => Future.successful(Redirect("enter-vrn"))
@@ -106,7 +106,7 @@ class AuthImpl @Inject()(
           def getVrnFromSession(): Future[Result] = request.session.get("sessionId") match {
             case Some(sessionId) =>
               sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
-                case Some(a) if a.vrn.isDefined && a.isUserEnrolled => withJourneySession(Vrn(a.vrn.get))
+                case Some(a) if a.vrn.value.isDefined && a.isUserEnrolled => withJourneySession(Vrn(a.vrn.value.get))
                 case _ => Future.successful(Redirect("enter-vrn"))
               }
             case None => Future.successful(Redirect("enter-vrn"))
@@ -164,7 +164,7 @@ class AuthImpl @Inject()(
         request.session.get("sessionId").map { sessionId =>
           sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").flatMap {
             case Some(a) => {
-              val redirect = a.redirect(request)
+              val redirect = a.redirect
               if (redirect.isDefined)
                 redirect.getOrElse(throw new IllegalStateException("unable to get defined option"))
               else if (!a.locked)

@@ -20,16 +20,31 @@ import java.time._
 import java.time.format.DateTimeFormatter
 
 import play.api.i18n.Messages
-import play.api.libs.json.Writes
+import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{MatchingJourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse, Identifiers, KnownFacts}
 
 import scala.concurrent.ExecutionContext
 import scala.math.BigDecimal.RoundingMode
 
 package object controllers {
+
+  case class DateFormValues(day: String, month: String, year: String) {
+    def isValidDate: Boolean = try{
+      val dateText = s"${"%02d".format(day.toInt)}/${"%02d".format(month.toInt)}/$year"
+      LocalDate.parse(dateText, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+      true
+    }
+    catch {
+      case _ => false
+    }
+  }
+
+  case object DateFormValues {
+    implicit val format = Json.format[DateFormValues]
+  }
 
   def paymentStartDate: ZonedDateTime = {
     val now = ZonedDateTime.now.withZoneSameInstant(ZoneId.of("Europe/London"))
@@ -102,16 +117,16 @@ package object controllers {
       EnrolmentRequest(
         HmrcMtdVatService,
         Seq[KnownFacts](
-          KnownFacts("VRN", matchingJourneySession.vrn.getOrElse("")),
-          KnownFacts("Postcode", matchingJourneySession.postCode.getOrElse("")))
+          KnownFacts("VRN", matchingJourneySession.vrn.value.getOrElse("")),
+          KnownFacts("Postcode", matchingJourneySession.postCode.value.getOrElse("")))
       )
 
     def enrolmentRequestHmceVatdecOrg(matchingJourneySession: MatchingJourneySession) =
       EnrolmentRequest(
         HmceVatdecOrgService,
         Seq[KnownFacts](
-          KnownFacts("VATRegNo", matchingJourneySession.vrn.getOrElse("")),
-          KnownFacts("IRPCODE", matchingJourneySession.postCode.getOrElse("")))
+          KnownFacts("VATRegNo", matchingJourneySession.vrn.value.getOrElse("")),
+          KnownFacts("IRPCODE", matchingJourneySession.postCode.value.getOrElse("")))
       )
 
     def enrolmentMatches(
@@ -156,12 +171,12 @@ package object controllers {
       identifiers: Identifiers,
       mjs: MatchingJourneySession
     ): Boolean = (service, identifiers.key, identifiers.value) match {
-      case (HmrcMtdVatService, "BoxFiveValue", v) => v == mjs.latestVatAmount.getOrElse("")
-      case (HmrcMtdVatService, "LastMonthLatestStagger", v) => v == mjs.latestAccountPeriodMonth.getOrElse("")
-      case (HmrcMtdVatService, "VATRegistrationDate", v) => checkVatRegistrationDate(v, mjs.date)
-      case (HmceVatdecOrgService, "PETAXDUESALES", v) => v == mjs.latestVatAmount.getOrElse("")
-      case (HmceVatdecOrgService, "PEPDNO", v) => v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
-      case (HmceVatdecOrgService, "IREFFREGDATE", v) => checkVatRegistrationDate(v, mjs.date)
+      case (HmrcMtdVatService, "BoxFiveValue", v) => v == mjs.latestVatAmount.value.getOrElse("")
+      case (HmrcMtdVatService, "LastMonthLatestStagger", v) => v == mjs.latestAccountPeriodMonth.value.getOrElse("")
+      case (HmrcMtdVatService, "VATRegistrationDate", v) => checkVatRegistrationDate(v, mjs.date.value)
+      case (HmceVatdecOrgService, "PETAXDUESALES", v) => v == mjs.latestVatAmount.value.getOrElse("")
+      case (HmceVatdecOrgService, "PEPDNO", v) => v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth.value)
+      case (HmceVatdecOrgService, "IREFFREGDATE", v) => checkVatRegistrationDate(v, mjs.date.value)
       case _ => true
     }
   }

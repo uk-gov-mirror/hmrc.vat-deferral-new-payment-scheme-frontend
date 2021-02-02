@@ -44,19 +44,23 @@ class VatReturnController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
       enterLatestVatReturnTotalPage(
-        matchingJourneySession.latestVatAmount.fold(frm) { x =>
+        matchingJourneySession.latestVatAmount.value.fold(frm) { x =>
           frm.fill(Amount(x))
-        }
+        },
+        matchingJourneySession.previous
       )
     ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     frm.bindFromRequest().fold(
-      errors => Future(BadRequest(enterLatestVatReturnTotalPage(errors))),
+      errors => Future(BadRequest(enterLatestVatReturnTotalPage(errors, matchingJourneySession.previous))),
       amount => {
-        sessionStore.store[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession", matchingJourneySession.copy(latestVatAmount = Some(amount.value)))
-        Future.successful(Redirect(routes.VatPeriodController.get()))
+        sessionStore.store[MatchingJourneySession](
+          matchingJourneySession.id,
+          "MatchingJourneySession",
+          matchingJourneySession.copy(latestVatAmount = matchingJourneySession.latestVatAmount.copy(value = Some(amount.value)))
+        ).flatMap(_.next)
       }
     )
   }

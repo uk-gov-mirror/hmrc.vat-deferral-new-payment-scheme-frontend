@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.EnrolmentStoreConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.enrolments._
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegistrationDatePage, VatDetailsNotValidPage}
 
@@ -51,23 +51,24 @@ class VatRegistrationDateController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     Future.successful(Ok(
       enterVatRegistrationDatePage(
-        matchingJourneySession.date.fold(frm) (x =>
+        matchingJourneySession.date.value.fold(frm) (x =>
           frm.fill(DateFormValues(x.day, x.month, x.year))
-        )
+        ),
+        matchingJourneySession.previous
       )
     ))
   }
 
   def post(): Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
     frm.bindFromRequest().fold(
-      errors => Future(BadRequest(enterVatRegistrationDatePage(errors))),
+      errors => Future(BadRequest(enterVatRegistrationDatePage(errors, matchingJourneySession.previous))),
       formValues => {
 
         for {
           journeyState <- sessionStore.store[MatchingJourneySession](
             matchingJourneySession.id,
             "MatchingJourneySession",
-            matchingJourneySession.copy(date = Some(formValues))
+            matchingJourneySession.copy(date = matchingJourneySession.date.copy(value = Some(formValues)))
           )
           erhmv = enrolmentRequestHmrcMtdVat(matchingJourneySession)
           erhvo = enrolmentRequestHmceVatdecOrg(matchingJourneySession)
