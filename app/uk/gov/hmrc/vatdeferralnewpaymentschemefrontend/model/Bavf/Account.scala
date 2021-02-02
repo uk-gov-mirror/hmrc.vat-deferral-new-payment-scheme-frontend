@@ -68,7 +68,7 @@ object Account {
     (__ \ "personal" \ "accountName").read[String] and
     (__ \ "personal" \ "sortCode").read[String] and
     (__ \ "personal" \ "accountNumber").read[String] and
-    (__ \ "business" \ "accountExists").readNullable[ReputationResponseEnum]
+    (__ \ "personal" \ "accountExists").readNullable[ReputationResponseEnum]
     )(PersonalCompleteResponse.apply _)
 
   implicit val accountReads: Reads[Account] = Reads[Account](jsValue => {

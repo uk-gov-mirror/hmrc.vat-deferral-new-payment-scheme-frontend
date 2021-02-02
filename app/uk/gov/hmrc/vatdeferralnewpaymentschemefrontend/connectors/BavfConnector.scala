@@ -57,6 +57,7 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
     val url = s"${appConfig.bavfApiBaseUrl}/api/complete/$journeyId"
     httpClient.GET[HttpResponse](url).map {
       case r if r.status == 200 =>
+        println(s"AAAAAAAAA ${Some(r.json.as[Account])}")
         Some(r.json.as[Account])
       case _ =>
         None

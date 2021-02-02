@@ -66,7 +66,6 @@ class CheckBankAccountDetailsController @Inject()(
     connector.complete(journeyId).map {
 
       case Some(r) =>
-        println(s"$r AAAAAAAAAAAAAA")
         r match {
           case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, Some(reputationResponseEnum)) =>
             reputationResponseEnum match {

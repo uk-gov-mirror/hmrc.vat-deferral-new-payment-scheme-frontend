@@ -65,7 +65,7 @@ class PaymentPlanController @Inject()(
   def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     _ =>
       _ =>
-        val continueUrl = s"${appConfig.frontendUrl}/bank-details"
+        val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
         connector.init(continueUrl).map {
           case Some(initResponse) => SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
           case None => InternalServerError
