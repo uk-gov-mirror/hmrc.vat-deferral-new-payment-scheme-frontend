@@ -79,22 +79,6 @@ class EligibilityController @Inject()(
           Ok(noDeferredVatToPayPage())
         case _ =>
           Ok(notEligiblePage())
-
-//
-//          Ok(noDeferredVatToPayPage())
-//        case e:Eligibility if !e.outstandingBalance =>
-//          Ok(noDeferredVatToPayPage())
-//        case e:Eligibility if e.existingObligations =>
-//          Ok(outstandingReturnsPage())
-//        case e:Eligibility if e.paymentOnAccoutExists =>
-//          Ok(paymentOnAccountExistsPage())
-//        case e:Eligibility if e.timeToPayExists =>
-//          Ok(timeToPayExistsPage())
-//        case e:Eligibility if e.paymentPlanExists =>
-//          Ok(returningUserPage())
-//
-//        case e =>
-//          Ok(notEligiblePage())
       }
     }
   }
