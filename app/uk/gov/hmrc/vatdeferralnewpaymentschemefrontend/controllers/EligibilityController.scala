@@ -61,7 +61,9 @@ class EligibilityController @Inject()(
       for {
         e <- vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn)
         _ = audit("elibilityCheck", e)
-      } yield e match {
+      } yield {
+        println(s"############################################## $e")
+        e match {
         case e:Eligibility if e.eligible =>
           request.session.get("sessionId").map { sessionId =>
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
@@ -75,11 +77,11 @@ class EligibilityController @Inject()(
           Ok(timeToPayExistsPage())
         case Eligibility(_,_,_,Some(true),_) =>
           Ok(outstandingReturnsPage())
-        case Eligibility(_,_,_,_,Some(false)) =>
+        case Eligibility(_,_,_,_,None) =>
           Ok(noDeferredVatToPayPage())
         case _ =>
           Ok(notEligiblePage())
-      }
+      }}
     }
   }
 }
