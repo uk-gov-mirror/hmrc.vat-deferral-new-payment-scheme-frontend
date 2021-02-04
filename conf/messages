@@ -124,6 +124,7 @@ payment.plan.h1=Check your payment plan
 payment.plan.list-key=Payments collected on
 payment.plan.list-value=or next working day
 payment.plan.total.pay=Total to pay
+payment.plan.monthly.payments=Monthly payments
 
 check.direct.debit.heading=Check your Direct Debit details
 check.direct.debit.bank.account.type.heading=Bank account type
