@@ -40,9 +40,9 @@
                 @messages(s"check.direct.debit.bank.account.type.$accountType")
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="direct-debit-bank-details">
-                    Change<span class="govuk-visually-hidden">
-                    account name</span>
+                <a class="govuk-link" href="@controllers.routes.CheckBankAccountDetailsController.callBavfInit(journeyId)">
+                    @messages("common.change")
+                    <span class="govuk-visually-hidden">@messages("check.direct.debit.bank.account.type.change.hidden")</span>
                 </a>
             </dd>
         </div>
@@ -62,9 +62,9 @@
                 @accountNumber
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="direct-debit-bank-details">
-                    Change<span class="govuk-visually-hidden">
-                    account name</span>
+                <a class="govuk-link" href="@controllers.routes.CheckBankAccountDetailsController.callBavfInit(journeyId)">
+                    @messages("common.change")
+                    <span class="govuk-visually-hidden">@messages("check.direct.debit.change.hidden")</span>
                 </a>
             </dd>
         </div>

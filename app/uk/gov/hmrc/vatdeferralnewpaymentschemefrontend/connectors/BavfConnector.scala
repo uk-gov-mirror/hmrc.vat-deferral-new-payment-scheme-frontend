@@ -27,19 +27,21 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: AppConfig) {
 
-  def init(continueUrl: String,
-           messages: Option[InitRequestMessages] = None,
-           customisationsUrl: Option[String] = None)(
-            implicit ec: ExecutionContext,
-            hc: HeaderCarrier
-          ): Future[Option[InitResponse]] = {
+  def init(
+    continueUrl: String,
+    messages: Option[InitRequestMessages] = None,
+    customisationsUrl: Option[String] = None,
+    prepopulatedData: Option[InitRequestPrepopulatedData] = None
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[InitResponse]] = {
 
     val request = InitRequest(
       "vdnps",
       continueUrl,
       messages,
       customisationsUrl,
-      address = None)
+      address = None,
+      prepopulatedData
+    )
 
     val url = s"${appConfig.bavfApiBaseUrl}/api/init"
     httpClient.POST[InitRequest, HttpResponse](url, request).map {
@@ -57,7 +59,6 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
     val url = s"${appConfig.bavfApiBaseUrl}/api/complete/$journeyId"
     httpClient.GET[HttpResponse](url).map {
       case r if r.status == 200 =>
-        println(s"AAAAAAAAA ${Some(r.json.as[Account])}")
         Some(r.json.as[Account])
       case _ =>
         None

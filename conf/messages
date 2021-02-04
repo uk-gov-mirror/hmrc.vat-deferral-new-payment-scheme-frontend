@@ -14,6 +14,7 @@ continue.button=Continue
 finish.sign-out.button=Finish and sign out
 
 common.error.summary.title=There is a problem
+common.change=Change
 
 time-out.title=For your security, we signed you out
 time-out.button=Sign in
@@ -128,6 +129,8 @@ check.direct.debit.heading=Check your Direct Debit details
 check.direct.debit.bank.account.type.heading=Bank account type
 check.direct.debit.bank.account.type.business=Business
 check.direct.debit.bank.account.type.personal=Personal
+check.direct.debit.bank.account.type.change.hidden=bank account type
+check.direct.debit.change.hidden=direct debit details
 check.direct.debit.name.on.account=Name on the account
 check.direct.debit.sort.code=Sort code
 check.direct.debit.account.number=Account number
