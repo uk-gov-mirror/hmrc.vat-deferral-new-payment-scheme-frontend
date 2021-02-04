@@ -61,26 +61,26 @@ class EligibilityController @Inject()(
       for {
         e <- vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn)
         _ = audit("elibilityCheck", e)
-      } yield e match {
+      } yield {
+        e match {
         case e:Eligibility if e.eligible =>
           request.session.get("sessionId").map { sessionId =>
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
-        case e:Eligibility if !e.outstandingBalance =>
-          Ok(noDeferredVatToPayPage())
-        case e:Eligibility if e.existingObligations =>
-          Ok(outstandingReturnsPage())
-        case e:Eligibility if e.paymentOnAccoutExists =>
-          Ok(paymentOnAccountExistsPage())
-        case e:Eligibility if e.timeToPayExists =>
-          Ok(timeToPayExistsPage())
-        case e:Eligibility if e.paymentPlanExists =>
+        case Eligibility(Some(true),_,_,_,_) =>
           Ok(returningUserPage())
-
-        case e =>
-          Ok(notEligiblePage(e))
-      }
+        case Eligibility(_,Some(true),_,_,_) =>
+          Ok(paymentOnAccountExistsPage())
+        case Eligibility(_,_,Some(true),_,_) =>
+          Ok(timeToPayExistsPage())
+        case Eligibility(_,_,_,Some(true),_) =>
+          Ok(outstandingReturnsPage())
+        case Eligibility(_,_,_,_,None) =>
+          Ok(noDeferredVatToPayPage())
+        case _ =>
+          Ok(notEligiblePage())
+      }}
     }
   }
 }
