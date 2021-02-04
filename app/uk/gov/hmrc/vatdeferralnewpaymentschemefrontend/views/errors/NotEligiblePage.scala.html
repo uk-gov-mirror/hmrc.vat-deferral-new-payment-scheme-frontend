@@ -22,7 +22,7 @@
         layout: Layout
 )
 
-@(eligibility: Eligibility)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("eligibility.not.eligible.heading.1"))) {
     <h1 class="govuk-heading-xl">@messages("eligibility.not.eligible.heading.1")</h1>

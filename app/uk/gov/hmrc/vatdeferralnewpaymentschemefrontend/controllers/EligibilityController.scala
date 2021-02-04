@@ -67,19 +67,34 @@ class EligibilityController @Inject()(
             sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
             Redirect(routes.CheckBeforeYouStartController.get())
           }.getOrElse(InternalServerError)
-        case e:Eligibility if !e.outstandingBalance =>
-          Ok(noDeferredVatToPayPage())
-        case e:Eligibility if e.existingObligations =>
-          Ok(outstandingReturnsPage())
-        case e:Eligibility if e.paymentOnAccoutExists =>
-          Ok(paymentOnAccountExistsPage())
-        case e:Eligibility if e.timeToPayExists =>
-          Ok(timeToPayExistsPage())
-        case e:Eligibility if e.paymentPlanExists =>
+        case Eligibility(Some(true),_,_,_,_) =>
           Ok(returningUserPage())
+        case Eligibility(_,Some(true),_,_,_) =>
+          Ok(paymentOnAccountExistsPage())
+        case Eligibility(_,_,Some(true),_,_) =>
+          Ok(timeToPayExistsPage())
+        case Eligibility(_,_,_,Some(true),_) =>
+          Ok(outstandingReturnsPage())
+        case Eligibility(_,_,_,_,Some(false)) =>
+          Ok(noDeferredVatToPayPage())
+        case _ =>
+          Ok(notEligiblePage())
 
-        case e =>
-          Ok(notEligiblePage(e))
+//
+//          Ok(noDeferredVatToPayPage())
+//        case e:Eligibility if !e.outstandingBalance =>
+//          Ok(noDeferredVatToPayPage())
+//        case e:Eligibility if e.existingObligations =>
+//          Ok(outstandingReturnsPage())
+//        case e:Eligibility if e.paymentOnAccoutExists =>
+//          Ok(paymentOnAccountExistsPage())
+//        case e:Eligibility if e.timeToPayExists =>
+//          Ok(timeToPayExistsPage())
+//        case e:Eligibility if e.paymentPlanExists =>
+//          Ok(returningUserPage())
+//
+//        case e =>
+//          Ok(notEligiblePage())
       }
     }
   }

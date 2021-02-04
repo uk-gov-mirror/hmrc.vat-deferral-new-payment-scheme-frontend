@@ -19,18 +19,17 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 import play.api.libs.json.{JsValue, Json, Writes}
 
 case class Eligibility(
-  paymentPlanExists: Boolean,
-  paymentOnAccoutExists: Boolean,
-  timeToPayExists: Boolean,
-  existingObligations: Boolean,
-  outstandingBalance: Boolean
+  paymentPlanExists: Option[Boolean],
+  paymentOnAccoutExists: Option[Boolean],
+  timeToPayExists: Option[Boolean],
+  existingObligations: Option[Boolean],
+  outstandingBalance: Option[Boolean]
 ) {
-  def eligible: Boolean =
-    !paymentPlanExists &&
-      !paymentOnAccoutExists &&
-      !timeToPayExists &&
-      !existingObligations &&
-      outstandingBalance
+  // TODO - this relies on outstandingBalance only being set when all others are false - consider enum
+  def eligible: Boolean = this match {
+    case Eligibility(_,_,_,_,Some(true)) => true
+    case _ => false
+  }
 }
 
 object Eligibility {
