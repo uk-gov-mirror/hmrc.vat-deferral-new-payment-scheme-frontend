@@ -19,12 +19,14 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 @import uk.gov.hmrc.hmrcfrontend.views.config._
+@import uk.gov.hmrc.webchat.client.WebChatClient
 
 @this(
         govukLayout: GovukLayout,
         head: Head,
         beforeContentBlock: BeforeContent,
-        scripts: Scripts
+        scripts: Scripts,
+        webChatClient: WebChatClient
 )
 @(pageTitle: Option[String] = None,
         backLinkEnabled: Boolean = false,
@@ -38,6 +40,11 @@
     @timeout_dialog(request.uri, appConfig.sessionTimeout)
 }
 
+@contentAndWebChatBlock = {
+    @contentBlock
+    @{webChatClient.loadWebChatContainer("HMRC_Anchored_1")}
+}
+
 @govukLayout(
     pageTitle = pageTitle,
     headBlock = Some(head(headBlock)),
@@ -45,4 +52,4 @@
     beforeContentBlock = Some(beforeContentWrapper),
     footerItems = FooterLinks(),
     bodyEndBlock = Some(scripts())
-)(contentBlock)
+)(contentAndWebChatBlock)

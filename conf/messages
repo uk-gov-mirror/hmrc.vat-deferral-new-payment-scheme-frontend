@@ -64,7 +64,7 @@ eligibility.not.eligible.p1=Our records show you are not eligible to join the VA
 eligibility.not.eligible.p2=You may not be eligible because you:
 eligibility.not.eligible.li1=have no deferred VAT to pay
 eligibility.not.eligible.li2=are not up to date with your VAT Returns
-eligibility.not.eligible.li3=already make advance payments towards your VAT bill and are applying before 1 March 2020
+eligibility.not.eligible.li3=already make advance payments towards your VAT bill and are applying before 1 March 2021
 eligibility.not.eligible.li4=already have a time to pay arrangement with HMRC that includes your deferred VAT
 eligibility.not.eligible.p3=Find out about 
 eligibility.not.eligible.link1=who can join the scheme
@@ -89,7 +89,7 @@ check.before.you.start.p3=If you need help to find out how much you owe,
 check.before.you.start.p4=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 check.before.you.start.p5=You must pay all instalments on time. If you are unable to pay, contact us to arrange other ways to clear your debt.
 
-deferred.vat.bill.heading.1=Your deferred VAT bill is
+deferred.vat.bill.heading.1=Your deferred VAT bill is {0}
 deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
 deferred.vat.bill.vat.total.payable=VAT payable for 20 March to 30 June 2020
 deferred.vat.bill.vat.paid=VAT paid to date
@@ -195,5 +195,44 @@ returning.user.heading=You have already set up your deferred VAT payments
 returning.user.p1=Our records show you have already used this service to set up a Direct Debit to pay your deferred VAT.
 returning.user.p2=If you think this is wrong,
 returning.user.p2.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+
+wrong-account.heading=You cannot use this service on behalf of a client
+wrong-account.p1=You signed in with a Government Gateway user ID for an agent.
+wrong-account.p2=We do not accept applications from agents acting on behalf of another business.
+wrong-account.p3=The business must apply directly using the online service.
+
+no-vat-to-pay.heading=You do not need to use this service
+no-vat-to-pay.p1=Our records show you have no deferred VAT to pay.
+no-vat-to-pay.p2.content=If you think you need to pay deferred VAT,
+no-vat-to-pay.p2.link= contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+
+time-to-pay.heading=You are not eligible to join the scheme
+time-to-pay.p1=Our records show you already have a time to pay arrangement with HMRC that includes your deferred VAT.
+time-to-pay.p2= This means you are not eligible to join the VAT deferral payment scheme.
+time-to-pay.p3.content=Find out about
+time-to-pay.p3.link=who can join the scheme
+time-to-pay.p4.content=If you still think you are eligible to join now,
+time-to-pay.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+
+payment-on-account.heading=You can join the scheme from {0}
+payment-on-account.p1=Our records show you already make advance payments towards your VAT bill.
+payment-on-account.p2=You will be able to join the VAT deferral payment scheme from {0}.
+payment-on-account.p3.content=Find out about
+payment-on-account.p3.link=who can join the scheme
+payment-on-account.p4.content=If you think you are eligible to join now,
+payment-on-account.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+
+outstanding-returns.heading=You must submit any outstanding VAT Returns before you can join the scheme
+outstanding-returns.p1=Our records show you are not up to date with your VAT Returns.
+outstanding-returns.p2= Before you can join the VAT deferral payment scheme, you must submit any outstanding VAT \
+  Returns from the last 4 years.
+outstanding-returns.what-to-do.heading=What you need to do
+outstanding-returns.what-to-do.p1.content-start=Go to your
+outstanding-returns.what-to-do.p1.link=business tax account
+outstanding-returns.what-to-do.p1.content-end=to find any VAT Returns you need to submit.
+outstanding-returns.what-to-do.p2=Once you have submitted these, you can come back to this service to join the \
+  scheme. Allow 24 hours for our records to update.
+outstanding-returns.what-to-do.p3.content=If your business tax account shows your VAT Returns are already up to date,
+outstanding-returns.what-to-do.p3.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 
 try.again.button=Try again

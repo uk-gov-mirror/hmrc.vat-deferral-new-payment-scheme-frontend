@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.NotMatchedPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.NotMatchedPage
 
 import scala.concurrent.ExecutionContext
 

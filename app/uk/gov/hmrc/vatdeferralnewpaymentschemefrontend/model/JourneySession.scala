@@ -37,18 +37,22 @@ case class JourneySession (
   def redirect(request: Request[AnyContent]): Option[Future[Result]] = {
     import play.api.mvc.Results.Redirect
     import shapeless.syntax.std.tuple._
+    import shapeless.syntax.typeable._
     import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
 
     import scala.concurrent.Future
-    val argList: List[Option[_]] =
-      monthsQuestion ::
-      JourneySession
+    val argList: List[Option[_]] = {
+      val js = JourneySession
         .unapply(this)
         .map(_.toList)
         .fold(List.empty[Any])(identity)
-        .slice(3,5)
-        .map(_.asInstanceOf[Option[_]])
+        .map(_.cast[Option[_]])
+        .filter(_.nonEmpty)
+        .flatten
+      js.head :: monthsQuestion :: js.tail
+    }
     val routeList: List[String] = List(
+      routes.DeferredVatBillController.get().url,
       routes.MonthsController.get().url,
       routes.MonthsController.getInstallmentBreakdown().url,
       routes.WhenToPayController.get().url

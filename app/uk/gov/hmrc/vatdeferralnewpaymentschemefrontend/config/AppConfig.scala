@@ -17,13 +17,20 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config
 
 import java.net.{URI, URLEncoder}
+import java.time.LocalDate
 
+import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+
+  implicit val dateConfigLoader: ConfigLoader[LocalDate] = (config: Config, path: String) => {
+    LocalDate.parse(config.getString(path))
+  }
+
   val footerLinkItems: Seq[String] = config.getOptional[Seq[String]]("footerLinkItems").getOrElse(Seq())
 
   private def getUrlFor(service: String) = servicesConfig.getString(s"microservice.services.$service.url")
@@ -64,4 +71,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val vrnRegex = servicesConfig.getString(s"regex.vrn")
   val decimalRegex = servicesConfig.getString(s"regex.decimal")
   val postCodeRegex = servicesConfig.getString(s"regex.postCode")
+
+  lazy val datePoaUsersStart: LocalDate = config.get[LocalDate]("date-poa-users-start")
 }
