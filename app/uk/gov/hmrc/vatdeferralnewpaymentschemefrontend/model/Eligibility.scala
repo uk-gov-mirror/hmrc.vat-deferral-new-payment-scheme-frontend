@@ -25,7 +25,7 @@ case class Eligibility(
   existingObligations: Option[Boolean],
   outstandingBalance: Option[Boolean]
 ) {
-  // TODO - this relies on outstandingBalance only being set when all others are false - consider enum
+  // TODO - consider enum
   def eligible: Boolean = this match {
     case Eligibility(_,_,_,Some(false),Some(true)) => true
     case _ => false
