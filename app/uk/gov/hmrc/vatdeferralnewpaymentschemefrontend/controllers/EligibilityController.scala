@@ -62,7 +62,6 @@ class EligibilityController @Inject()(
         e <- vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn)
         _ = audit("elibilityCheck", e)
       } yield {
-        println(s"############################################## $e")
         e match {
         case e:Eligibility if e.eligible =>
           request.session.get("sessionId").map { sessionId =>
