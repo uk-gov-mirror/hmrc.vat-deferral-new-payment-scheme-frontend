@@ -57,6 +57,7 @@ case class MatchingJourneySession (
 
   def redirect(request: Request[AnyContent]): Option[Future[Result]] = {
     import shapeless.syntax.std.tuple._
+    import shapeless.syntax.typeable._
     import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
     import scala.concurrent.Future
     import play.api.mvc.Results.Redirect
@@ -65,8 +66,9 @@ case class MatchingJourneySession (
         .unapply(this)
         .map(_.toList)
         .fold(List.empty[Any])(identity)
-        .slice(1,6)
-        .map(_.asInstanceOf[Option[_]])
+        .map(_.cast[Option[_]])
+        .filter(_.nonEmpty)
+        .flatten
     val routeList: List[String] = List(
       routes.VrnController.get().url,
       routes.PostCodeController.get().url,
