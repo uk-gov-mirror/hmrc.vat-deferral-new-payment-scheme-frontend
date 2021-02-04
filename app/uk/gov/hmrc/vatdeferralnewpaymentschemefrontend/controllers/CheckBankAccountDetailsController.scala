@@ -74,7 +74,7 @@ class CheckBankAccountDetailsController @Inject()(
         r match {
           case PersonalCompleteResponse(accountOrBusinessName, sortCode, accountNumber, Some(reputationResponseEnum)) =>
             reputationResponseEnum match {
-              case _=>
+              case ReputationResponseEnum.Yes =>
                 auditSuccess(account = Some(r))
                 //cya page due to Yes reputationResponse from BAVF
                 Ok(
