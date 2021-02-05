@@ -62,7 +62,7 @@ class VatDeferralNewPaymentSchemeConnector @Inject()(
       case e@UpstreamErrorResponse(message, 406, _, _ ) =>
         logger.error(message)
         audit(
-          "directDebitSetup",
+          "DirectDebitSetup",
           DirectDebitArrangementRequestAuditWrapper(success = false, vrn, directDebitArrangementRequest)
         )
         throw e
