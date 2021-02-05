@@ -18,14 +18,18 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf
 
 import play.api.libs.json._
 
-case class InitRequest(serviceIdentifier: String,
-                       continueUrl: String,
-                       messages: Option[InitRequestMessages] = None,
-                       customisationsUrl: Option[String] = None,
-                       address: Option[InitRequestAddress] = None)
+case class InitRequest(
+  serviceIdentifier: String,
+  continueUrl: String,
+  messages: Option[InitRequestMessages] = None,
+  customisationsUrl: Option[String] = None,
+  address: Option[InitRequestAddress] = None,
+  prepopulatedData: Option[InitRequestPrepopulatedData]
+)
 
 object InitRequest {
   implicit val messagesWrites: OWrites[InitRequestMessages] = Json.writes[InitRequestMessages]
   implicit val addressWrites: OWrites[InitRequestAddress] = Json.writes[InitRequestAddress]
+  implicit val prePopulatedDataWrites: OWrites[InitRequestPrepopulatedData] = Json.writes[InitRequestPrepopulatedData]
   implicit val writes: Writes[InitRequest] = Json.writes[InitRequest]
 }

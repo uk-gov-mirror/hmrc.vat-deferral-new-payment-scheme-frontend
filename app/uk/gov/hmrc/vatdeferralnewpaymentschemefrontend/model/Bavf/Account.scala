@@ -22,9 +22,19 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Vrn
 
 sealed trait Account
 
-case class BusinessCompleteResponse(companyName: String, sortCode: String, accountNumber: String) extends Account
+case class BusinessCompleteResponse(
+  companyName: String,
+  sortCode: String,
+  accountNumber: String,
+  accountExists: Option[ReputationResponseEnum]
+) extends Account
 
-case class PersonalCompleteResponse(accountName: String, sortCode: String, accountNumber: String) extends Account
+case class PersonalCompleteResponse(
+  accountName: String,
+  sortCode: String,
+  accountNumber: String,
+  accountExists: Option[ReputationResponseEnum]
+) extends Account
 
 case class AccountVerificationAuditWrapper(
   verified: Boolean,
@@ -50,13 +60,15 @@ object Account {
   implicit val businessReads: Reads[BusinessCompleteResponse] = (
       (__ \ "business" \ "companyName").read[String] and
       (__ \ "business" \ "sortCode").read[String] and
-      (__ \ "business" \ "accountNumber").read[String]
+      (__ \ "business" \ "accountNumber").read[String] and
+      (__ \ "business" \ "accountExists").readNullable[ReputationResponseEnum]
     )(BusinessCompleteResponse.apply _)
 
   implicit val personalReads: Reads[PersonalCompleteResponse] = (
     (__ \ "personal" \ "accountName").read[String] and
     (__ \ "personal" \ "sortCode").read[String] and
-    (__ \ "personal" \ "accountNumber").read[String]
+    (__ \ "personal" \ "accountNumber").read[String] and
+    (__ \ "personal" \ "accountExists").readNullable[ReputationResponseEnum]
     )(PersonalCompleteResponse.apply _)
 
   implicit val accountReads: Reads[Account] = Reads[Account](jsValue => {
