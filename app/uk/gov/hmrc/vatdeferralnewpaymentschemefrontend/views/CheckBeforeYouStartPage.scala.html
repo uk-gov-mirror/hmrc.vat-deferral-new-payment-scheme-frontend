@@ -32,6 +32,15 @@
 ) {
 
     <h1 class="govuk-heading-l">@messages("check.before.you.start.h1")</h1>
+    <h2 class="govuk-heading-m">@messages("check.before.you.start.t.and.c.heading.accept")</h2>
+    <h2 class="govuk-heading-s">@messages("check.before.you.start.t.and.c.heading.small")</h2>
+    <p class="govuk-body">@messages("check.before.you.start.t.and.c.cancel")</p>
+    <p class="govuk-body">@messages("check.before.you.start.t.and.c.pay.total")</p>
+    <h2 class="govuk-heading-m">@messages("check.before.you.start.t.and.c.declaration")</h2>
+    <p class="govuk-body">@messages("check.before.you.start.t.and.c.agree")</p>
+
+    @button(messages("accept.and.continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
+
     <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.1")</h2>
     <p class="govuk-body">@messages("check.before.you.start.p1")</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -43,9 +52,12 @@
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
             <span class="govuk-warning-text__assistive">@messages("check.before.you.start.warning")</span>
-            @messages("check.before.you.start.p5")
+            @messages("check.before.you.start.p5.start")
+            <a target="_blank"
+            href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline"
+            class="govuk-link">@messages("check.before.you.start.p5.contact.us")</a>
+            @messages("check.before.you.start.p5.end")
         </strong>
     </div>
-    @button(messages("continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
 
 }

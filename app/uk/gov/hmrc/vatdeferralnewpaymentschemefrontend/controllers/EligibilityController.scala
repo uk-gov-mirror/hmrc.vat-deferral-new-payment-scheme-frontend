@@ -60,7 +60,7 @@ class EligibilityController @Inject()(
 
       for {
         e <- vatDeferralNewPaymentSchemeConnector.eligibility(vrn.vrn)
-        _ = audit("elibilityCheck", e)
+        _ = audit("EligibilityCheck", e)
       } yield {
         e match {
         case e:Eligibility if e.eligible =>

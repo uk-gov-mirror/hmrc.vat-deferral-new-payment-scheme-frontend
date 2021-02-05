@@ -66,7 +66,7 @@ class CheckBankAccountDetailsController @Inject()(
         "bankAccountVerification",
         AccountVerificationAuditWrapper(verified = false, vrn.vrn, account)
       )
-      logger.error(errLogMsg)
+      logger.warn(errLogMsg)
     }
     connector.complete(journeyId).map {
 

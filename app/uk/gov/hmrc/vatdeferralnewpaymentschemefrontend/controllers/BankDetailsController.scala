@@ -98,7 +98,7 @@ class BankDetailsController @Inject()(
       _ <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
     } yield {
       audit(
-        "directDebitSetup",
+        "DirectDebitSetup",
         DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
       )
       Redirect(routes.ConfirmationController.get())

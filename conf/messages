@@ -11,6 +11,7 @@ common.alpha-info.p2= will help us to improve it.
 common.error.title=Error: 
 common.page.title=Pay VAT deferred due to coronavirus (COVID-19) - GOV.UK
 continue.button=Continue
+accept.and.continue.button=Accept and continue
 finish.sign-out.button=Finish and sign out
 
 common.error.summary.title=There is a problem
@@ -80,6 +81,12 @@ eligibility.not.eligible.link3=contact the coronavirus (COVID-19) helpline for b
 
 check.before.you.start.h1=Before you start
 check.before.you.start.h2.1=Check you can use this service
+check.before.you.start.t.and.c.heading.accept=You must accept the terms and conditions
+check.before.you.start.t.and.c.heading.small=Terms and conditions
+check.before.you.start.t.and.c.cancel=We can cancel this agreement if you pay late or miss a payment.
+check.before.you.start.t.and.c.pay.total=If we cancel this agreement, you will need to pay the total amount you owe straight away.
+check.before.you.start.t.and.c.declaration=Declaration
+check.before.you.start.t.and.c.agree=I agree to the terms and conditions of this payment plan.
 check.before.you.start.p1=To use this service you must:
 check.before.you.start.li1=have a UK bank account
 check.before.you.start.li2=be able to set up a Direct Debit
@@ -87,7 +94,9 @@ check.before.you.start.li3=be able to pay the first instalment on 1 March 2021
 check.before.you.start.warning=Warning
 check.before.you.start.p3=If you need help to find out how much you owe,
 check.before.you.start.p4=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
-check.before.you.start.p5=You must pay all instalments on time. If you are unable to pay, contact us to arrange other ways to clear your debt.
+check.before.you.start.p5.start=You must pay all instalments on time. If you are unable to pay,
+check.before.you.start.p5.contact.us=contact us
+check.before.you.start.p5.end=to arrange other ways to clear your debt.
 
 deferred.vat.bill.heading.1=Your deferred VAT bill is {0}
 deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
