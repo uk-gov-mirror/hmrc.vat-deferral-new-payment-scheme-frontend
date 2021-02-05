@@ -131,10 +131,15 @@ when-to-pay.error.day.required=Enter a day from 1 to 28
 when-to-pay.error.day.invalid=Enter a day from 1 to 28
 
 payment.plan.h1=Check your payment plan
-payment.plan.list-key=Payments collected on
 payment.plan.list-value=or next working day
 payment.plan.total.pay=Total to pay
+payment.plan.dates.heading=Dates`
+payment.plan.dates.first-payment=First payment collected on
+payment.plan.dates.remaining-payments=Remaining payments collected on
+payment.plan.dates.remaining-payments.change.hidden=day remaining payments are collected on
 payment.plan.monthly.payments=Monthly payments
+payment.plan.month=Month
+payment.plan.amount=Amount
 
 check.direct.debit.heading=Check your Direct Debit details
 check.direct.debit.bank.account.type.heading=Bank account type
