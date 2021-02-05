@@ -96,7 +96,8 @@ deferred.vat.bill.vat.paid=VAT paid to date
 deferred.vat.bill.payable=Deferred VAT left to pay by 31 March 2022
 deferred.vat.bill.wrong.p1=What to do if you think this bill is wrong
 deferred.vat.bill.wrong.p2=If you think your deferred VAT bill is wrong,
-deferred.vat.bill.wrong.p3=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+deferred.vat.bill.wrong.p3=contact the Coronavirus (COVID-19) helpline for businesses and self-employed
+deferred.vat.bill.wrong.p4=. (opens in a new tab)
 
 installments.h1=Do you want to pay in 11 monthly instalments?
 installments.p1=If you select yes, your monthly payments will be

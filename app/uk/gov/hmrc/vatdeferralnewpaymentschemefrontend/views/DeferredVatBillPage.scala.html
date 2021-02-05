@@ -69,7 +69,7 @@
 
     @details(
         messages("deferred.vat.bill.wrong.p1"),
-        s"""${messages("deferred.vat.bill.wrong.p2")} ${Html("<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline' class='govuk-link'>")} ${messages("deferred.vat.bill.wrong.p3")}${Html("</a>")}."""
+        s"""${messages("deferred.vat.bill.wrong.p2")} ${Html("<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline' class='govuk-link'>")} ${messages("deferred.vat.bill.wrong.p3")}${Html("</a>")}${messages("deferred.vat.bill.wrong.p4")}"""
     )
 
     @button("global.button.continue", Some(s"${controllers.routes.MonthsController.get()}"))
