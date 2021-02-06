@@ -8,3 +8,15 @@ if (timeoutDialog &&
     window.location.pathname !== "/pay-vat-deferred-due-to-coronavirus/time-out") {
     new window.HMRCFrontend.TimeoutDialog(timeoutDialog).init();
 }
+
+function printElement(elId, ms) {
+    var divToPrint = document.getElementById(elId);
+    newWin = window.open();
+    newWin.document.write(divToPrint.innerHTML);
+    newWin.focus();
+    setTimeout(function() {printNewWindow()}, ms);
+}
+function printNewWindow(){
+    newWin.print();
+    newWin.close();
+};

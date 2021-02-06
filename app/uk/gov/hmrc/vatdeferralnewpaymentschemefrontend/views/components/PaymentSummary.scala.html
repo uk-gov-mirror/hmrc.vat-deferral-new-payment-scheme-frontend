@@ -1,0 +1,99 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
+@import org.joda.time.LocalDate
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.{PageTitle, Money}
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.Layout
+
+@this(
+        layout: Layout
+  )
+
+@(
+    paymentStartDate: String,
+    dayOfPayment: Int,
+    numberOfPayments: Int,
+    outstandingAmount: BigDecimal,
+    firstPaymentAmount: BigDecimal,
+    regularPaymentAmount: BigDecimal
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(
+    pageTitle = PageTitle("payment.plan.print.heading")
+) {
+
+    <h1 class="govuk-heading-l">@messages("payment.plan.print.heading")</h1>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">@messages("payment.plan.dates.heading")</th>
+                <th scope="col" class="govuk-table__header">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.first-payment")</th>
+                <td class="govuk-table__cell">@paymentStartDate</td>
+                <td class="govuk-table__cell">&nbsp;</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.remaining-payments")</th>
+                <td class="govuk-table__cell">
+                    @{dayOfPayment.toString ++ daySuffix(dayOfPayment)}
+                    @messages("payment.plan.list-value")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption">@messages("payment.plan.monthly.payments")</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                @messages("payment.plan.month")
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric govuk-!-width-one-third">
+                @messages("payment.plan.amount")
+                </th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">@paymentStartDate</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third"> @Money(firstPaymentAmount)</td>
+            </tr>
+            @{
+                (3 to numberOfPayments + 1).map{ item =>
+                    <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("MMMM yyyy")}</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">{Money(regularPaymentAmount)}</td>
+                    </tr>
+                }
+            }
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("payment.plan.total.pay")</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric">@Money(outstandingAmount)</td>
+            </tr>
+        </tbody>
+    </table>
+}

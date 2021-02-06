@@ -26,11 +26,10 @@
         govukPanel : GovukPanel
 )
 
-@(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime, paymentSummary: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
-    pageTitle = PageTitle("confirmation.header"),
-    backLinkEnabled = true
+    pageTitle = PageTitle("confirmation.header")
 ) {
 
     @govukPanel(Panel(
@@ -40,28 +39,34 @@
     <h2 class="govuk-heading-m">@messages("confirmation.header2")</h2>
     <p class="govuk-body">@messages("confirmation.p1")</p>
     <p class="govuk-body">
-        @messages(
-            "confirmation.p2",
-            Money(firstPaymentAmount),
-            startDate.format(DateTimeFormatter.ofPattern(s"d'${daySuffix(startDate.getDayOfMonth)}' MMMM yyyy"))
-        )
+    @messages(
+        "confirmation.p2",
+        Money(firstPaymentAmount),
+        startDate.format(DateTimeFormatter.ofPattern(s"d'${daySuffix(startDate.getDayOfMonth)}' MMMM yyyy"))
+    )
     </p>
     <p class="govuk-body">
-        @messages(
-            "confirmation.p3",
-            regularPaymentDate.getDayOfMonth.toString() ++ daySuffix(regularPaymentDate.getDayOfMonth)
-        )
+    @messages(
+        "confirmation.p3",
+        regularPaymentDate.format(DateTimeFormatter.ofPattern("MMMM yyyy")),
+        regularPaymentDate.getDayOfMonth.toString() ++ daySuffix(regularPaymentDate.getDayOfMonth)
+    )
     </p>
-    @*TODO Implement a print summary page *@
-    <p class="govuk-body">
-        <a href="print-summary" class="govuk-link">@messages("confirmation.summary.page.href")</a>
-    </p>
+    <h2 class="govuk-heading-m">@messages("confirmation.next.header")</h2>
+    <p class="govuk-body">@messages("confirmation.next.p1")</p>
 
-    @* TODO confirm if this is coming out, if not update content to reflect prototype *@
+    <p class="govuk-body">
+        <a class="govuk-link" href='javascript:printElement("confDetails", 700)'>
+            @messages("confirmation.print.or.save.payment-summary")
+        </a>
+    </p>
+    <div id="confDetails" hidden>@paymentSummary</div>
+
     <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
     <p class="govuk-body">
         @messages("confirmation.p4")
-        <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("confirmation.vat.helpline.href")</a>.
+        <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("confirmation.vat.helpline.href")</a>
+        .
     </p>
 
 }
