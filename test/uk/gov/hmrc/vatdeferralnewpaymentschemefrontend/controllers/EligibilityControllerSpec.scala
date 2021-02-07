@@ -18,18 +18,13 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import play.api.http.Status
 import play.api.test.Helpers.{status, _}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model._
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class EligibilityControllerSpec extends BaseSpec {
 
   "GET /" should {
     "return CheckBeforeYouStartPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000000"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000000"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.SEE_OTHER
@@ -37,7 +32,7 @@ class EligibilityControllerSpec extends BaseSpec {
     }
 
     "return ReturningUserPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000001"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000001"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.OK
@@ -45,7 +40,7 @@ class EligibilityControllerSpec extends BaseSpec {
     }
 
     "return PaymentOnAccountExistsPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000002"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000002"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.OK
@@ -53,7 +48,7 @@ class EligibilityControllerSpec extends BaseSpec {
     }
 
     "return TimeToPayExistsPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000003"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000003"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.OK
@@ -61,7 +56,7 @@ class EligibilityControllerSpec extends BaseSpec {
     }
 
     "return OutstandingReturnsPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000004"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000004"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.OK
@@ -69,7 +64,7 @@ class EligibilityControllerSpec extends BaseSpec {
     }
 
     "return NoDeferredVatToPayPage" in {
-      val controller = testController(new MockVatDeferralNewPaymentSchemeConnector("1000000005"))
+      val controller = testController(new FakeVatDeferralNewPaymentSchemeConnector("1000000005"))
       val result = controller.get(fakeRequest)
 
       status(result) shouldBe Status.OK
@@ -90,23 +85,4 @@ class EligibilityControllerSpec extends BaseSpec {
       outstandingReturnsPage
     )
   }
-
-  class MockVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDeferralNewPaymentSchemeConnector {
-
-    override def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Eligibility] = testVrn match {
-      case "1000000000" => Future.successful(Eligibility(None,None,None,Some(false),Some(true)))
-      case "1000000001" => Future.successful(Eligibility(Some(true),None,None,None,None))
-      case "1000000002" => Future.successful(Eligibility(None,Some(true),None,None,None))
-      case "1000000003" => Future.successful(Eligibility(None,None,Some(true),None,None))
-      case "1000000004" => Future.successful(Eligibility(None,None,None,Some(true),None))
-      case "1000000005" => Future.successful(Eligibility(None,None,None,None,None))
-      case _ => ???
-    }
-
-    override def financialData(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FinancialData] = ???
-
-    override def createDirectDebitArrangement(vrn: String, directDebitArrangementRequest: DirectDebitArrangementRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
-  }
-
-
 }
