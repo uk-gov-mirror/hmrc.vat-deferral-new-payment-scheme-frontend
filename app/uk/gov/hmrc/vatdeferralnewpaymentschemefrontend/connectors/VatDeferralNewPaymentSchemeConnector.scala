@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
-import com.google.inject.Inject
+import com.google.inject.{ImplementedBy, Inject}
 import play.api.Logger
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -28,15 +28,41 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, Finan
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class VatDeferralNewPaymentSchemeConnector @Inject()(
+@ImplementedBy(classOf[VatDeferralNewPaymentSchemeConnectorImpl])
+trait VatDeferralNewPaymentSchemeConnector {
+
+  val logger = Logger(this.getClass)
+
+  def eligibility(
+    vrn: String
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Eligibility]
+
+  def financialData(
+    vrn: String
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[FinancialData]
+
+  def createDirectDebitArrangement(
+    vrn: String,
+    directDebitArrangementRequest: DirectDebitArrangementRequest
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[HttpResponse]
+}
+
+class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
   http: HttpClient,
   servicesConfig: ServicesConfig
 )(
   implicit val appConfig: AppConfig,
   auditConnector: AuditConnector
-) {
-
-  val logger = Logger(this.getClass)
+) extends VatDeferralNewPaymentSchemeConnector {
 
   lazy val serviceURL: String = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
 

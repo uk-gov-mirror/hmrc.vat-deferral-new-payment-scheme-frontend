@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Writes
 import play.api.mvc._
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -36,7 +35,6 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class EligibilityController @Inject()(
-  mcc: MessagesControllerComponents,
   auth: Auth,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   sessionStore: SessionStore,
@@ -48,6 +46,7 @@ class EligibilityController @Inject()(
   outstandingReturnsPage: OutstandingReturnsPage
 )(
   implicit val appConfig: AppConfig,
+  mcc: MessagesControllerComponents,
   val serviceConfig: ServicesConfig,
   ec: ExecutionContext,
   auditConnector: AuditConnector
@@ -56,6 +55,7 @@ class EligibilityController @Inject()(
 
   val get: Action[AnyContent] = auth.authorise { implicit request =>
     implicit vrn => {
+
       implicit val auditWrites: Writes[Eligibility] = Eligibility.auditWrites
 
       for {
@@ -79,7 +79,7 @@ class EligibilityController @Inject()(
         case Eligibility(_,_,_,_,None) =>
           Ok(noDeferredVatToPayPage())
         case _ =>
-          Ok(notEligiblePage())
+          Ok(notEligiblePage()) // TODO - this page will never be shown and can be removed
       }}
     }
   }
