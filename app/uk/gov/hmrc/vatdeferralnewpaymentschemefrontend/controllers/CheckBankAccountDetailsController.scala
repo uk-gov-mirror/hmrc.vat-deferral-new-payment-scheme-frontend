@@ -168,7 +168,7 @@ class CheckBankAccountDetailsController @Inject()(
       case None => throw new Exception("nothing from bank-account-verification-api")
     }
     bavfApiCall.flatMap { ppd =>
-        connector.init(continueUrl, prepopulatedData = Some(ppd)).map {
+        connector.init(continueUrl, requestMessages, prepopulatedData = Some(ppd)).map {
           case Some(initResponse) =>
             SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
           case None => InternalServerError

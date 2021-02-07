@@ -20,7 +20,18 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 
 object PageTitle {
-  def apply(pageHeadingKey: String, hasErrors: Boolean = false)(implicit messages: Messages, appConfig: AppConfig): Option[String] = {
-    Some(s"${if(hasErrors){messages("common.error.title")}else{""}} ${messages(pageHeadingKey)} - ${messages("common.page.title")}")
+  def apply(
+    pageHeadingKey: String,
+    hasErrors: Boolean = false,
+    messageArg: String = ""
+  )(
+    implicit messages: Messages,
+    appConfig: AppConfig
+  ): Option[String] = {
+
+    Some(
+      s"${if(hasErrors){messages("common.error.title")}else{""}} " +
+        s"${messages(pageHeadingKey, messageArg)} - ${messages("common.page.title")}"
+    )
   }
 }

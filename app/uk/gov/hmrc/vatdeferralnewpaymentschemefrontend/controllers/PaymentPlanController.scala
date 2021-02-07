@@ -51,7 +51,7 @@ class PaymentPlanController @Inject()(
       case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(
         Ok(
           paymentPlanPage(
-            formattedPaymentsStartDate,
+            paymentStartDate,
             dayOfPayment,
             journeySession.numberOfPaymentMonths.getOrElse(11),
             outStandingAmount,
@@ -68,32 +68,9 @@ class PaymentPlanController @Inject()(
     _ =>
       _ =>
         val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
-        connector.init(continueUrl).map {
+        connector.init(continueUrl, requestMessages).map {
           case Some(initResponse) => SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
           case None => InternalServerError
         }
-  }
-
-  private def requestMessages(implicit messagesApi: MessagesApi): Option[InitRequestMessages] = {
-    val english = messagesApi.preferred(Seq(Lang("en")))
-    val welsh = messagesApi.preferred(Seq(Lang("cy")))
-    Some(
-      InitRequestMessages(
-        en = Json.obj(
-          "service.name" -> english("service.name"),
-//          TODO: Add in a11y statement after DAC
-//          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${english("footer.accessibility.url")}",
-          "phaseBanner.tag" -> "BETA"
-        ),
-        cy = Some(
-          Json.obj(
-            "service.name" -> welsh("service.name"),
-//          TODO: Add in a11y statement after DAC
-//          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${welsh("footer.accessibility.url")}",
-            "phaseBanner.tag" -> "BETA"
-          )
-        )
-      )
-    )
   }
 }
