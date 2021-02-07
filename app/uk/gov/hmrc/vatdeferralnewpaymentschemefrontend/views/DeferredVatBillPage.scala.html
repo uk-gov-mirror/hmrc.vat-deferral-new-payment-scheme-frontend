@@ -29,7 +29,7 @@
 @(totalDeferredVatAmount: BigDecimal, deferredVatAmount: BigDecimal, deferredVatAmountPaid: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
-    pageTitle = PageTitle("deferred.vat.bill.heading.1"),
+    pageTitle = PageTitle("deferred.vat.bill.heading.1", messageArg = Money(deferredVatAmount)),
     backLinkEnabled = true,
     backLink = Some(s"${controllers.routes.CheckBeforeYouStartController.get()}")
 ) {
