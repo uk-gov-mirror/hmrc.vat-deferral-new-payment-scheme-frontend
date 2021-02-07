@@ -5,9 +5,6 @@
 
 GET        /assets/*file                              controllers.Assets.at(path="/public", file)
 
-
-GET        /hello-world                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.HelloWorldController.helloWorld
-
 GET        /time-in                                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.timeIn(referrer)
 GET        /time-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.timeOut
 GET        /sign-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.signOut
