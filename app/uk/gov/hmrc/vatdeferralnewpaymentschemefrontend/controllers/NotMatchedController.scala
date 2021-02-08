@@ -48,7 +48,7 @@ class NotMatchedController @Inject()(
     val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
     sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").map { x =>
       x.fold{
-        logger.warn(s"sessionStore cannot being retrieved for $sessionId")
+        logger.warn(s"sessionStore cannot be retrieved for $sessionId")
         Redirect(routes.VrnController.get())
       }{ y =>
         Ok(
