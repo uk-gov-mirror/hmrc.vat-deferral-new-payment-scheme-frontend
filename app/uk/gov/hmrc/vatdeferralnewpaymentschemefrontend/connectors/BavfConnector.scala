@@ -22,10 +22,13 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
 import InitRequest.writes
 import HttpReads.Implicits.readRaw
+import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: AppConfig) {
+
+  val logger = Logger(getClass)
 
   def init(
     continueUrl: String,
@@ -61,6 +64,7 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
       case r if r.status == 200 =>
         Some(r.json.as[Account])
       case _ =>
+        logger.warn("No response from completion of BAVF journey")
         None
     }
   }

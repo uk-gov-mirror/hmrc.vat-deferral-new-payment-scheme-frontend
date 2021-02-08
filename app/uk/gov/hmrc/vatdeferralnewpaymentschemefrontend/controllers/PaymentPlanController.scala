@@ -18,7 +18,8 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import org.joda.time.LocalDate
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.Logger
+import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -26,8 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.BavfConnector
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.InitRequestMessages
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.PaymentPlanPage
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,6 +44,8 @@ class PaymentPlanController @Inject()(
 ) extends FrontendController(mcc)
   with I18nSupport {
 
+  val logger = Logger(getClass)
+
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
@@ -60,7 +61,9 @@ class PaymentPlanController @Inject()(
           )
         )
       )
-      case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
+      case _ =>
+        logger.warn("dayOfPayment and outStandingAmount cannot be retrieved from journeySession")
+        Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
   }
 
@@ -70,7 +73,9 @@ class PaymentPlanController @Inject()(
         val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
         connector.init(continueUrl, requestMessages).map {
           case Some(initResponse) => SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
-          case None => InternalServerError
+          case None =>
+            logger.warn("No response when trying to redirect to the BAVF journey for first time")
+            InternalServerError
         }
   }
 }

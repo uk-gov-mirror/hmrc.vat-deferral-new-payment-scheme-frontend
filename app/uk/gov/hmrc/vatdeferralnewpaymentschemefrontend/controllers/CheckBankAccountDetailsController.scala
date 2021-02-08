@@ -171,7 +171,9 @@ class CheckBankAccountDetailsController @Inject()(
         connector.init(continueUrl, requestMessages, prepopulatedData = Some(ppd)).map {
           case Some(initResponse) =>
             SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
-          case None => InternalServerError
+          case None =>
+            logger.warn("No response when trying to redirect to the BAVF journey from cya")
+            InternalServerError
         }
     }
   }

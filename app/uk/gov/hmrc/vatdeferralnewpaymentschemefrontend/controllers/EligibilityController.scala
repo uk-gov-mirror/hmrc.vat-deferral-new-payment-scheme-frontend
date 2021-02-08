@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Writes
 import play.api.mvc._
@@ -53,7 +54,9 @@ class EligibilityController @Inject()(
 ) extends FrontendController(mcc)
   with I18nSupport {
 
-  val get: Action[AnyContent] = auth.authorise { implicit request =>
+  val logger = Logger(getClass)
+
+  def get: Action[AnyContent] = auth.authorise { implicit request =>
     implicit vrn => {
 
       implicit val auditWrites: Writes[Eligibility] = Eligibility.auditWrites
@@ -65,9 +68,12 @@ class EligibilityController @Inject()(
         e match {
         case e:Eligibility if e.eligible =>
           request.session.get("sessionId").map { sessionId =>
-            sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, true))
+            sessionStore.store[JourneySession](sessionId, "JourneySession", JourneySession(sessionId, eligible = true))
             Redirect(routes.CheckBeforeYouStartController.get())
-          }.getOrElse(InternalServerError)
+          }.getOrElse {
+            logger.warn("Unable to retirieve sessionId from request")
+            InternalServerError
+          }
         case Eligibility(Some(true),_,_,_,_) =>
           Ok(returningUserPage())
         case Eligibility(_,Some(true),_,_,_) =>

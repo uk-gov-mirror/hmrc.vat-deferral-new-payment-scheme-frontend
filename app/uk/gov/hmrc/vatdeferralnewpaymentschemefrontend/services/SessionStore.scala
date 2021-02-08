@@ -38,6 +38,8 @@ trait SessionStore {
 @Singleton
 class SessionStoreImpl @Inject()(mongo: ReactiveMongoComponent, serviceConfig: ServicesConfig)(implicit ec: ExecutionContext) extends SessionStore {
 
+  val logger = Logger(getClass)
+
   private val expireAfterSeconds = serviceConfig.getDuration("mongodb.session.expireAfter").toSeconds
 
   private lazy val cacheRepository = new CacheMongoRepository("sessions", expireAfterSeconds)(mongo.mongoConnector.db, ec)
@@ -47,12 +49,14 @@ class SessionStoreImpl @Inject()(mongo: ReactiveMongoComponent, serviceConfig: S
     cacheRepository.findById(id) map {
       case Some(cache) => cache.data flatMap {
         json =>
-          Logger.debug(s"[SessionStore][get] $cache")
+          logger.debug(s"[SessionStore][get] $cache")
           Some((json \ key))
             .filter(_.validate[T].isSuccess)
             .map(_.as[T])
       }
-      case None => None
+      case None =>
+        logger.info("Nothing in stored in cache with this id")
+        None
     }
   }
 
