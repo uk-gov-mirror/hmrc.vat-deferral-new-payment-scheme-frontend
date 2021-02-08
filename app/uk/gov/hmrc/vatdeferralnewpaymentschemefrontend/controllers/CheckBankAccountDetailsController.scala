@@ -168,10 +168,12 @@ class CheckBankAccountDetailsController @Inject()(
       case None => throw new Exception("nothing from bank-account-verification-api")
     }
     bavfApiCall.flatMap { ppd =>
-        connector.init(continueUrl, prepopulatedData = Some(ppd)).map {
+        connector.init(continueUrl, requestMessages, prepopulatedData = Some(ppd)).map {
           case Some(initResponse) =>
             SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
-          case None => InternalServerError
+          case None =>
+            logger.warn("No response when trying to redirect to the BAVF journey from cya")
+            InternalServerError
         }
     }
   }

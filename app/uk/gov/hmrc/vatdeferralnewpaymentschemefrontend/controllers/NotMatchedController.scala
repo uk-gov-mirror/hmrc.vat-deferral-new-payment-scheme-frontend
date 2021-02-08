@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -41,11 +42,15 @@ class NotMatchedController @Inject()(
   extends FrontendController(mcc)
   with I18nSupport
 {
+  val logger = Logger(getClass)
 
   def get: Action[AnyContent] = Action.async { implicit request =>
     val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
     sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").map { x =>
-      x.fold(Redirect(routes.VrnController.get())){ y =>
+      x.fold{
+        logger.warn(s"sessionStore cannot be retrieved for $sessionId")
+        Redirect(routes.VrnController.get())
+      }{ y =>
         Ok(
           notMatchedPage(y.failedMatchingAttempts, y.locked)
         )

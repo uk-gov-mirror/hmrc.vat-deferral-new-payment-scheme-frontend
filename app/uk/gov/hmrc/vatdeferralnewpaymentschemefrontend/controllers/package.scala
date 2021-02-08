@@ -19,10 +19,11 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend
 import java.time._
 import java.time.format.DateTimeFormatter
 
-import play.api.i18n.Messages
-import play.api.libs.json.Writes
+import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.InitRequestMessages
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse, Identifiers, KnownFacts}
 
@@ -90,6 +91,29 @@ package object controllers {
     auditConnector.sendExplicitAudit(
       auditType,
       Json.toJson(result)(writes)
+    )
+  }
+
+  def requestMessages(implicit messagesApi: MessagesApi): Option[InitRequestMessages] = {
+    val english = messagesApi.preferred(Seq(Lang("en")))
+    val welsh = messagesApi.preferred(Seq(Lang("cy")))
+    Some(
+      InitRequestMessages(
+        en = Json.obj(
+          "service.name" -> english("service.name"),
+          //          TODO: Add in a11y statement after DAC
+          //          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${english("footer.accessibility.url")}",
+          "phaseBanner.tag" -> "BETA"
+        ),
+        cy = Some(
+          Json.obj(
+            "service.name" -> welsh("service.name"),
+            //          TODO: Add in a11y statement after DAC
+            //          "footer.accessibility.url" -> s"${appConfig.exampleExternalUrl}${welsh("footer.accessibility.url")}",
+            "phaseBanner.tag" -> "BETA"
+          )
+        )
+      )
     )
   }
 

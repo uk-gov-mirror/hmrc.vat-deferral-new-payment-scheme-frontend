@@ -19,6 +19,8 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
 @import org.joda.time.LocalDate
+@import java.time.ZonedDateTime
+@import java.time.format.DateTimeFormatter
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.{PageTitle, Money}
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
@@ -28,7 +30,7 @@
         button: Button,
 )
 
-@(paymentStartDate: String, dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(paymentStartDate: ZonedDateTime, dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = PageTitle("payment.plan.h1"),
@@ -50,7 +52,11 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.first-payment")</th>
-                    <td class="govuk-table__cell">@paymentStartDate</td>
+                    <td class="govuk-table__cell">
+                        @paymentStartDate.format(
+                            DateTimeFormatter.ofPattern(s"d'${daySuffix(paymentStartDate.getDayOfMonth)}' MMMM yyyy")
+                        )
+                    </td>
                     <td class="govuk-table__cell">&nbsp;</td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -87,8 +93,12 @@
             <tbody class="govuk-table__body">
 
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">@paymentStartDate</th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third"> @Money(firstPaymentAmount)</td>
+                    <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">
+                        @paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+                    </th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">
+                        @Money(firstPaymentAmount)
+                    </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a class="govuk-link" href="@controllers.routes.MonthsController.get">
                             @messages("common.change")
@@ -99,8 +109,12 @@
                 @{
                     (3 to numberOfPayments + 1).map{ item =>
                         <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">{LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("MMMM yyyy")}</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">{Money(regularPaymentAmount)}</td>
+                        <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">
+                            {LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("MMMM yyyy")}
+                        </th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">
+                            {Money(regularPaymentAmount)}
+                        </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
                         </tr>
                     }

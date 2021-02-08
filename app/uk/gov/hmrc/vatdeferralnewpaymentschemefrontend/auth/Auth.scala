@@ -48,6 +48,7 @@ trait Auth extends AuthorisedFunctions with AuthRedirects with Results {
   def authoriseWithMatchingJourneySession(action: Request[AnyContent] => MatchingJourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent]
 }
 
+// TODO - refactor to use ActionBuilder
 @Singleton
 class AuthImpl @Inject()(
   val authConnector: AuthConnector,
