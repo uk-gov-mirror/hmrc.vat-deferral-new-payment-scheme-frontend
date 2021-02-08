@@ -20,6 +20,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 import javax.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import play.api.mvc._
@@ -46,6 +47,8 @@ class WhenToPayController @Inject()(
   ec: ExecutionContext
 ) extends BaseController(mcc) {
 
+  val logger = Logger(getClass)
+
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
     vrn =>
       journeySession =>
@@ -60,6 +63,7 @@ class WhenToPayController @Inject()(
                 )
               ))
           case _ =>
+            logger.warn("outStandingAmount and dayOfPayment cannot be retrieved from journeySession")
             Future.successful(
               Redirect(
                 routes.DeferredVatBillController.get()

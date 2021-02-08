@@ -45,7 +45,7 @@ class MonthsController @Inject()(
   ec: ExecutionContext
 ) extends BaseController(mcc) {
 
-  val get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
     displayInstalmentsPage(
       journeySession,
       journeySession.monthsQuestion.fold(
@@ -56,7 +56,7 @@ class MonthsController @Inject()(
     )
   }
 
-  val post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     instalmentsForm.bindFromRequest().fold(
       errors => displayInstalmentsPage(journeySession, errors),
