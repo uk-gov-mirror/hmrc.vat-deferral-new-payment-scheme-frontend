@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.ConfirmationPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.PaymentSummary
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,6 +34,7 @@ class ConfirmationController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   confirmationPage: ConfirmationPage,
+  paymentSummary: PaymentSummary,
   sessionStore: SessionStore
 )(
   implicit val appConfig: AppConfig,
@@ -42,14 +44,26 @@ class ConfirmationController @Inject()(
   with I18nSupport {
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+
+    val oa :BigDecimal = journeySession.outStandingAmount.getOrElse(0)
+
     val fpa: BigDecimal = firstPaymentAmount(
-      journeySession.outStandingAmount.getOrElse(0),
+      oa,
       journeySession.numberOfPaymentMonths.getOrElse(11)
     )
     val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
       dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
     }
+
+    val ps = paymentSummary(
+      formattedPaymentsStartDate,
+      journeySession.dayOfPayment.getOrElse((0)),
+      journeySession.numberOfPaymentMonths.getOrElse(11),
+      journeySession.outStandingAmount.getOrElse(BigDecimal(0)),
+      firstPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11)),
+      regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
+    )
     request.session.get("sessionId").fold(())(sessionStore.drop)
-    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop)))
+    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop,ps)))
   }
 }

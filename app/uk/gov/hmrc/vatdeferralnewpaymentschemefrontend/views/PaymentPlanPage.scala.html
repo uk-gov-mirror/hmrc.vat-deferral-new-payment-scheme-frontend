@@ -53,9 +53,7 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.first-payment")</th>
                     <td class="govuk-table__cell">
-                        @paymentStartDate.format(
-                            DateTimeFormatter.ofPattern(s"d'${daySuffix(paymentStartDate.getDayOfMonth)}' MMMM yyyy")
-                        )
+                        @paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
                     </td>
                     <td class="govuk-table__cell">&nbsp;</td>
                 </tr>

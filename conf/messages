@@ -141,6 +141,8 @@ payment.plan.monthly.payments=Monthly payments
 payment.plan.month=Month
 payment.plan.amount=Amount
 
+payment.plan.print.heading=Your payment summary
+
 check.direct.debit.heading=Check your Direct Debit details
 check.direct.debit.bank.account.type.heading=Bank account type
 check.direct.debit.bank.account.type.business=Business
@@ -163,11 +165,15 @@ confirmation.header=You have set up a Direct Debit for your deferred VAT payment
 confirmation.header2=What happens next
 confirmation.p1=We will send you a letter confirming your payment dates. You should get this within 5 working days.
 confirmation.p2=We will collect your first payment of {0} from your bank account on {1}.
-confirmation.p3=After that, we will collect your payments on the {0} day of the month, or the next working day.
+confirmation.p3=From {0}, we will collect on the {1} day of the month, or the next working day.
 confirmation.summary.page.href=View your payment summary
 confirmation.service.help.header=Get help with this service
 confirmation.p4=If you have any questions or need to speak to someone about your payments,
-confirmation.vat.helpline.href=contact the VAT helpline
+confirmation.vat.helpline.href=contact the Coronavirus (COVID-19) helpline for businesses and self-employed people
+
+confirmation.next.header=What to do next
+confirmation.next.p1=Before you leave this page, print or save a copy of your payment summary as you will not be able to do this later.
+confirmation.print.or.save.payment-summary=Print or save your payment summary
 
 global.button.continue=Continue
 global.button.accept.and.continue=Accept and continue
