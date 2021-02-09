@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend
 
+import play.api.Logger
+
 import java.time._
 import java.time.format.DateTimeFormatter
-
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,6 +32,8 @@ import scala.concurrent.ExecutionContext
 import scala.math.BigDecimal.RoundingMode
 
 package object controllers {
+
+  val logger = Logger(this.getClass)
 
   def paymentStartDate: ZonedDateTime = {
     val now = ZonedDateTime.now.withZoneSameInstant(ZoneId.of("Europe/London"))
@@ -143,16 +146,21 @@ package object controllers {
       journeyState: MatchingJourneySession
     ):Boolean = {
       enrolmentResponse match {
-        case Some(er) if er.enrolments.isEmpty =>
+        case Some(er) if er.enrolments.isEmpty => {
+          logger.warn("VDNPS: Enrolment empty: true")
           false
+        }
         case Some(er) =>
+          logger.warn("VDNPS: Enrolment empty: false")
           er.enrolments.forall(
             enrolment => enrolment.verifiers.forall(
               identifiers => checkEnrolments(er.service, identifiers, journeyState)
             )
           )
-        case _ =>
+        case _ => {
+          logger.warn("VDNPS: Enrolment: None")
           false
+        }
       }
     }
 
@@ -180,13 +188,33 @@ package object controllers {
       identifiers: Identifiers,
       mjs: MatchingJourneySession
     ): Boolean = (service, identifiers.key, identifiers.value) match {
-      case (HmrcMtdVatService, "BoxFiveValue", v) => v == mjs.latestVatAmount.getOrElse("")
-      case (HmrcMtdVatService, "LastMonthLatestStagger", v) => v == mjs.latestAccountPeriodMonth.getOrElse("")
-      case (HmrcMtdVatService, "VATRegistrationDate", v) => checkVatRegistrationDate(v, mjs.date)
-      case (HmceVatdecOrgService, "PETAXDUESALES", v) => v == mjs.latestVatAmount.getOrElse("")
-      case (HmceVatdecOrgService, "PEPDNO", v) => v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
-      case (HmceVatdecOrgService, "IREFFREGDATE", v) => checkVatRegistrationDate(v, mjs.date)
-      case _ => true
+      case (HmrcMtdVatService, "BoxFiveValue", v) => {
+        logger.warn(s"VDNPS: BoxFiveValue: ${v == mjs.latestVatAmount.getOrElse("")}")
+        v == mjs.latestVatAmount.getOrElse("")
+      }
+      case (HmrcMtdVatService, "LastMonthLatestStagger", v) => {
+        logger.warn(s"VDNPS: LastMonthLatestStagger: ${v == mjs.latestAccountPeriodMonth.getOrElse("")}")
+        v == mjs.latestAccountPeriodMonth.getOrElse("")
+      }
+      case (HmrcMtdVatService, "VATRegistrationDate", v) => {
+        logger.warn(s"VDNPS: VATRegistrationDate: ${checkVatRegistrationDate(v, mjs.date)}")
+        checkVatRegistrationDate(v, mjs.date)
+      }
+      case (HmceVatdecOrgService, "PETAXDUESALES", v) =>  {
+        logger.warn(s"VDNPS: PETAXDUESALES: ${v == mjs.latestVatAmount.getOrElse("") }")
+        v == mjs.latestVatAmount.getOrElse("")
+      }
+      case (HmceVatdecOrgService, "PEPDNO", v) => {
+        logger.warn(s"VDNPS: PEPDNO: ${v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)}")
+        v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
+      }
+      case (HmceVatdecOrgService, "IREFFREGDATE", v) =>
+        logger.warn(s"VDNPS: IREFFREGDATE: ${checkVatRegistrationDate(v, mjs.date) }")
+        checkVatRegistrationDate(v, mjs.date)
+      case _ => {
+        logger.logger.warn(s"VDNPS: Everything matches")
+        true
+      }
     }
   }
 }
