@@ -17,9 +17,10 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend
 
 import play.api.Logger
-
 import java.time._
 import java.time.format.DateTimeFormatter
+import java.util.Base64
+
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -166,15 +167,29 @@ package object controllers {
       }
     }
 
+//    private def checkVatRegistrationDate(
+//      identifierValue: String,
+//      stateValue: Option[DateFormValues]
+//    ): Boolean = {
+//      identifierValue == formatStateDate(stateValue).getOrElse("")
+//    }
+
     private def checkVatRegistrationDate(
       identifierValue: String,
       stateValue: Option[DateFormValues]
     ): Boolean = {
-      identifierValue == formatStateDate(stateValue).getOrElse("")
+      val formatter = format.DateTimeFormatter.ofPattern("[yyyy-MM-dd][dd/MM/yy][ddMMyy]")
+      val parseDate = LocalDate.parse(identifierValue, formatter)
+
+      parseDate.isEqual(formatStateDate(stateValue).getOrElse(LocalDate.of(1900,1,1)))
     }
 
-    private def formatStateDate(date: Option[DateFormValues]): Option[String] =
-      date.map(dt => s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year.takeRight(2)}")
+//    private def formatStateDate(date: Option[DateFormValues]): Option[String] =
+//      date.map(dt => s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year.takeRight(2)}")
+
+    private def formatStateDate(date: Option[DateFormValues]): Option[LocalDate] =
+      date.map(dt => LocalDate.of(dt.year.toInt, dt.month.toInt, dt.day.toInt))
+
 
     private def formatLastAccountPeriodMonth(month: Option[String]) =
       month.fold("") { x =>
