@@ -153,9 +153,11 @@ package object controllers {
         case Some(er) =>
           logger.warn("VDNPS: Enrolment empty: false")
           er.enrolments.forall(
-            enrolment => enrolment.verifiers.forall(
-              identifiers => checkEnrolments(er.service, identifiers, journeyState)
-            )
+            enrolment => enrolment.verifiers.forall({
+              logger.logger.warn(s"VDNPS: Enrolment response: verifiers: ${enrolment.verifiers.map(x => x.key)}")
+              identifiers =>
+                checkEnrolments(er.service, identifiers, journeyState)
+            })
           )
         case _ => {
           logger.warn("VDNPS: Enrolment: None")
@@ -197,7 +199,7 @@ package object controllers {
         v == mjs.latestAccountPeriodMonth.getOrElse("")
       }
       case (HmrcMtdVatService, "VATRegistrationDate", v) => {
-        logger.warn(s"VDNPS: VATRegistrationDate: ${checkVatRegistrationDate(v, mjs.date)}")
+        logger.warn(s"VDNPS: VATRegistrationDate: ${checkVatRegistrationDate(v, mjs.date)}, length: ${v.length}, format: ${v.replaceAll("[0-9]", "x")}")
         checkVatRegistrationDate(v, mjs.date)
       }
       case (HmceVatdecOrgService, "PETAXDUESALES", v) =>  {
@@ -209,12 +211,9 @@ package object controllers {
         v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
       }
       case (HmceVatdecOrgService, "IREFFREGDATE", v) =>
-        logger.warn(s"VDNPS: IREFFREGDATE: ${checkVatRegistrationDate(v, mjs.date) }")
+        logger.warn(s"VDNPS: IREFFREGDATE: ${checkVatRegistrationDate(v, mjs.date) }, length: ${v.length}, format: ${v.replaceAll("[0-9]", "x")}")
         checkVatRegistrationDate(v, mjs.date)
-      case _ => {
-        logger.logger.warn(s"VDNPS: Everything matches")
-        true
-      }
+      case _ => true
     }
   }
 }
