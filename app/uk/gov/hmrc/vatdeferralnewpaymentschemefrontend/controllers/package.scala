@@ -172,7 +172,7 @@ package object controllers {
     }
 
     private def formatStateDate(date: Option[DateFormValues]): Option[String] =
-      date.map(dt => s"${"%02d".format(dt.day.toInt)}/${"%02d".format(dt.month.toInt)}/${dt.year.takeRight(2)}")
+      date.map(dt => s"${dt.year}/${"%02d".format(dt.month.toInt)}/${"%02d".format(dt.day.toInt)}")
 
     private def formatLastAccountPeriodMonth(month: Option[String]) =
       month.fold("") { x =>
