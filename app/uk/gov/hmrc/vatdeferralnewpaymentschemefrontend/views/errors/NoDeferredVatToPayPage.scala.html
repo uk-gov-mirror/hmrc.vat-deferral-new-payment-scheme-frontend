@@ -32,8 +32,13 @@
     <p class="govuk-body">@messages("no-vat-to-pay.p1")</p>
     <p class="govuk-body">
      @messages("no-vat-to-pay.p2.content")
-     <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline" class="govuk-link">
-     @messages("no-vat-to-pay.p2.link")</a>.
+     <a
+     target='_blank'
+     rel='noreferrer noopener'
+     href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline"
+     class="govuk-link"
+     >
+     @messages("no-vat-to-pay.p2.link")</a>@messages("no-vat-to-pay.p2.new-tab")
     </p>
 
     @button(
