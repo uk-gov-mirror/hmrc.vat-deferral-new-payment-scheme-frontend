@@ -78,6 +78,7 @@ eligibility.not.eligible.p6=Once you have submitted these, you can come back to 
 eligibility.not.eligible.h2.2=If you think you are eligible
 eligibility.not.eligible.p8.1=If you still think you are eligible to join the scheme now,
 eligibility.not.eligible.link3=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+eligibility.not.eligible.p8.2=. (opens in a new tab)
 
 check.before.you.start.h1=Before you start
 check.before.you.start.h2.1=Check you can use this service
@@ -92,11 +93,9 @@ check.before.you.start.li1=have a UK bank account
 check.before.you.start.li2=be able to set up a Direct Debit
 check.before.you.start.li3=be able to pay the first instalment on 1 March 2021
 check.before.you.start.warning=Warning
-check.before.you.start.p3=If you need help to find out how much you owe,
-check.before.you.start.p4=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
-check.before.you.start.p5.start=You must pay all instalments on time. If you are unable to pay,
-check.before.you.start.p5.contact.us=contact us
-check.before.you.start.p5.end=to arrange other ways to clear your debt.
+check.before.you.start.p2.start=You must pay all instalments on time. If you are unable to pay,
+check.before.you.start.p2.contact.us=contact us
+check.before.you.start.p2.end=(opens in a new tab) to arrange other ways to clear your debt.
 
 deferred.vat.bill.heading.1=Your deferred VAT bill is {0}
 deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
@@ -170,6 +169,7 @@ confirmation.summary.page.href=View your payment summary
 confirmation.service.help.header=Get help with this service
 confirmation.p4=If you have any questions or need to speak to someone about your payments,
 confirmation.vat.helpline.href=contact the Coronavirus (COVID-19) helpline for businesses and self-employed people
+confirmation.vat.helpline.content=. (opens in a new tab)
 
 confirmation.next.header=What to do next
 confirmation.next.p1=Before you leave this page, print or save a copy of your payment summary as you will not be able to do this later.
@@ -217,6 +217,7 @@ returning.user.heading=You have already set up your deferred VAT payments
 returning.user.p1=Our records show you have already used this service to set up a Direct Debit to pay your deferred VAT.
 returning.user.p2=If you think this is wrong,
 returning.user.p2.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+returning.user.p2.new-tab=. (opens in a new tab)
 
 wrong-account.heading=You cannot use this service on behalf of a client
 wrong-account.p1=You signed in with a Government Gateway user ID for an agent.
@@ -227,6 +228,7 @@ no-vat-to-pay.heading=You do not need to use this service
 no-vat-to-pay.p1=Our records show you have no deferred VAT to pay.
 no-vat-to-pay.p2.content=If you think you need to pay deferred VAT,
 no-vat-to-pay.p2.link= contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+no-vat-to-pay.p2.new-tab=. (opens in a new tab)
 
 time-to-pay.heading=You are not eligible to join the scheme
 time-to-pay.p1=Our records show you already have a time to pay arrangement with HMRC that includes your deferred VAT.
@@ -235,6 +237,7 @@ time-to-pay.p3.content=Find out about
 time-to-pay.p3.link=who can join the scheme
 time-to-pay.p4.content=If you still think you are eligible to join now,
 time-to-pay.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+time-to-pay.p4.new-tab=. (opens in a new tab)
 
 payment-on-account.heading=You can join the scheme from {0}
 payment-on-account.p1=Our records show you already make advance payments towards your VAT bill.
@@ -243,6 +246,7 @@ payment-on-account.p3.content=Find out about
 payment-on-account.p3.link=who can join the scheme
 payment-on-account.p4.content=If you think you are eligible to join now,
 payment-on-account.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+payment-on-account.p4.new-tab=. (opens in a new tab)
 
 outstanding-returns.heading=You must submit any outstanding VAT Returns before you can join the scheme
 outstanding-returns.p1=Our records show you are not up to date with your VAT Returns.
@@ -256,5 +260,6 @@ outstanding-returns.what-to-do.p2=Once you have submitted these, you can come ba
   scheme. Allow 24 hours for our records to update.
 outstanding-returns.what-to-do.p3.content=If your business tax account shows your VAT Returns are already up to date,
 outstanding-returns.what-to-do.p3.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+outstanding-returns.what-to-do.p3.new-tab=. (opens in a new tab)
 
 try.again.button=Try again
