@@ -31,12 +31,7 @@ class CustomLanguageController @Inject()(
 ) extends LanguageController(languageUtils, cc) {
 
   override protected def languageMap: Map[String, Lang] = appConfig.languageMap
-//  {
-//    if (appConfig.welshLanguageSupportEnabled) Map(en -> Lang(en), cy -> Lang(cy))
-//    else Map(en -> Lang(en))
-//  }
 
   override def fallbackURL: String = routes.EligibilityController.get().url
-
 
 }
