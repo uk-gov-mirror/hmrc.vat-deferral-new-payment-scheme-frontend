@@ -39,13 +39,13 @@
         None
     }
 }
-    @*TODO add in when we have welsh*@
-    @*@if(appConfig.languageTranslationEnabled) {*@
-        @*@language_selection(*@
-                @*appConfig.languageMap,*@
-                @*appConfig.routeToSwitchLanguage,*@
-                @*Some("lang")*@
-        @*)*@
-    @*}*@
+
+@if(appConfig.languageTranslationEnabled) {
+    @language_selection(
+            appConfig.languageMap,
+            appConfig.routeToSwitchLanguage,
+            Some("lang")
+    )
+}
 
 
