@@ -23,6 +23,8 @@ import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
 import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes
+import play.api.i18n.Lang
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
@@ -73,4 +75,14 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val postCodeRegex = servicesConfig.getString(s"regex.postCode")
 
   lazy val datePoaUsersStart: LocalDate = config.get[LocalDate]("date-poa-users-start")
+
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy"))
+
+  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
+
+  lazy val languageTranslationEnabled: Boolean =
+    config.getOptional[Boolean]("microservice.services.features.welsh-translation").getOrElse(false)
+
 }
