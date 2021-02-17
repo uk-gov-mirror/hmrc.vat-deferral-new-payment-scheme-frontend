@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.FooterLinks
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.Layouts
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import uk.gov.hmrc.hmrcfrontend.views.config._
 @import uk.gov.hmrc.webchat.client.WebChatClient
 
@@ -26,7 +27,8 @@
         head: Head,
         beforeContentBlock: BeforeContent,
         scripts: Scripts,
-        webChatClient: WebChatClient
+        webChatClient: WebChatClient,
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
 @(pageTitle: Option[String] = None,
         backLinkEnabled: Boolean = false,
@@ -42,6 +44,7 @@
 
 @contentAndWebChatBlock = {
     @contentBlock
+    @hmrcReportTechnicalIssueHelper()
     @{webChatClient.loadWebChatContainer("HMRC_Anchored_1")}
 }
 
