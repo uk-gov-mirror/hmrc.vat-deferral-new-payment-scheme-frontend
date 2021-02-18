@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json, Writes}
 
 case class Eligibility(
   paymentPlanExists: Option[Boolean],
-  paymentOnAccoutExists: Option[Boolean],
+  paymentOnAccountExists: Option[Boolean],
   timeToPayExists: Option[Boolean],
   existingObligations: Option[Boolean],
   outstandingBalance: Option[Boolean]
