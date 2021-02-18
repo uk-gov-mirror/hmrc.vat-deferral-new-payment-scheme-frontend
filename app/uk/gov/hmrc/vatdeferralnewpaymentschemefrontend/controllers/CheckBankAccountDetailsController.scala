@@ -68,7 +68,7 @@ class CheckBankAccountDetailsController @Inject()(
       )
       logger.warn(errLogMsg)
     }
-    connector.complete(journeyId).map { r =>
+    connector.complete(journeyId, vrn.vrn).map { r =>
       r match {
           case PersonalCompleteResponse(accountOrBusinessName, sortCode, accountNumber, Some(reputationResponseEnum)) =>
             reputationResponseEnum match {
@@ -153,7 +153,7 @@ class CheckBankAccountDetailsController @Inject()(
     val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
 
     lazy val bavfApiCall = for {
-      account <- connector.complete(journeyId)
+      account <- connector.complete(journeyId, vrn.vrn)
     } yield account match {
       case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         InitRequestPrepopulatedData(AccountTypeRequestEnum.Personal, Some(accountOrBusinessName), Some(sortCode), Some(accountNumber))

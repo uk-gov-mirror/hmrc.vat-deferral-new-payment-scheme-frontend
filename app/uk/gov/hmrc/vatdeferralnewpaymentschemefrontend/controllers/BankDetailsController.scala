@@ -70,8 +70,8 @@ class BankDetailsController @Inject()(
         throw new IllegalStateException("journeySession missing outStandingAmount")
       )
     lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
-      x <- connector.complete(journeyId)
-    } yield x match {
+      account <- connector.complete(journeyId, vrn.vrn)
+    } yield account match {
       case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         DirectDebitArrangementRequest(
           paymentDay = dayOfPayment,

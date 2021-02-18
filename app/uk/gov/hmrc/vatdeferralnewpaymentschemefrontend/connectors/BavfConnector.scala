@@ -17,15 +17,21 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
 import javax.inject.Inject
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
-import InitRequest.writes
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.audit
 import play.api.Logger
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: AppConfig) {
+class BavfConnector @Inject()(
+  httpClient: HttpClient
+)(
+  implicit val appConfig: AppConfig,
+  auditConnector: AuditConnector
+) {
 
   val logger = Logger(getClass)
 
@@ -53,13 +59,17 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
     }
   }
 
-  def complete(journeyId: String)(
+  def complete(journeyId: String, vrn: String)(
     implicit ec: ExecutionContext,
     hc: HeaderCarrier
   ): Future[Account] = {
     val url = s"${appConfig.bavfApiBaseUrl}/api/complete/$journeyId"
     httpClient.GET[Account](url).recover {
       case e: UpstreamErrorResponse =>
+        audit[AccountVerificationAuditWrapper](
+          "BankAccountVerificationStride",
+          AccountVerificationAuditWrapper(verified = false, vrn, None)
+        )
         logger.warn(s"JourneyId: $journeyId - complete connector failed from BAVFE with statusCode: ${e.statusCode} and message: ${e.message}")
       throw e
     }
