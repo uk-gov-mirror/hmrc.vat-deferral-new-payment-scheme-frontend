@@ -18,10 +18,9 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
 import javax.inject.Inject
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
 import InitRequest.writes
-import HttpReads.Implicits.readRaw
 import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +34,7 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
     messages: Option[InitRequestMessages] = None,
     customisationsUrl: Option[String] = None,
     prepopulatedData: Option[InitRequestPrepopulatedData] = None
-  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[InitResponse]] = {
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[InitResponse] = {
 
     val request = InitRequest(
       "vdnps",
@@ -47,25 +46,22 @@ class BavfConnector @Inject()(httpClient: HttpClient)(implicit val appConfig: Ap
     )
 
     val url = s"${appConfig.bavfApiBaseUrl}/api/init"
-    httpClient.POST[InitRequest, HttpResponse](url, request).map {
-      case r if r.status == 200 =>
-        Some(r.json.as[InitResponse])
-      case _ =>
-        None
+    httpClient.POST[InitRequest, InitResponse](url, request).recover {
+      case e: UpstreamErrorResponse =>
+        logger.warn(s"init connector failed to BAVFE with statusCode: ${e.statusCode} and message: ${e.message}")
+        throw e
     }
   }
 
   def complete(journeyId: String)(
     implicit ec: ExecutionContext,
     hc: HeaderCarrier
-  ): Future[Option[Account]] = {
+  ): Future[Account] = {
     val url = s"${appConfig.bavfApiBaseUrl}/api/complete/$journeyId"
-    httpClient.GET[HttpResponse](url).map {
-      case r if r.status == 200 =>
-        Some(r.json.as[Account])
-      case _ =>
-        logger.warn("No response from completion of BAVF journey")
-        None
+    httpClient.GET[Account](url).recover {
+      case e: UpstreamErrorResponse =>
+        logger.warn(s"JourneyId: $journeyId - complete connector failed from BAVFE with statusCode: ${e.statusCode} and message: ${e.message}")
+      throw e
     }
   }
 }

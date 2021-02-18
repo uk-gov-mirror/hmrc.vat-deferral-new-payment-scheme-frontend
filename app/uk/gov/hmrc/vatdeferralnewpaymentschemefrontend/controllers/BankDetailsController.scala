@@ -72,7 +72,7 @@ class BankDetailsController @Inject()(
     lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
       x <- connector.complete(journeyId)
     } yield x match {
-      case Some(PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
+      case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         DirectDebitArrangementRequest(
           paymentDay = dayOfPayment,
           numberOfPayments = numberOfPaymentMonths,
@@ -81,7 +81,7 @@ class BankDetailsController @Inject()(
           accountNumber = accountNumber,
           accountName = accountOrBusinessName
         )
-      case Some(BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
+      case BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         DirectDebitArrangementRequest(
           paymentDay = dayOfPayment,
           numberOfPayments = numberOfPaymentMonths,
@@ -90,7 +90,6 @@ class BankDetailsController @Inject()(
           accountNumber = accountNumber,
           accountName = accountOrBusinessName
         )
-      case None => throw new Exception("nothing from bank-account-verification-api")
     }
 
     for {

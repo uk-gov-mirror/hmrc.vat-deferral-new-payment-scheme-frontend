@@ -68,10 +68,8 @@ class CheckBankAccountDetailsController @Inject()(
       )
       logger.warn(errLogMsg)
     }
-    connector.complete(journeyId).map {
-
-      case Some(r) =>
-        r match {
+    connector.complete(journeyId).map { r =>
+      r match {
           case PersonalCompleteResponse(accountOrBusinessName, sortCode, accountNumber, Some(reputationResponseEnum)) =>
             reputationResponseEnum match {
               case ReputationResponseEnum.Yes =>
@@ -147,11 +145,7 @@ class CheckBankAccountDetailsController @Inject()(
           case _ =>
             auditFailure(s"No Account returned from BAVF for ${vrn.vrn}")
             Redirect(routes.PaymentPlanController.post()) //Redirect back to BAVF journey due to error
-        }
-
-      case None =>
-        auditFailure(s"No response from BAVF, assume bank account verification failed for ${vrn.vrn}")
-        InternalServerError
+      }
     }
   }
 
@@ -159,21 +153,16 @@ class CheckBankAccountDetailsController @Inject()(
     val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
 
     lazy val bavfApiCall = for {
-      x <- connector.complete(journeyId)
-    } yield x match {
-      case Some(PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
+      account <- connector.complete(journeyId)
+    } yield account match {
+      case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         InitRequestPrepopulatedData(AccountTypeRequestEnum.Personal, Some(accountOrBusinessName), Some(sortCode), Some(accountNumber))
-      case Some(BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _)) =>
+      case BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
         InitRequestPrepopulatedData(AccountTypeRequestEnum.Business, Some(accountOrBusinessName), Some(sortCode), Some(accountNumber))
-      case None => throw new Exception("nothing from bank-account-verification-api")
     }
     bavfApiCall.flatMap { ppd =>
-        connector.init(continueUrl, requestMessages, prepopulatedData = Some(ppd)).map {
-          case Some(initResponse) =>
-            SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
-          case None =>
-            logger.warn("No response when trying to redirect to the BAVF journey from cya")
-            InternalServerError
+        connector.init(continueUrl, requestMessages, prepopulatedData = Some(ppd)).map { initResponse =>
+          SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
         }
     }
   }

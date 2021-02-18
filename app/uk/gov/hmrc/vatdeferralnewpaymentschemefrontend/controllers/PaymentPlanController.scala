@@ -71,11 +71,8 @@ class PaymentPlanController @Inject()(
     _ =>
       _ =>
         val continueUrl = s"${appConfig.frontendUrl}/check-the-account-details"
-        connector.init(continueUrl, requestMessages).map {
-          case Some(initResponse) => SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
-          case None =>
-            logger.warn("No response when trying to redirect to the BAVF journey for first time")
-            InternalServerError
+        connector.init(continueUrl, requestMessages).map { initResponse =>
+          SeeOther(s"${appConfig.bavfWebBaseUrl}${initResponse.startUrl}")
         }
   }
 }
