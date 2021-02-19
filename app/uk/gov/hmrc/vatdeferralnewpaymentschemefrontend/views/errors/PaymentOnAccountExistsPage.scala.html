@@ -28,23 +28,14 @@
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
-    pageTitle = PageTitle(
-        "payment-on-account.heading",
-        messageArg = s"${appConfig.datePoaUsersStart.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))}"
-    )
+    pageTitle = PageTitle("payment-on-account.heading")
 ) {
     <h1 class="govuk-heading-xl">
-        @messages(
-            "payment-on-account.heading",
-            appConfig.datePoaUsersStart.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
-        )
+        @messages("payment-on-account.heading")
     </h1>
     <p class="govuk-body">@messages("payment-on-account.p1")</p>
     <p class="govuk-body">
-        @messages(
-            "payment-on-account.p2",
-            appConfig.datePoaUsersStart.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
-        )
+        @messages("payment-on-account.p2")
     </p>
     <p class="govuk-body">
         @messages("payment-on-account.p3.content")
