@@ -15,8 +15,6 @@
  *@
 
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.FooterLinks
-@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import uk.gov.hmrc.hmrcfrontend.views.config._
@@ -28,7 +26,8 @@
         beforeContentBlock: BeforeContent,
         scripts: Scripts,
         webChatClient: WebChatClient,
-        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+        hmrcStandardFooter: HmrcStandardFooter
 )
 @(pageTitle: Option[String] = None,
         backLinkEnabled: Boolean = false,
@@ -53,6 +52,6 @@
     headBlock = Some(head(headBlock)),
     scriptsBlock = scriptsBlock,
     beforeContentBlock = Some(beforeContentWrapper),
-    footerItems = FooterLinks(),
+    footerBlock = Some(hmrcStandardFooter()),
     bodyEndBlock = Some(scripts())
 )(contentAndWebChatBlock)
