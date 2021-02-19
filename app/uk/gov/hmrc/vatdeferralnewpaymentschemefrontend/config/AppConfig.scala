@@ -33,8 +33,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
     LocalDate.parse(config.getString(path))
   }
 
-  val footerLinkItems: Seq[String] = config.getOptional[Seq[String]]("footerLinkItems").getOrElse(Seq())
-
   private def getUrlFor(service: String) = servicesConfig.getString(s"microservice.services.$service.url")
 
   lazy val appName: String = config.get[String]("appName")
