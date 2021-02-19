@@ -1,0 +1,265 @@
+service.name=Talu TAW a ohiriwyd oherwydd coronafeirws (COVID-19)
+service.homePageUrl=/vat-deferral-new-payment-scheme-frontend
+service.text=This is your new service
+error.summary.heading=There is a problem
+back=Back
+
+common.alpha-info.p1=This is a new service – your
+common.alpha-info.link=feedback
+common.alpha-info.p2= will help us to improve it.
+
+common.error.title=Error: 
+common.page.title=Talu TAW a ohiriwyd oherwydd coronafeirws (COVID-19)
+continue.button=Continue
+accept.and.continue.button=Accept and continue
+finish.sign-out.button=Finish and sign out
+
+common.error.summary.title=There is a problem
+common.change=Change
+
+time-out.title=For your security, we signed you out
+time-out.button=Sign in
+
+global.month.1=January
+global.month.2=February
+global.month.3=March
+global.month.4=April
+global.month.5=May
+global.month.6=June
+global.month.7=July
+global.month.8=August
+global.month.9=September
+global.month.10=October
+global.month.11=November
+global.month.12=December
+
+footer.cookies.text=Cookies
+footer.cookies.url=/help/cookies
+footer.privacy.text=Privacy policy
+footer.privacy.url=/help/privacy
+footer.termsConditions.text=Terms and conditions
+footer.termsConditions.url=/help/terms-and-conditions
+footer.govukHelp.text=Help using GOV.UK
+footer.govukHelp.url=https://www.gov.uk/help
+
+enter.vrn.heading=What is your VAT registration number?
+enter.vrn.hint=This is 9 numbers, sometimes with 'GB' at the start, for example 123456789 or GB123456789. You can find it on your VAT registration certificate.
+enter.vrn.required=Enter the VAT number
+enter.vrn.invalid=VRN is invalid
+
+enter.postcode.heading=What is the postcode where your business is registered for VAT?
+enter.postcode.hint=For example, AB1 2YZ
+
+enter.latestVatReturn.heading=What is your latest VAT Return total?
+enter.latestVatReturn.hint=You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example &pound;123.00
+
+enter.latestVatPeriod.heading=Select the last month of your latest VAT accounting period
+enter.latestVatPeriod.hint=You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
+
+enter.vatRegistrationDate.heading=When did you become VAT registered?
+enter.vatRegistrationDate.hint1=You can find this date on your VAT registration certificate.
+enter.vatRegistrationDate.hint2=For example, 31 3 2018
+
+eligibility.not.eligible.heading.1=You are not eligible to join the scheme
+eligibility.not.eligible.p1=Our records show you are not eligible to join the VAT deferral payment scheme at this time.
+eligibility.not.eligible.p2=You may not be eligible because you:
+eligibility.not.eligible.li1=have no deferred VAT to pay
+eligibility.not.eligible.li2=are not up to date with your VAT Returns
+eligibility.not.eligible.li3=already make advance payments towards your VAT bill and are applying before 1 March 2021
+eligibility.not.eligible.li4=already have a time to pay arrangement with HMRC that includes your deferred VAT
+eligibility.not.eligible.p3=Find out about 
+eligibility.not.eligible.link1=who can join the scheme
+eligibility.not.eligible.h2.1=If your VAT Returns are not up to date
+eligibility.not.eligible.p4=Before you can join the scheme, you must submit any outstanding VAT Returns from the last 4 years.
+eligibility.not.eligible.p5.1=Go to your
+eligibility.not.eligible.link2=business tax account
+eligibility.not.eligible.p5.2=to find any VAT Returns you need to submit.
+eligibility.not.eligible.p6=Once you have submitted these, you can come back to this service to join the scheme. Allow 24 hours for our records to update.
+eligibility.not.eligible.h2.2=If you think you are eligible
+eligibility.not.eligible.p8.1=If you still think you are eligible to join the scheme now,
+eligibility.not.eligible.link3=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+eligibility.not.eligible.p8.2=. (opens in a new tab)
+
+check.before.you.start.h1=Cyn i chi ddechrau
+check.before.you.start.h2.1=Gwiriwch eich bod yn gallu defnyddio’r gwasanaeth hwn
+check.before.you.start.t.and.c.heading.accept=You must accept the terms and conditions
+check.before.you.start.t.and.c.heading.small=Terms and conditions
+check.before.you.start.t.and.c.cancel=We can cancel this agreement if you pay late or miss a payment.
+check.before.you.start.t.and.c.pay.total=If we cancel this agreement, you will need to pay the total amount you owe straight away.
+check.before.you.start.t.and.c.declaration=Declaration
+check.before.you.start.t.and.c.agree=I agree to the terms and conditions of this payment plan.
+check.before.you.start.p1=Er mwyn defnyddio’r gwasanaeth hwn, mae’n rhaid:
+check.before.you.start.li1=i chi fod â chyfrif banc yn y DU
+check.before.you.start.li2=i chi allu sefydlu Debyd Uniongyrchol
+check.before.you.start.li3=be able to pay the first instalment on 1 March 2021 //Incorrect content sent for translation
+check.before.you.start.warning=Warning
+check.before.you.start.p2.start=You must pay all instalments on time. If you are unable to pay,
+check.before.you.start.p2.contact.us=contact us
+check.before.you.start.p2.end=(opens in a new tab) to arrange other ways to clear your debt.
+
+deferred.vat.bill.heading.1=Your deferred VAT bill is {0}
+deferred.vat.bill.heading.2=How we worked out your deferred VAT bill
+deferred.vat.bill.vat.total.payable=VAT payable for 20 March to 30 June 2020
+deferred.vat.bill.vat.paid=VAT paid to date
+deferred.vat.bill.payable=Deferred VAT left to pay by 31 March 2022
+deferred.vat.bill.wrong.p1=What to do if you think this bill is wrong
+deferred.vat.bill.wrong.p2=If you think your deferred VAT bill is wrong,
+deferred.vat.bill.wrong.p3=contact the Coronavirus (COVID-19) helpline for businesses and self-employed
+deferred.vat.bill.wrong.p4=. (opens in a new tab)
+
+installments.h1=Do you want to pay in 11 monthly instalments?
+installments.p1=If you select yes, your monthly payments will be
+installments.p2.1=The remaining balance of
+installments.p2.2=will be added to your first payment.
+installments.option.1=Yes
+installments.option.2=No - I want to pay in fewer instalments
+11-months-to-pay.error.required=Select yes if you want to pay in 11 monthly instalments
+
+how.many.months.h1=How many months do you want to pay over?
+how.many.months.p1=Months at
+how.many.months.p2.1=With remaining
+how.many.months.p2.2=added to first payment
+how-many-months.error.required=Select how many months you want to pay over
+
+when.to.pay.h1=Choose when your payments will be collected
+when.to.pay.p1=We will collect your first payment on <span class="govuk-!-font-weight-bold">{0}</span>.
+when.to.pay.h2=On which day do you want the remaining monthly payments to be collected?
+when.to.pay.p2=If the payment due date falls on a weekend, we will take your payment on the next working day.
+when.to.pay.label=Enter a day from 1 to 28
+when-to-pay.error.day.required=Enter a day from 1 to 28
+when-to-pay.error.day.invalid=Enter a day from 1 to 28
+
+payment.plan.h1=Check your payment plan
+payment.plan.list-value=or next working day
+payment.plan.total.pay=Total to pay
+payment.plan.dates.heading=Dates
+payment.plan.dates.first-payment=First payment collected on
+payment.plan.dates.remaining-payments=Remaining payments collected on
+payment.plan.dates.remaining-payments.change.hidden=day remaining payments are collected on
+payment.plan.monthly.payments=Monthly payments
+payment.plan.month=Month
+payment.plan.amount=Amount
+
+payment.plan.print.heading=Your payment summary
+
+check.direct.debit.heading=Check your Direct Debit details
+check.direct.debit.bank.account.type.heading=Bank account type
+check.direct.debit.bank.account.type.business=Business
+check.direct.debit.bank.account.type.personal=Personal
+check.direct.debit.bank.account.type.change.hidden=bank account type
+check.direct.debit.change.hidden=direct debit details
+check.direct.debit.name.on.account=Name on the account
+check.direct.debit.sort.code=Sort code
+check.direct.debit.account.number=Account number
+
+direct.debit.header=The Direct Debit Guarantee
+direct.debit.p1=This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits.
+direct.debit.p2=If there are any changes to the amount, date or frequency of your Direct Debit HM Revenue & Customs will notify you 10 working days in advance of your account being debited or as otherwise agreed. If you request HM Revenue & Customs to collect a payment, application-complete of the amount and date will be given to you at the time of the request.
+direct.debit.p3=If an error is made in the payment of your Direct Debit by HM Revenue & Customs or your bank or building society you are entitled to a full and immediate refund of the amount paid from your bank or building society
+direct.debit.p4=If you receive a refund you are not entitled to, you must pay it back when HM Revenue & Customs asks you to.
+direct.debit.p5=You can cancel a Direct Debit at any time by simply contacting your bank or building society. Written confirmation may be required. Please also notify us.
+direct.debit.confirm.and.setup=Confirm and set up Direct Debit
+
+confirmation.header=You have set up a Direct Debit for your deferred VAT payments
+confirmation.header2=What happens next
+confirmation.p1=We will send you a letter confirming your payment dates. You should get this within 5 working days.
+confirmation.p2=We will collect your first payment of {0} from your bank account on {1}.
+confirmation.p3=From {0}, we will collect on the {1} day of the month, or the next working day.
+confirmation.summary.page.href=View your payment summary
+confirmation.service.help.header=Get help with this service
+confirmation.p4=If you have any questions or need to speak to someone about your payments,
+confirmation.vat.helpline.href=contact the Coronavirus (COVID-19) helpline for businesses and self-employed people
+confirmation.vat.helpline.content=. (opens in a new tab)
+
+confirmation.next.header=What to do next
+confirmation.next.p1=Before you leave this page, print or save a copy of your payment summary as you will not be able to do this later.
+confirmation.print.or.save.payment-summary=Print or save your payment summary
+
+global.button.continue=Continue
+global.button.accept.and.continue=Accept and continue
+
+vatcheck.common.errorSummary=There is a problem
+vatcheck.common.error.title=Error:
+
+error.vrn.required=Enter your VAT registration number
+error.vrn.invalid=Enter your VAT registration number in the correct format
+error.postcode.required=Enter the postcode where your business is registered for VAT
+error.postcode.invalid=Enter a real postcode
+error.vatamount.required=Enter your latest VAT Return total
+error.vatamount.invalid=Your latest VAT Return total must include pence, like 123.45 or 156.00
+error.date.emptyfields=Enter the date you became VAT registered
+error.day.missing=The date you became VAT registered must include a day
+error.month.missing=The date you became VAT registered must include a month
+error.year.missing=The date you became VAT registered must include a year
+error.day-and-year.missing=The date you became VAT registered must include a day and year
+error.day-and-month.missing=The date you became VAT registered must include a day and month
+error.month-and-year.missing=The date you became VAT registered must include a month and year
+error.date.invalid=The date you became VAT registered must be a real date
+error.date.in-future=The date you became VAT registered must be in the past
+latest-vat-period.error.required=Select the month of your latest VAT accounting period
+error.day.required=Day is required
+error.month.required=Month is required
+error.year.required=Year is required
+error.11-months-to-pay.required=Option is required
+error.how-many-months.required=Option is required
+error.day.invalid=Please select a valid day
+
+matching.notMatched.title=Business not found
+matching.notMatched.p1=We cannot find any business that matches the details you entered.
+matching.notMatched.p2=Check the details are correct and try again. 
+matching.notMatched.attempts-remaining=You have <span class="govuk-!-font-weight-bold">{0}</span> attempts left to enter the correct details.
+matching.notMatched.last-attempt=For security reasons, if you enter incorrect details again, you will need to wait 15 minutes before you can try again.
+matching.notMatched.wait=You will need to wait 15 minutes before you can try again. 
+
+matching.locked.title=We could not confirm your identity
+
+returning.user.heading=You have already set up your deferred VAT payments
+returning.user.p1=Our records show you have already used this service to set up a Direct Debit to pay your deferred VAT.
+returning.user.p2=If you think this is wrong,
+returning.user.p2.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+returning.user.p2.new-tab=. (opens in a new tab)
+
+wrong-account.heading=You cannot use this service on behalf of a client
+wrong-account.p1=You signed in with a Government Gateway user ID for an agent.
+wrong-account.p2=We do not accept applications from agents acting on behalf of another business.
+wrong-account.p3=The business must apply directly using the online service.
+
+no-vat-to-pay.heading=You do not need to use this service
+no-vat-to-pay.p1=Our records show you have no deferred VAT to pay.
+no-vat-to-pay.p2.content=If you think you need to pay deferred VAT,
+no-vat-to-pay.p2.link= contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+no-vat-to-pay.p2.new-tab=. (opens in a new tab)
+
+time-to-pay.heading=You are not eligible to join the scheme
+time-to-pay.p1=Our records show you already have a time to pay arrangement with HMRC that includes your deferred VAT.
+time-to-pay.p2= This means you are not eligible to join the VAT deferral payment scheme.
+time-to-pay.p3.content=Find out about
+time-to-pay.p3.link=who can join the scheme
+time-to-pay.p4.content=If you still think you are eligible to join now,
+time-to-pay.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+time-to-pay.p4.new-tab=. (opens in a new tab)
+
+payment-on-account.heading=You can join the scheme from {0}
+payment-on-account.p1=Our records show you already make advance payments towards your VAT bill.
+payment-on-account.p2=You will be able to join the VAT deferral payment scheme from {0}.
+payment-on-account.p3.content=Find out about
+payment-on-account.p3.link=who can join the scheme
+payment-on-account.p4.content=If you think you are eligible to join now,
+payment-on-account.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+payment-on-account.p4.new-tab=. (opens in a new tab)
+
+outstanding-returns.heading=You must submit any outstanding VAT Returns before you can join the scheme
+outstanding-returns.p1=Our records show you are not up to date with your VAT Returns.
+outstanding-returns.p2= Before you can join the VAT deferral payment scheme, you must submit any outstanding VAT \
+  Returns from the last 4 years.
+outstanding-returns.what-to-do.heading=What you need to do
+outstanding-returns.what-to-do.p1.content-start=Go to your
+outstanding-returns.what-to-do.p1.link=business tax account
+outstanding-returns.what-to-do.p1.content-end=to find any VAT Returns you need to submit.
+outstanding-returns.what-to-do.p2=Once you have submitted these, you can come back to this service to join the \
+  scheme. Allow 24 hours for our records to update.
+outstanding-returns.what-to-do.p3.content=If your business tax account shows your VAT Returns are already up to date,
+outstanding-returns.what-to-do.p3.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
+outstanding-returns.what-to-do.p3.new-tab=. (opens in a new tab)
+
+try.again.button=Try again
