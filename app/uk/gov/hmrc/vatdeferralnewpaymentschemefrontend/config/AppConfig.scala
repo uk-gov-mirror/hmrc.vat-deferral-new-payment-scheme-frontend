@@ -29,10 +29,6 @@ import play.api.i18n.Lang
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
 
-  implicit val dateConfigLoader: ConfigLoader[LocalDate] = (config: Config, path: String) => {
-    LocalDate.parse(config.getString(path))
-  }
-
   private def getUrlFor(service: String) = servicesConfig.getString(s"microservice.services.$service.url")
 
   lazy val appName: String = config.get[String]("appName")
@@ -71,8 +67,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val vrnRegex = servicesConfig.getString(s"regex.vrn")
   val decimalRegex = servicesConfig.getString(s"regex.decimal")
   val postCodeRegex = servicesConfig.getString(s"regex.postCode")
-
-  lazy val datePoaUsersStart: LocalDate = config.get[LocalDate]("date-poa-users-start")
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
