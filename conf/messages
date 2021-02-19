@@ -264,4 +264,8 @@ outstanding-returns.what-to-do.p3.content=If your business tax account shows you
 outstanding-returns.what-to-do.p3.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 outstanding-returns.what-to-do.p3.new-tab=. (opens in a new tab)
 
+ddp-failure.heading=Sorry, there is a problem with our service
+ddp-failure.p1=We are investigating the issue and will contact you when it is fixed.
+ddp-failure.p2=You do not need to contact HMRC.
+
 try.again.button=Try again
