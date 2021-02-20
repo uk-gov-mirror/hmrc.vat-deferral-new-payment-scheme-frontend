@@ -4,6 +4,7 @@
 ->         /hmrc-frontend                             hmrcfrontend.Routes
 
 GET        /assets/*file                              controllers.Assets.at(path="/public", file)
+GET     /language/:lang                               uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.CustomLanguageController.switchToLanguage(lang: String)
 
 GET        /time-in                                   uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.timeIn(referrer)
 GET        /time-out                                  uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.AuthenticationController.timeOut

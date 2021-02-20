@@ -41,6 +41,8 @@ footer.termsConditions.text=Terms and conditions
 footer.termsConditions.url=/help/terms-and-conditions
 footer.govukHelp.text=Help using GOV.UK
 footer.govukHelp.url=https://www.gov.uk/help
+footer.accessibility.text=Accessibility Statement
+footer.accessibility.url=/vat-deferral-new-payment-scheme-frontend/accessibility-statement{0}
 
 enter.vrn.heading=What is your VAT registration number?
 enter.vrn.hint=This is 9 numbers, sometimes with 'GB' at the start, for example 123456789 or GB123456789. You can find it on your VAT registration certificate.
@@ -239,9 +241,9 @@ time-to-pay.p4.content=If you still think you are eligible to join now,
 time-to-pay.p4.link=contact the coronavirus (COVID-19) helpline for businesses and self-employed people
 time-to-pay.p4.new-tab=. (opens in a new tab)
 
-payment-on-account.heading=You can join the scheme from {0}
+payment-on-account.heading=You can join the scheme from later in March 2021
 payment-on-account.p1=Our records show you already make advance payments towards your VAT bill.
-payment-on-account.p2=You will be able to join the VAT deferral payment scheme from {0}.
+payment-on-account.p2=You will be able to join the VAT deferral payment scheme from later in March 2021.
 payment-on-account.p3.content=Find out about
 payment-on-account.p3.link=who can join the scheme
 payment-on-account.p4.content=If you think you are eligible to join now,

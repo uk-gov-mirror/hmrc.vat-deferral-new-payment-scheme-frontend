@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views
+package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.FooterItem
+import com.google.inject.Inject
+import javax.inject.Singleton
+import play.api.i18n.Lang
+import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+import play.api.mvc._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 
-object FooterLinks {
-  def apply()(implicit messages: Messages, appConfig: AppConfig): Seq[FooterItem] = appConfig.footerLinkItems.flatMap { item =>
-    val keyPrefix = s"footer.$item"
-    val textKey = s"$keyPrefix.text"
-    val urlKey = s"$keyPrefix.url"
-    if (
-      messages.isDefinedAt(textKey) && messages.isDefinedAt(urlKey)
-    ) Some(FooterItem(
-      text = Some(messages(textKey)),
-      href = Some(messages(urlKey))
-    )) else None
-  }
+@Singleton
+class CustomLanguageController @Inject()(
+  cc: ControllerComponents,
+  languageUtils: LanguageUtils,
+  appConfig: AppConfig
+) extends LanguageController(languageUtils, cc) {
+
+  override protected def languageMap: Map[String, Lang] = appConfig.languageMap
+
+  override def fallbackURL: String = routes.EligibilityController.get().url
+
 }
