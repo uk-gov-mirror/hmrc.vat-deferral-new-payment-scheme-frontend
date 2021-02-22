@@ -24,7 +24,6 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.DDFailurePage
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,8 +57,7 @@ trait VatDeferralNewPaymentSchemeConnector {
 
 class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
   http: HttpClient,
-  servicesConfig: ServicesConfig,
-  ddFailurePage: DDFailurePage
+  servicesConfig: ServicesConfig
 )(
   implicit val appConfig: AppConfig,
   auditConnector: AuditConnector
