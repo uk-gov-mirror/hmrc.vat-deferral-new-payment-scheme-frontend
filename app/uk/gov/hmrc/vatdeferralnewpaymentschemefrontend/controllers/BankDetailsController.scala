@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -30,6 +31,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.DDFailurePage
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +40,7 @@ class BankDetailsController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   directDebitPage: DirectDebitPage,
+  ddFailurePage: DDFailurePage,
   connector: BavfConnector,
   sessionStore: SessionStore,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector
@@ -94,13 +97,30 @@ class BankDetailsController @Inject()(
 
     for {
       a <- ddArrangementAPICall
-      _ <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
+      b <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
     } yield {
-      audit(
-        "DirectDebitSetup",
-        DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
-      )
-      Redirect(routes.ConfirmationController.get())
+      (a,b) match {
+        case (_, Right(_)) =>
+          audit(
+            "DirectDebitSetup",
+            DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
+          )
+          Redirect(routes.ConfirmationController.get())
+        case (_, Left(UpstreamErrorResponse(message, 406, _, _))) =>
+          audit(
+            "DirectDebitSetup",
+            DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
+          )
+          logger.info(s"getting 406, message: $message")
+          Ok(ddFailurePage())
+        case (_, Left(e)) =>
+          logger.error(e.message)
+          audit(
+            "DirectDebitSetup",
+            DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
+          )
+          throw e
+      }
     }
   }
 }
