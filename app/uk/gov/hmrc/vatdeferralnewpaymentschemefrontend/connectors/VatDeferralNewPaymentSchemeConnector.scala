@@ -22,8 +22,7 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.audit
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,7 +52,7 @@ trait VatDeferralNewPaymentSchemeConnector {
   )(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
-  ): Future[HttpResponse]
+  ): Future[Either[UpstreamErrorResponse,HttpResponse]]
 }
 
 class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
@@ -76,22 +75,18 @@ class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
     http.GET[FinancialData](url)
   }
 
+  import uk.gov.hmrc.http.HttpReadsInstances._
   def createDirectDebitArrangement(
     vrn: String,
     directDebitArrangementRequest: DirectDebitArrangementRequest
   )(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
-  ): Future[HttpResponse] = {
+  ): Future[Either[UpstreamErrorResponse,HttpResponse]] = {
     val url = s"$serviceURL/vat-deferral-new-payment-scheme/direct-debit-arrangement/$vrn"
-    http.POST[DirectDebitArrangementRequest, HttpResponse](url, directDebitArrangementRequest).recover {
-      case e@UpstreamErrorResponse(message, 406, _, _ ) =>
-        logger.error(message)
-        audit(
-          "DirectDebitSetup",
-          DirectDebitArrangementRequestAuditWrapper(success = false, vrn, directDebitArrangementRequest)
-        )
-        throw e
-    }
+    http.POST[DirectDebitArrangementRequest, Either[UpstreamErrorResponse,HttpResponse]](
+      url,
+      directDebitArrangementRequest
+    )
   }
 }

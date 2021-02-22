@@ -26,12 +26,25 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Ma
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeAuth(val authConnector: AuthConnector, val env: Environment, val config: Configuration) extends Auth {
-  override def authorise(action: Request[AnyContent] => Vrn => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] =
+  override def authorise(
+    action: Request[AnyContent] => Vrn => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] =
     Action.async { implicit request =>
       action(request)(Vrn("9999999999"))
     }
 
-  override def authoriseWithJourneySession(action: Request[AnyContent] => Vrn => JourneySession => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] = ???
+  override def authoriseWithJourneySession(
+    action: Request[AnyContent] => Vrn => JourneySession => Future[Result]
+  )(
+    implicit ec: ExecutionContext,
+    servicesConfig: ServicesConfig
+  ): Action[AnyContent] =
+    Action.async { implicit request =>
+      action(request)(Vrn("9999999999"))(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11),Some(1)))
+    }
 
   override def authoriseForMatchingJourney(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] = ???
 

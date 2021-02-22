@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors
 
+import com.google.inject.ImplementedBy
 import javax.inject.Inject
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
@@ -26,14 +27,31 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BavfConnector @Inject()(
+@ImplementedBy(classOf[BavfConnectorImpl])
+trait BavfConnector {
+
+  val logger = Logger(getClass)
+
+  def init(
+    continueUrl: String,
+    messages: Option[InitRequestMessages] = None,
+    customisationsUrl: Option[String] = None,
+    prepopulatedData: Option[InitRequestPrepopulatedData] = None
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[InitResponse]
+
+  def complete(journeyId: String, vrn: String)(
+    implicit ec: ExecutionContext,
+    hc: HeaderCarrier
+  ): Future[Account]
+}
+
+class BavfConnectorImpl @Inject()(
   httpClient: HttpClient
 )(
   implicit val appConfig: AppConfig,
   auditConnector: AuditConnector
-) {
+) extends BavfConnector {
 
-  val logger = Logger(getClass)
 
   def init(
     continueUrl: String,

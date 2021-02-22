@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import play.api.http.Status
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
@@ -25,7 +26,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDeferralNewPaymentSchemeConnector {
 
-  override def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Eligibility] = testVrn match {
+  override def eligibility(
+    vrn: String
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Eligibility] = testVrn match {
     case "1000000000" => Future.successful(Eligibility(None,None,None,Some(false),Some(true)))
     case "1000000001" => Future.successful(Eligibility(Some(true),None,None,None,None))
     case "1000000002" => Future.successful(Eligibility(None,Some(true),None,None,None))
@@ -35,7 +41,21 @@ class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDefer
     case _ => ???
   }
 
-  override def financialData(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FinancialData] = ???
+  override def financialData(
+    vrn: String
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[FinancialData] = ???
 
-  override def createDirectDebitArrangement(vrn: String, directDebitArrangementRequest: DirectDebitArrangementRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+  override def createDirectDebitArrangement(
+    vrn: String,
+    directDebitArrangementRequest: DirectDebitArrangementRequest
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Either[UpstreamErrorResponse,HttpResponse]] = testVrn match {
+    case "9999999999" => Future.successful(Left(UpstreamErrorResponse("foo", 406)))
+    case _ => Future.successful(Right(HttpResponse(Status.CREATED, "")))
+  }
 }
