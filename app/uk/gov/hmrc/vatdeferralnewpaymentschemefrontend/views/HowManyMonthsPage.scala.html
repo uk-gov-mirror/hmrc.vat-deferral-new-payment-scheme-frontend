@@ -31,6 +31,8 @@
 @(months: Seq[Month], form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @fieldName = @{"how-many-months"}
+@currentLangIsEn = @{request.headers.get("Cookie").fold(false)(_.contains("PLAY_LANG=en;"))}
+
 @layout(
     pageTitle = PageTitle("how.many.months.h1", form.hasErrors),
     backLinkEnabled = true,
@@ -50,6 +52,7 @@
             ))
         }
 
+
 @* TODO - sort out spacing on heading and investigate seperator (in the CSS) and error message content *@
         @govukRadios(Radios(
             errorMessage = if(form.hasErrors) {Some(ErrorMessage(
@@ -67,9 +70,18 @@
             items = months.map(item => {
                         RadioItem(
                             label = Some(Label(classes = "govuk-!-padding-top-0")),
-                            content = HtmlContent(s"""<span class="govuk-body govuk-!-font-size-36">${item.month}</span>
+                            content = if(currentLangIsEn){
+                                    HtmlContent(s"""<span class="govuk-body govuk-!-font-size-36">${item.month}</span>
                                                 ${messages("how.many.months.p1")}
-                                            <span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>"""),
+                                            <span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>""")
+                            } else {
+                                HtmlContent(
+                                  s"""<span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>
+                                     ${messages("how.many.months.p1.1")}
+                                     <span class="govuk-body govuk-!-font-size-36">${item.month}</span>
+                                     ${messages("how.many.months.p1.2")}
+                                   """)
+                            },
                             hint = Some(Hint(
                                 content = HtmlContent(s"""${messages("how.many.months.p2.1")}
                                             <span class="govuk-!-font-weight-bold">${Money(item.remainder)}</span>

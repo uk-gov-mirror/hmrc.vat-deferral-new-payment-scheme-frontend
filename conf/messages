@@ -199,12 +199,6 @@ error.month-and-year.missing=The date you became VAT registered must include a m
 error.date.invalid=The date you became VAT registered must be a real date
 error.date.in-future=The date you became VAT registered must be in the past
 latest-vat-period.error.required=Select the month of your latest VAT accounting period
-error.day.required=Day is required
-error.month.required=Month is required
-error.year.required=Year is required
-error.11-months-to-pay.required=Option is required
-error.how-many-months.required=Option is required
-error.day.invalid=Please select a valid day
 
 matching.notMatched.title=Business not found
 matching.notMatched.p1=We cannot find any business that matches the details you entered.
