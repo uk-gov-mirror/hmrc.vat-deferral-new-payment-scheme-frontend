@@ -10,7 +10,6 @@ common.alpha-info.p2= yn ein helpu i’w wella.
 common.error.title=Gwall
 common.page.title=Talu TAW a ohiriwyd oherwydd coronafeirws (COVID-19)
 continue.button=Yn eich blaen
-#NT
 accept.and.continue.button=Derbyn ac yn eich blaen
 finish.sign-out.button=Gorffen ac allgofnodi
 
@@ -33,20 +32,15 @@ global.month.10=Hydref
 global.month.11=Tachwedd
 global.month.12=Rhagfyr
 
-#NT
-footer.cookies.text=Cookies
+footer.cookies.text=Cwcis
 footer.cookies.url=/help/cookies
-#NT
-footer.privacy.text=Privacy policy
+footer.privacy.text=Polisi preifatrwydd
 footer.privacy.url=/help/privacy
-#NT
-footer.termsConditions.text=Terms and conditions
+footer.termsConditions.text=Telerau ac amodau
 footer.termsConditions.url=/help/terms-and-conditions
-#NT
-footer.govukHelp.text=Help using GOV.UK
+footer.govukHelp.text=Help wrth ddefnyddio GOV.UK
 footer.govukHelp.url=https:www.gov.uk/help
-#NT
-footer.accessibility.text=Accessibility Statement
+footer.accessibility.text=Datganiad hygyrchedd
 footer.accessibility.url=/vat-deferral-new-payment-scheme-frontend/accessibility-statement{0}
 
 enter.vrn.heading=Beth yw’ch rhif cofrestru TAW?
@@ -141,18 +135,13 @@ when-to-pay.error.day.invalid=Nodwch ddiwrnod o 1 i 28
 payment.plan.h1=Gwirio’ch cynllun talu
 payment.plan.list-value=neu’r diwrnod gwaith nesaf
 payment.plan.total.pay=Y cyfanswm i dalu
-#NT
-payment.plan.dates.heading=Dates
-#NT
-payment.plan.dates.first-payment=First payment collected on
-#NT
-payment.plan.dates.remaining-payments=Remaining payments collected on
-#NT
-payment.plan.dates.remaining-payments.change.hidden=day remaining payments are collected on
+payment.plan.dates.heading=Dyddiadau
+payment.plan.dates.first-payment=Casglwyd y taliad cyntaf ar
+payment.plan.dates.remaining-payments=Taliadau sy'n weddill a gasglwyd ar
+payment.plan.dates.remaining-payments.change.hidden=cesglir taliadau diwrnod sy'n weddill
 payment.plan.monthly.payments=Taliadau misol
 payment.plan.month=Mis
-#NT
-payment.plan.amount=Amount
+payment.plan.amount=Swm
 
 payment.plan.print.heading=Bwrw golwg dros grynodeb o’ch taliadau
 
@@ -204,8 +193,7 @@ error.vatamount.invalid=Mae’n rhaid i gyfanswm eich Ffurflen TAW ddiweddaraf g
 error.date.emptyfields=Nodwch y dyddiad y gwnaethoch gofrestru ar gyfer TAW
 error.day.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys diwrnod
 error.month.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys mis
-#NT
-error.year.missing=The date you became VAT registered must include a year
+error.year.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys a blwyddyn
 error.day-and-year.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys diwrnod a blwyddyn
 error.day-and-month.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys diwrnod a mis
 error.month-and-year.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys mis a blwyddyn
