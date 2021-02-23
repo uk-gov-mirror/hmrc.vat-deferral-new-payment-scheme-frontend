@@ -64,6 +64,6 @@ class ConfirmationController @Inject()(
       regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
     )
     request.session.get("sessionId").fold(())(sessionStore.drop)
-    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop,ps)))
+    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop,ps)).withNewSession)
   }
 }
