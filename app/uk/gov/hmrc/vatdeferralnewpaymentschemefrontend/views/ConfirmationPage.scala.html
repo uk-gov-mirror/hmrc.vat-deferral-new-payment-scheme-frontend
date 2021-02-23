@@ -56,10 +56,11 @@
     <p class="govuk-body">@messages("confirmation.next.p1")</p>
 
     <p class="govuk-body">
-        <a class="govuk-link" href='javascript:printElement("confDetails", 700)'>
+        <a class="govuk-link print-link" href='javascript:printElement("confDetails", 700)'>
             @messages("confirmation.print.or.save.payment-summary")
         </a>
     </p>
+
     <div id="confDetails" hidden>@paymentSummary</div>
 
     <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
