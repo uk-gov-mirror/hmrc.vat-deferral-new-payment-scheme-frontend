@@ -47,11 +47,9 @@ package object controllers {
     today match {
       case d if d.getDayOfMonth >= 15 && d.getDayOfMonth <= 22 && d.getMonthValue == 2 =>
         d.withDayOfMonth(1).withMonth(3)
-      case d if d.plusDays(5).getDayOfWeek.getValue <= 5 =>
-        d.plusDays(5)
-      case d if d.plusDays(5).getDayOfWeek.getValue == 6 =>
+      case d if d.getDayOfWeek.getValue <= 6 =>
         d.plusDays(7)
-      case d if d.plusDays(5).getDayOfWeek.getValue == 7 =>
+      case d if d.getDayOfWeek.getValue == 7 =>
         d.plusDays(6)
     }
   }
