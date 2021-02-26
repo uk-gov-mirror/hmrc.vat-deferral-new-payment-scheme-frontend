@@ -262,5 +262,9 @@ outstanding-returns.what-to-do.p3.new-tab=. (opens in a new tab)
 try.again.button=Try again
 
 dd.failure.heading=Sorry, there is a problem with our service
-dd.failure.p1=We are investigating the issue and will contact you when it is fixed. 
-dd.failure.p2=You do not need to contact HMRC.
+dd.failure.p1=If you are at risk of missing the deadline to join this month, contact HMRC: 
+dd.failure.p2.phone=Telephone: 
+dd.failure.p2.number=0800 024 1222
+dd.failure.p3=Get help from HMRC if you need extra support
+dd.failure.p3.new-tab=. (opens in a new tab)
+dd.failure.p4=Otherwise, you can try again later.
