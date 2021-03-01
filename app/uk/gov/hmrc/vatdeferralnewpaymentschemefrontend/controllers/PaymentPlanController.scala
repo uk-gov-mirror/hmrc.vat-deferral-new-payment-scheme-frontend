@@ -17,16 +17,14 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import org.joda.time.LocalDate
 import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.BavfConnector
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.PaymentPlanPage
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +34,8 @@ class PaymentPlanController @Inject()(
   mcc: MessagesControllerComponents,
   auth: Auth,
   paymentPlanPage: PaymentPlanPage,
-  connector: BavfConnector
+  connector: BavfConnector,
+  vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -49,18 +48,19 @@ class PaymentPlanController @Inject()(
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
-      case (Some(dayOfPayment), Some(outStandingAmount)) => Future.successful(
-        Ok(
-          paymentPlanPage(
-            paymentStartDate,
-            dayOfPayment,
-            journeySession.numberOfPaymentMonths.getOrElse(11),
-            outStandingAmount,
-            firstPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11)),
-            regularPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11))
+      case (Some(dayOfPayment), Some(outStandingAmount)) =>
+        vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { paymentStartDate =>
+          Ok(
+            paymentPlanPage(
+              paymentStartDate,
+              dayOfPayment,
+              journeySession.numberOfPaymentMonths.getOrElse(11),
+              outStandingAmount,
+              firstPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11)),
+              regularPaymentAmount(outStandingAmount, journeySession.numberOfPaymentMonths.getOrElse(11))
+            )
           )
-        )
-      )
+        }
       case _ =>
         logger.warn("dayOfPayment and outStandingAmount cannot be retrieved from journeySession")
         Future.successful(Redirect(routes.DeferredVatBillController.get()))

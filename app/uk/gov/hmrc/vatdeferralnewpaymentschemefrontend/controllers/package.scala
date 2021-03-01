@@ -16,18 +16,17 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend
 
-import play.api.Logger
 import java.time._
 import java.time.format.DateTimeFormatter
-import java.util.Base64
 
+import play.api.Logger
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf.InitRequestMessages
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.enrolments.{EnrolmentRequest, EnrolmentResponse, Identifiers, KnownFacts}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{DateFormValues, MatchingJourneySession}
 
 import scala.concurrent.ExecutionContext
 import scala.math.BigDecimal.RoundingMode
@@ -36,26 +35,8 @@ package object controllers {
 
   val logger = Logger(this.getClass)
 
-  def paymentStartDate: ZonedDateTime = {
-    val now = ZonedDateTime.now.withZoneSameInstant(ZoneId.of("Europe/London"))
-    val serviceStart: ZonedDateTime =
-      ZonedDateTime.of(
-        LocalDateTime.of(2021,2,15,1,1,1),
-        ZoneId.of("Europe/London")
-      )
-    val today = if (now.isAfter(serviceStart)) now else serviceStart
-    today match {
-      case d if d.getDayOfMonth >= 15 && d.getDayOfMonth <= 22 && d.getMonthValue == 2 =>
-        d.withDayOfMonth(1).withMonth(3)
-      case d if d.getDayOfWeek.getValue <= 6 =>
-        d.plusDays(7)
-      case d if d.getDayOfWeek.getValue == 7 =>
-        d.plusDays(6)
-    }
-  }
-
-  def formattedPaymentsStartDate: String =
-    paymentStartDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY"))
+  def formattedPaymentsStartDate(zdt: ZonedDateTime): String =
+    zdt.format(DateTimeFormatter.ofPattern("d MMMM YYYY"))
 
   def firstPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
     val monthlyAmount = regularPaymentAmount(amountOwed, periodOwed)
