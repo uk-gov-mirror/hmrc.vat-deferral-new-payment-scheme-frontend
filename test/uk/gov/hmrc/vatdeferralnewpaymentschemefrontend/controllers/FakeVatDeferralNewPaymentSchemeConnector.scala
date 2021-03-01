@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import java.time.ZonedDateTime
+
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
@@ -58,4 +60,6 @@ class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDefer
     case "9999999999" => Future.successful(Left(UpstreamErrorResponse("foo", 406)))
     case _ => Future.successful(Right(HttpResponse(Status.CREATED, "")))
   }
+
+  override def firstPaymentDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = ???
 }

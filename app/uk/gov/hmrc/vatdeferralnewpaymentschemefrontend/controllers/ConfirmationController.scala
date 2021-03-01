@@ -23,11 +23,12 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.ConfirmationPage
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.PaymentSummary
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ConfirmationController @Inject()(
@@ -35,7 +36,8 @@ class ConfirmationController @Inject()(
   auth: Auth,
   confirmationPage: ConfirmationPage,
   paymentSummary: PaymentSummary,
-  sessionStore: SessionStore
+  sessionStore: SessionStore,
+  vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -51,19 +53,22 @@ class ConfirmationController @Inject()(
       oa,
       journeySession.numberOfPaymentMonths.getOrElse(11)
     )
-    val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
-      dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
-    }
 
-    val ps = paymentSummary(
-      formattedPaymentsStartDate,
-      journeySession.dayOfPayment.getOrElse((0)),
-      journeySession.numberOfPaymentMonths.getOrElse(11),
-      journeySession.outStandingAmount.getOrElse(BigDecimal(0)),
-      firstPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11)),
-      regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
-    )
-    request.session.get("sessionId").fold(())(sessionStore.drop)
-    Future.successful(Ok(confirmationPage(paymentStartDate,fpa,dop,ps)).withNewSession)
+    vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { paymentStartDate =>
+      val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
+        dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
+      }
+
+      val ps = paymentSummary(
+        formattedPaymentsStartDate(paymentStartDate),
+        journeySession.dayOfPayment.getOrElse((0)),
+        journeySession.numberOfPaymentMonths.getOrElse(11),
+        journeySession.outStandingAmount.getOrElse(BigDecimal(0)),
+        firstPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11)),
+        regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
+      )
+      request.session.get("sessionId").fold(())(sessionStore.drop)
+      Ok(confirmationPage(paymentStartDate,fpa,dop,ps)).withNewSession
+    }
   }
 }
