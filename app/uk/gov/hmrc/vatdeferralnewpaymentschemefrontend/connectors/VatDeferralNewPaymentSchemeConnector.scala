@@ -21,7 +21,6 @@ import java.time.ZonedDateTime
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.Logger
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
@@ -66,8 +65,7 @@ class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
   http: HttpClient,
   servicesConfig: ServicesConfig
 )(
-  implicit val appConfig: AppConfig,
-  auditConnector: AuditConnector
+  implicit val appConfig: AppConfig
 ) extends VatDeferralNewPaymentSchemeConnector {
 
   lazy val serviceURL: String = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
