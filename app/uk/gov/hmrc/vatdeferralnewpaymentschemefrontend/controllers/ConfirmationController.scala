@@ -54,7 +54,7 @@ class ConfirmationController @Inject()(
       journeySession.numberOfPaymentMonths.getOrElse(11)
     )
 
-    vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { paymentStartDate =>
+    vatDeferralNewPaymentSchemeConnector.firstPaymentDate(vrn).map { paymentStartDate =>
       val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
         dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
       }

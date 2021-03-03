@@ -49,7 +49,7 @@ class PaymentPlanController @Inject()(
 
     (journeySession.dayOfPayment, journeySession.outStandingAmount) match {
       case (Some(dayOfPayment), Some(outStandingAmount)) =>
-        vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { paymentStartDate =>
+        vatDeferralNewPaymentSchemeConnector.firstPaymentDate(vrn).map { paymentStartDate =>
           Ok(
             paymentPlanPage(
               paymentStartDate,
