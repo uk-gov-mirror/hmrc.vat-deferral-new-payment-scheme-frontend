@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.JourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DeferredVatBillPage
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{DeferredVatBillNoOriginalAmountPage, DeferredVatBillPage}
 
 import scala.concurrent.ExecutionContext
 
@@ -36,6 +36,7 @@ class DeferredVatBillController @Inject()(
   auth: Auth,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   deferredVatBillPage: DeferredVatBillPage,
+  deferredVatBillNoOriginalAmountPage: DeferredVatBillNoOriginalAmountPage,
   sessionStore: SessionStore
 )(
   implicit val appConfig: AppConfig,
@@ -47,7 +48,12 @@ class DeferredVatBillController @Inject()(
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
       vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map { e =>
         sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(outStandingAmount = Some(e.outstandingAmount)))
-        Ok(deferredVatBillPage(e.originalAmount, e.outstandingAmount, e.originalAmount - e.outstandingAmount))
+        e.originalAmount match {
+          case Some(originalAmount) =>
+            Ok(deferredVatBillPage(originalAmount, e.outstandingAmount, originalAmount - e.outstandingAmount))
+          case _ =>
+            Ok(deferredVatBillNoOriginalAmountPage(e.outstandingAmount))
+        }
       }
   }
 }
