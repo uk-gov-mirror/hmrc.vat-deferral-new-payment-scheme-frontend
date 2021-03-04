@@ -52,7 +52,7 @@ class WhenToPayController @Inject()(
       journeySession =>
         (journeySession.outStandingAmount,journeySession.dayOfPayment) match {
           case (Some(_),dop) =>
-            vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { firstPaymentDate =>
+            vatDeferralNewPaymentSchemeConnector.firstPaymentDate(vrn).map { firstPaymentDate =>
               Ok(
                 whenToPagePage(
                   dop.fold(frm)(x => frm.fill(FormValues(x.toString))),
@@ -75,7 +75,7 @@ class WhenToPayController @Inject()(
 
         frm.bindFromRequest().fold(
           errors =>
-            vatDeferralNewPaymentSchemeConnector.firstPaymentDate.map { firstPaymentDate =>
+            vatDeferralNewPaymentSchemeConnector.firstPaymentDate(vrn).map { firstPaymentDate =>
               BadRequest(
                 whenToPagePage(
                   errors,

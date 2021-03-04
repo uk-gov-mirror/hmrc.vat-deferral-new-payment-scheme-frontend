@@ -24,7 +24,7 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData, Vrn}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,7 +55,7 @@ trait VatDeferralNewPaymentSchemeConnector {
     ec: ExecutionContext
   ): Future[Either[UpstreamErrorResponse,HttpResponse]]
 
-  def firstPaymentDate(
+  def firstPaymentDate(vrn: Vrn)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[ZonedDateTime]
@@ -70,8 +70,8 @@ class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
 
   lazy val serviceURL: String = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
 
-  def firstPaymentDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = {
-    val url = s"$serviceURL/vat-deferral-new-payment-scheme/firstPaymentDate"
+  def firstPaymentDate(vrn: Vrn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/firstPaymentDate/${vrn.vrn}"
     http.GET[ZonedDateTime](url)
   }
 
