@@ -25,9 +25,10 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 
 @this(
-        layout: Layout,
-        formHelper: FormWithCSRF,
-        button: Button,
+    layout: Layout,
+    formHelper: FormWithCSRF,
+    button: Button,
+    govukSummaryList: GovukSummaryList
 )
 
 @(paymentStartDate: ZonedDateTime, dayOfPayment: Int, numberOfPayments: Int, outstandingAmount: BigDecimal, firstPaymentAmount: BigDecimal, regularPaymentAmount: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -41,90 +42,66 @@
     @formHelper(action = controllers.routes.PaymentPlanController.post()) {
 
         <h1 class="govuk-heading-l">@messages("payment.plan.h1")</h1>
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">@messages("payment.plan.dates.heading")</th>
-                    <th scope="col" class="govuk-table__header">&nbsp;</th>
-                    <th scope="col" class="govuk-table__header">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.first-payment")</th>
-                    <td class="govuk-table__cell">
-                        @paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
-                    </td>
-                    <td class="govuk-table__cell">&nbsp;</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@messages("payment.plan.dates.remaining-payments")</th>
-                    <td class="govuk-table__cell">
-                        @{dayOfPayment.toString ++ daySuffix(dayOfPayment)}
-                        @messages("payment.plan.list-value")
-                    </td>
-                    <td class="govuk-table__cell">
-                        <a class="govuk-link" href="@controllers.routes.WhenToPayController.get()">
-                            @messages("common.change")
-                            <span class="govuk-visually-hidden">
-                                @messages("payment.plan.dates.remaining-payments.change.hidden")
-                            </span>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
-        <table class="govuk-table">
-            <caption class="govuk-table__caption">@messages("payment.plan.monthly.payments")</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                        @messages("payment.plan.month")
-                    </th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric govuk-!-width-one-third">
-                        @messages("payment.plan.amount")
-                    </th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
+        <h2 class="govuk-heading-m">@messages("payment.plan.dates.heading")</h2>
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">
-                        @paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
-                    </th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">
-                        @Money(firstPaymentAmount)
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a class="govuk-link" href="@controllers.routes.MonthsController.get">
-                            @messages("common.change")
-                            <span class="govuk-visually-hidden">@messages("common.change")</span>
-                        </a>
-                    </td>
-                </tr>
-                @{
-                    (3 to numberOfPayments + 1).map{ item =>
-                        <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header govuk-!-width-one-third govuk-!-font-weight-regular">
-                            {LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("MMMM yyyy")}
-                        </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-third">
-                            {Money(regularPaymentAmount)}
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        </tr>
-                    }
-                }
+        @{govukSummaryList(SummaryList(
+            rows = Seq(
+                SummaryListRow(
+                    Key(content = Text(messages("payment.plan.dates.first-payment"))),
+                    Value(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))))
+                ),
+                SummaryListRow(
+                    Key(content = Text(messages("payment.plan.dates.remaining-payments"))),
+                    Value(content = Text(
+                        s"""${dayOfPayment.toString ++ daySuffix(dayOfPayment)}
+                        ${messages("payment.plan.list-value")}"""
+                    )),
+                    actions = Some(Actions(
+                        items = Seq(
+                            ActionItem(
+                                href = controllers.routes.WhenToPayController.get().toString(),
+                                content = Text(messages("common.change")),
+                                visuallyHiddenText = Some(messages("payment.plan.dates.remaining-payments.change.hidden"))
+                            )
+                        )
+                    ))
+                )
+            )
+        ))}
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@messages("payment.plan.total.pay")</th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">@Money(outstandingAmount)</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                </tr>
-            </tbody>
-        </table>
+
+        <h2 class="govuk-heading-m">@messages("payment.plan.monthly.payments")</h2>
+
+        @{govukSummaryList(SummaryList(
+            rows = Seq(
+                SummaryListRow(
+                    Key(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy")))),
+                    Value(content = Text(Money(firstPaymentAmount))),
+                    actions = Some(Actions(
+                        items = Seq(
+                            ActionItem(
+                                href = controllers.routes.MonthsController.get().toString(),
+                                content = Text(messages("common.change")),
+                                visuallyHiddenText = Some(messages("common.change"))
+                            )
+                        )
+                    ))
+                )
+            ) ++
+            {(3 to numberOfPayments + 1).map{ item =>
+                SummaryListRow(
+                    Key(content = Text(LocalDate.now.withDayOfYear(dayOfPayment).plusMonths(item).toString("MMMM yyyy"))),
+                    Value(content = Text(Money(regularPaymentAmount)))
+                )
+            }} ++
+            Seq(
+                SummaryListRow(
+                    Key(content = Text(messages("payment.plan.total.pay"))),
+                    Value(content = Text(Money(outstandingAmount)))
+                )
+            )
+        ))}
 
         @button("continue.button")
 
