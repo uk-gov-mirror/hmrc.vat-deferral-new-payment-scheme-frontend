@@ -22,6 +22,7 @@ import play.api.data.Forms.mapping
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.JourneySession
@@ -38,7 +39,8 @@ class MonthsController @Inject()(
   auth: Auth,
   monthlyInstallmentsPage: MonthlyInstallmentsPage,
   howManyMonthsPage: HowManyMonthsPage,
-  sessionStore: SessionStore
+  sessionStore: SessionStore,
+  languageUtils: LanguageUtils
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -141,7 +143,8 @@ class MonthsController @Inject()(
           Future.successful(BadRequest(
             howManyMonthsPage(
               getMonths(outStandingAmount).reverse,
-              form
+              form,
+              languageUtils.getCurrentLang
             )
           ))
         } else {
@@ -149,7 +152,8 @@ class MonthsController @Inject()(
             howManyMonthsPage(
               getMonths(outStandingAmount).reverse,
               journeySession.numberOfPaymentMonths
-                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString)))
+                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString))),
+              languageUtils.getCurrentLang
           )))
         }
       }
