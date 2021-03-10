@@ -98,7 +98,7 @@ class BankDetailsController @Inject()(
             )
         }
 
-        def storeSubmitted(journeySession: JourneySession, submissionFoo: Submission) = {
+        def storeSubmitted(journeySession: JourneySession, submissionFoo: Submission): Future[JourneySession] = {
           sessionStore.store[JourneySession](
             journeySession.id,
             "JourneySession",
@@ -106,17 +106,22 @@ class BankDetailsController @Inject()(
           )
         }
 
-        def handleSubmission(submission: Submission): Future[Result] = submission match {
-            case Submission(true, "error", _, errorMsg, errorCode) =>
-              throw UpstreamErrorResponse(errorMsg, errorCode, errorCode)
-            case Submission(true, "redirect", b, _, _) =>
-              Future.successful(Redirect(b))
-            case Submission(true, "ok", _, _, _) =>
-              Future.successful(Ok(ddFailurePage()))
-            case Submission(true, "", "", "", _) =>
-              sessionStore.get[JourneySession](journeyId, "JourneySession")
-                .flatMap(x => x.fold(throw new RuntimeException("oops"))(y => handleSubmission(y.submission)))
-            case _ => throw new RuntimeException("foo")
+        def handleSubmission(submission: Submission, i: Int)(implicit request: Request[AnyContent]): Future[Result] = (submission,i) match {
+          case (_, count) if count > 30 =>
+            throw new RuntimeException("too many retries in double-click prevention")
+          case (Submission(true, "error", _, errorMsg, errorCode),_) =>
+            throw UpstreamErrorResponse(errorMsg, errorCode, errorCode)
+          case (Submission(true, "redirect", b, _, _),_) =>
+            Future.successful(Redirect(b))
+          case (Submission(true, "ok", _, _, _),_) =>
+            Future.successful(Ok(ddFailurePage()))
+          case (Submission(true, "", "", "", _),_) =>
+            sessionStore.get[JourneySession](journeyId, "JourneySession")
+              .flatMap(x => x.fold(throw new RuntimeException("Unable to get JourneySession from state")){ y =>
+                Thread.sleep(1000)
+                handleSubmission(y.submission, i +1)
+              })
+          case _ => throw new RuntimeException("No match in double-click prevention")
         }
 
         journeySession.submission match {
@@ -154,7 +159,7 @@ class BankDetailsController @Inject()(
             }
           }
           case submission@Submission(_,_,_,_,_) =>
-            handleSubmission(submission)
+            handleSubmission(submission, 0)
         }
   }
 }

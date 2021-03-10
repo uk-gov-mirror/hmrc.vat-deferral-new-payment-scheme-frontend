@@ -20,6 +20,11 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, _}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
+
+import scala.concurrent.Future
 
 class BankDetailsControllerSpec extends BaseSpec {
 
@@ -30,6 +35,12 @@ class BankDetailsControllerSpec extends BaseSpec {
           new FakeVatDeferralNewPaymentSchemeConnector("9999999999"),
           new FakeBavfConnector()
         )
+      when(sessionStore.store[JourneySession](any(), any(), any())(any(),any())).thenReturn(
+        Future.successful(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11), Some(1), Submission(false)))
+      )
+      when(sessionStore.get[JourneySession](any(), any())(any())).thenReturn(
+        Future.successful(Option(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11), Some(1), Submission(false))))
+      )
       val result =
         controller
           .post("foo")
