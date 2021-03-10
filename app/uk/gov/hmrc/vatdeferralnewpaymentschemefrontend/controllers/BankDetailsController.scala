@@ -116,7 +116,7 @@ class BankDetailsController @Inject()(
           case (Submission(true, "ok", _, _, _),_) =>
             Future.successful(Ok(ddFailurePage()))
           case (Submission(true, "", "", "", _),_) =>
-            sessionStore.get[JourneySession](journeyId, "JourneySession")
+            sessionStore.get[JourneySession](journeySession.id, "JourneySession")
               .flatMap(x => x.fold(throw new RuntimeException("Unable to get JourneySession from state")){ y =>
                 Thread.sleep(1000)
                 handleSubmission(y.submission, i +1)
