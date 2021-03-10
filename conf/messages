@@ -175,8 +175,8 @@ confirmation.vat.helpline.href=contact the Coronavirus (COVID-19) helpline for b
 confirmation.vat.helpline.content=. (opens in a new tab)
 
 confirmation.next.header=What to do next
-confirmation.next.p1=Before you leave this page, print or save a copy of your payment summary as you will not be able to do this later.
-confirmation.print.or.save.payment-summary=Print or save your payment summary
+confirmation.next.p1=Before you leave this page, print or save a copy of your payment plan as you will not be able to do this later.
+confirmation.print.or.save.payment-summary=Print or save your payment plan
 
 global.button.continue=Continue
 global.button.accept.and.continue=Accept and continue

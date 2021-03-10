@@ -177,8 +177,8 @@ confirmation.vat.helpline.href=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 confirmation.vat.helpline.content=. (yn agor tab newydd)
 
 confirmation.next.header=Yr hyn i’w wneud nesaf
-confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch crynodeb o daliadau. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
-confirmation.print.or.save.payment-summary=Argraffu neu gadw’r dudalen hon
+confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch cynllun talu. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
+confirmation.print.or.save.payment-summary=Argraffu neu gadw eich cynllun talu
 
 global.button.continue=Yn eich blaen
 global.button.accept.and.continue=Derbyn ac yn eich blaen
