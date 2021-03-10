@@ -161,7 +161,7 @@ direct.debit.p3=If an error is made in the payment of your Direct Debit by HM Re
 direct.debit.p4=If you receive a refund you are not entitled to, you must pay it back when HM Revenue & Customs asks you to.
 direct.debit.p5=You can cancel a Direct Debit at any time by simply contacting your bank or building society. Written confirmation may be required. Please also notify us.
 direct.debit.confirm.and.setup=Click once to confirm and set up Direct Debit
-direct.debit.double-click.warning=Clicking more than once will set up multiple Direct Debits.
+direct.debit.double-click.warning=Clicking the button more than once will set up multiple Direct Debits.
 
 confirmation.header=You have set up a Direct Debit for your deferred VAT payments
 confirmation.header2=What happens next

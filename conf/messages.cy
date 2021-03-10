@@ -162,7 +162,7 @@ direct.debit.p3=Os bydd Cyllid a Thollau EM, neu’ch banc neu gymdeithas adeila
 direct.debit.p4=Os cewch ad-daliad nad oedd gennych hawl iddo, mae’n rhaid i chi ei dalu yn ôl pan fydd Cyllid a Thollau EM yn gofyn i chi wneud hynny.
 direct.debit.p5=Gallwch ganslo Debyd Uniongyrchol ar unrhyw adeg drwy gysylltu â’ch banc neu gymdeithas adeiladu. Efallai y bydd angen cadarnhad ysgrifenedig. Rhowch wybod i ni hefyd.
 direct.debit.confirm.and.setup=Click once to confirm and set up Direct Debit
-direct.debit.double-click.warning=Clicking more than once will set up multiple Direct Debits.
+direct.debit.double-click.warning=Clicking the button more than once will set up multiple Direct Debits.
 #direct.debit.confirm.and.setup=Cadarnhau a sefydlu Debyd Uniongyrchol
 
 confirmation.header=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer eich taliadau TAW gohiriedig
