@@ -20,3 +20,12 @@ function printNewWindow(){
     newWin.print();
     newWin.close();
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('submit-dd')
+    if(typeof(button) != 'undefined' && button != null){
+        button.addEventListener('click', function(e) {
+            e.target.setAttribute('disabled', true)
+        })
+    }
+})
