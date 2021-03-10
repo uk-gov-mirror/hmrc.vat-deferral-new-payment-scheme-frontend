@@ -49,5 +49,12 @@
         <p class="govuk-body">@messages("direct.debit.p4")</p>
         <p class="govuk-body">@messages("direct.debit.p5")</p>
         @button("direct.debit.confirm.and.setup")
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                @messages("direct.debit.double-click.warning")
+            </strong>
+        </div>
     }
 }
