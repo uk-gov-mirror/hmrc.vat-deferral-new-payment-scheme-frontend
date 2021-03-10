@@ -98,11 +98,11 @@ class BankDetailsController @Inject()(
             )
         }
 
-        def storeSubmitted(journeySession: JourneySession, submissionFoo: Submission): Future[JourneySession] = {
+        def storeSubmitted(journeySession: JourneySession, sub: Submission): Future[JourneySession] = {
           sessionStore.store[JourneySession](
             journeySession.id,
             "JourneySession",
-            journeySession.copy(submission = submissionFoo)
+            journeySession.copy(submission = sub)
           )
         }
 
