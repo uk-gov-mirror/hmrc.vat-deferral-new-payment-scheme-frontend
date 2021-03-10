@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
@@ -58,69 +59,91 @@ class BankDetailsController @Inject()(
     Future.successful(Ok(directDebitPage(journeyId)))
   }
 
-  def post(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def post(journeyId: String): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>
+    vrn =>
+      journeySession =>
 
-    val dayOfPayment:Int =
-      journeySession.dayOfPayment.getOrElse(
-        throw new IllegalStateException("journeySession missing dayOfPayment")
-      )
-    val numberOfPaymentMonths:Int =
-      journeySession.numberOfPaymentMonths.getOrElse(
-        throw new IllegalStateException("journeySession missing numberOfPaymentMonths")
-      )
-    val outStandingAmount: BigDecimal =
-      journeySession.outStandingAmount.getOrElse(
-        throw new IllegalStateException("journeySession missing outStandingAmount")
-      )
-    lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
-      account <- connector.complete(journeyId, vrn.vrn)
-    } yield account match {
-      case PersonalCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
-        DirectDebitArrangementRequest(
-          paymentDay = dayOfPayment,
-          numberOfPayments = numberOfPaymentMonths,
-          totalAmountToPay = outStandingAmount,
-          sortCode = sortCode,
-          accountNumber = accountNumber,
-          accountName = accountOrBusinessName
-        )
-      case BusinessCompleteResponse(accountOrBusinessName,sortCode,accountNumber, _) =>
-        DirectDebitArrangementRequest(
-          paymentDay = dayOfPayment,
-          numberOfPayments = numberOfPaymentMonths,
-          totalAmountToPay = outStandingAmount,
-          sortCode = sortCode,
-          accountNumber = accountNumber,
-          accountName = accountOrBusinessName
-        )
-    }
+        val dayOfPayment: Int =
+          journeySession.dayOfPayment.getOrElse(
+            throw new IllegalStateException("journeySession missing dayOfPayment")
+          )
+        val numberOfPaymentMonths: Int =
+          journeySession.numberOfPaymentMonths.getOrElse(
+            throw new IllegalStateException("journeySession missing numberOfPaymentMonths")
+          )
+        val outStandingAmount: BigDecimal =
+          journeySession.outStandingAmount.getOrElse(
+            throw new IllegalStateException("journeySession missing outStandingAmount")
+          )
+        lazy val ddArrangementAPICall: Future[DirectDebitArrangementRequest] = for {
+          account <- connector.complete(journeyId, vrn.vrn)
+        } yield account match {
+          case PersonalCompleteResponse(accountOrBusinessName, sortCode, accountNumber, _) =>
+            DirectDebitArrangementRequest(
+              paymentDay = dayOfPayment,
+              numberOfPayments = numberOfPaymentMonths,
+              totalAmountToPay = outStandingAmount,
+              sortCode = sortCode,
+              accountNumber = accountNumber,
+              accountName = accountOrBusinessName
+            )
+          case BusinessCompleteResponse(accountOrBusinessName, sortCode, accountNumber, _) =>
+            DirectDebitArrangementRequest(
+              paymentDay = dayOfPayment,
+              numberOfPayments = numberOfPaymentMonths,
+              totalAmountToPay = outStandingAmount,
+              sortCode = sortCode,
+              accountNumber = accountNumber,
+              accountName = accountOrBusinessName
+            )
+        }
 
-    for {
-      a <- ddArrangementAPICall
-      b <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
-    } yield {
-      (a,b) match {
-        case (_, Right(_)) =>
-          audit(
-            "DirectDebitSetup",
-            DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
+        def storeSubmitted(journeySession: JourneySession, submissionFoo: Submission) = {
+          sessionStore.store[JourneySession](
+            journeySession.id,
+            "JourneySession",
+            journeySession.copy(submission = submissionFoo)
           )
-          Redirect(routes.ConfirmationController.get())
-        case (_, Left(UpstreamErrorResponse(message, 406, _, _))) =>
-          audit(
-            "DirectDebitSetup",
-            DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
-          )
-          logger.info(s"getting 406, message: $message")
-          Ok(ddFailurePage())
-        case (_, Left(e)) =>
-          logger.error(e.message)
-          audit(
-            "DirectDebitSetup",
-            DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
-          )
-          throw e
-      }
-    }
+        }
+
+        journeySession.submission match {
+          case Submission(false, _, _) => {
+            for {
+              a <- ddArrangementAPICall
+              b <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
+            } yield {
+              (a, b) match {
+                case (_, Right(_)) =>
+                  storeSubmitted(journeySession, Submission(isSubmitted = true, "redirect", routes.ConfirmationController.get().url))
+                  audit(
+                    "DirectDebitSetup",
+                    DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
+                  )
+                  Redirect(routes.ConfirmationController.get())
+                case (_, Left(UpstreamErrorResponse(message, 406, _, _))) =>
+                  audit(
+                    "DirectDebitSetup",
+                    DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
+                  )
+                  logger.info(s"getting 406, message: $message")
+                  storeSubmitted(journeySession, Submission(isSubmitted = true, "ok"))
+                   Ok(ddFailurePage())
+                case (_, Left(e)) =>
+                  logger.error(e.message)
+                  audit(
+                    "DirectDebitSetup",
+                    DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
+                  )
+                  throw e
+              }
+            }
+          }
+          case Submission(true, "redirect", b) =>
+            Future.successful(Redirect(b))
+          case Submission(true, "ok", a) =>
+            Future.successful(Ok(ddFailurePage()))
+          case _ =>
+
+        }
   }
 }
