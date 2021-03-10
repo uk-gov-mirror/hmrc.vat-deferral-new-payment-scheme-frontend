@@ -28,8 +28,8 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.DDFailurePage
@@ -106,9 +106,23 @@ class BankDetailsController @Inject()(
           )
         }
 
+        def handleSubmission(submission: Submission): Future[Result] = submission match {
+            case Submission(true, "error", _, errorMsg, errorCode) =>
+              throw UpstreamErrorResponse(errorMsg, errorCode, errorCode)
+            case Submission(true, "redirect", b, _, _) =>
+              Future.successful(Redirect(b))
+            case Submission(true, "ok", _, _, _) =>
+              Future.successful(Ok(ddFailurePage()))
+            case Submission(true, "", "", "", _) =>
+              sessionStore.get[JourneySession](journeyId, "JourneySession")
+                .flatMap(x => x.fold(throw new RuntimeException("oops"))(y => handleSubmission(y.submission)))
+            case _ => throw new RuntimeException("foo")
+        }
+
         journeySession.submission match {
-          case Submission(false, _, _) => {
+          case Submission(false, _, _, _, _) => {
             for {
+              _ <- storeSubmitted(journeySession, Submission(isSubmitted = true))
               a <- ddArrangementAPICall
               b <- vatDeferralNewPaymentSchemeConnector.createDirectDebitArrangement(vrn.vrn, a)
             } yield {
@@ -130,6 +144,7 @@ class BankDetailsController @Inject()(
                    Ok(ddFailurePage())
                 case (_, Left(e)) =>
                   logger.error(e.message)
+                  storeSubmitted(journeySession, Submission(isSubmitted = true, "error", e.message))
                   audit(
                     "DirectDebitSetup",
                     DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
@@ -138,12 +153,8 @@ class BankDetailsController @Inject()(
               }
             }
           }
-          case Submission(true, "redirect", b) =>
-            Future.successful(Redirect(b))
-          case Submission(true, "ok", a) =>
-            Future.successful(Ok(ddFailurePage()))
-          case _ =>
-
+          case submission@Submission(_,_,_,_,_) =>
+            handleSubmission(submission)
         }
   }
 }

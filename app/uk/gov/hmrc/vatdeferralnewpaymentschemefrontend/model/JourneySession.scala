@@ -24,7 +24,9 @@ import scala.concurrent.Future
 case class Submission(
   isSubmitted: Boolean = false,
   resultType: String = "",
-  resultPath: String = ""
+  resultPath: String = "",
+  errorMsg: String = "",
+  errorCode: Int = -1
 )
 
 object Submission {
