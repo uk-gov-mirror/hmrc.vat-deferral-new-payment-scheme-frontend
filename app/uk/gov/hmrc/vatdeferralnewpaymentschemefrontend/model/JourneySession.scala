@@ -21,12 +21,25 @@ import play.api.mvc.{AnyContent, Request, Result}
 
 import scala.concurrent.Future
 
+case class Submission(
+  isSubmitted: Boolean = false,
+  resultType: String = "",
+  resultPath: String = "",
+  errorMsg: String = "",
+  errorCode: Int = -1
+)
+
+object Submission {
+  implicit val format = Json.format[Submission]
+}
+
 case class JourneySession (
   id: String,
   eligible: Boolean = false,
   outStandingAmount: Option[BigDecimal] = None,
   numberOfPaymentMonths: Option[Int] = None,
-  dayOfPayment: Option[Int] = None
+  dayOfPayment: Option[Int] = None,
+  submission: Submission = Submission()
 ) {
   def monthsQuestion: Option[Boolean] = numberOfPaymentMonths match {
     case Some(11) => Some(true)

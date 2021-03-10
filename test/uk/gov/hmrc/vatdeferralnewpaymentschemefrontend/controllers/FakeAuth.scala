@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, MatchingJourneySession, Vrn}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, MatchingJourneySession, Submission, Vrn}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +43,7 @@ class FakeAuth(val authConnector: AuthConnector, val env: Environment, val confi
     servicesConfig: ServicesConfig
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      action(request)(Vrn("9999999999"))(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11),Some(1)))
+      action(request)(Vrn("9999999999"))(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11), Some(1), Submission(false)))
     }
 
   override def authoriseForMatchingJourney(action: Request[AnyContent] => Future[Result])(implicit ec: ExecutionContext, servicesConfig: ServicesConfig): Action[AnyContent] = ???
