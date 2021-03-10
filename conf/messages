@@ -126,7 +126,8 @@ how-many-months.error.required=Select how many months you want to pay over
 when.to.pay.h1=Choose when your payments will be collected
 when.to.pay.p1=We will collect your first payment on <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.h2=On which day do you want the remaining monthly payments to be collected?
-when.to.pay.p2=If the payment due date falls on a weekend, we will take your payment on the next working day.
+when.to.pay.p2=Your second payment will not be taken in the same month as your first payment.
+when.to.pay.p3=If the payment due date falls on a weekend, we will take your payment on the next working day.
 when.to.pay.label=Enter a day from 1 to 28
 when-to-pay.error.day.required=Enter a day from 1 to 28
 when-to-pay.error.day.invalid=Enter a day from 1 to 28
