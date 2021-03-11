@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.{BavfConnector, VatDeferralNewPaymentSchemeConnector}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.Bavf._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, DirectDebitArrangementRequestAuditWrapper}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DirectDebitPage
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.DDFailurePage
@@ -109,13 +109,13 @@ class BankDetailsController @Inject()(
         def handleSubmission(submission: Submission, i: Int)(implicit request: Request[AnyContent]): Future[Result] = (submission,i) match {
           case (_, count) if count > 30 =>
             throw new RuntimeException("too many retries in double-click prevention")
-          case (Submission(true, "error", _, errorMsg, errorCode),_) =>
+          case (Submission(true, Some(ResultError(errorMsg,errorCode))),_) =>
             throw UpstreamErrorResponse(errorMsg, errorCode, errorCode)
-          case (Submission(true, "redirect", b, _, _),_) =>
-            Future.successful(Redirect(b))
-          case (Submission(true, "ok", _, _, _),_) =>
+          case (Submission(true, Some(ResultRedirect(path))),_) =>
+            Future.successful(Redirect(path))
+          case (Submission(true, Some(ResultOk)),_) =>
             Future.successful(Ok(ddFailurePage()))
-          case (Submission(true, "", "", "", _),_) =>
+          case (Submission(true, None),_) =>
             sessionStore.get[JourneySession](journeySession.id, "JourneySession")
               .flatMap(x => x.fold(throw new RuntimeException("Unable to get JourneySession from state")){ y =>
                 Thread.sleep(1000)
@@ -125,7 +125,7 @@ class BankDetailsController @Inject()(
         }
 
         journeySession.submission match {
-          case Submission(false, _, _, _, _) => {
+          case Submission(false, _) => {
             for {
               _ <- storeSubmitted(journeySession, Submission(isSubmitted = true))
               a <- ddArrangementAPICall
@@ -137,8 +137,7 @@ class BankDetailsController @Inject()(
                     journeySession,
                     Submission(
                       isSubmitted = true,
-                      resultType = "redirect",
-                      resultPath = routes.ConfirmationController.get().url
+                      Some(ResultRedirect(routes.ConfirmationController.get().url))
                     )
                   )
                   audit(
@@ -154,22 +153,14 @@ class BankDetailsController @Inject()(
                   logger.info(s"getting 406, message: $message")
                   storeSubmitted(
                     journeySession,
-                    Submission(
-                      isSubmitted = true,
-                      resultType = "ok"
-                    )
+                    Submission(isSubmitted = true, Some(ResultOk))
                   )
-                   Ok(ddFailurePage())
+                  Ok(ddFailurePage())
                 case (_, Left(e)) =>
                   logger.error(e.message)
                   storeSubmitted(
                     journeySession,
-                    Submission(
-                      isSubmitted = true,
-                      resultType = "error",
-                      errorMsg = e.message,
-                      errorCode = e.statusCode
-                    )
+                    Submission(isSubmitted = true, Some(ResultError(e.message, e.statusCode)))
                   )
                   audit(
                     "DirectDebitSetup",
@@ -179,7 +170,7 @@ class BankDetailsController @Inject()(
               }
             }
           }
-          case submission@Submission(_,_,_,_,_) =>
+          case submission:Submission =>
             handleSubmission(submission, 0)
         }
   }

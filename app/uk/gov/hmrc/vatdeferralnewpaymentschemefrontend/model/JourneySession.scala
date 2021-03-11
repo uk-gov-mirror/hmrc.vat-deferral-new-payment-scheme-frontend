@@ -16,20 +16,43 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, _}
 import play.api.mvc.{AnyContent, Request, Result}
 
 import scala.concurrent.Future
 
 case class Submission(
   isSubmitted: Boolean = false,
-  resultType: String = "",
-  resultPath: String = "",
-  errorMsg: String = "",
-  errorCode: Int = -1
+  resultType: Option[ResultType] = None
 )
 
+
+sealed trait ResultType
+case class ResultError(msg: String, code: Int) extends ResultType
+case class ResultRedirect(path: String) extends ResultType
+case object ResultOk extends ResultType
+
+
 object Submission {
+
+  implicit object ResultTypeFormatter extends Format[ResultType] {
+    override def writes(rt: ResultType): JsValue = rt match {
+      case ResultOk => Json.toJson("ResultOk")
+      case e:ResultError =>
+        JsObject(Map("resultError" -> Json.toJson(e)(Json.format[ResultError])))
+      case r:ResultRedirect =>
+        JsObject(Map("resultRedirect" -> Json.toJson(r)(Json.format[ResultRedirect])))
+    }
+    override def reads(json: JsValue): JsResult[ResultType] = json match {
+      case JsString("ResultOk") => JsSuccess(ResultOk)
+      case o:JsObject if o.keys.contains("resultError") =>
+        Json.format[ResultError].reads(o.value("resultError"))
+      case o:JsObject if o.keys.contains("resultRedirect") =>
+        Json.format[ResultRedirect].reads(o.value("resultRedirect"))
+      case _ => JsError("unknown type")
+    }
+  }
+
   implicit val format = Json.format[Submission]
 }
 
