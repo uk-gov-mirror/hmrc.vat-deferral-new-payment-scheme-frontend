@@ -21,11 +21,14 @@ function printNewWindow(){
     newWin.close();
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    const button = document.getElementById('submit-dd')
-    if(typeof(button) != 'undefined' && button != null){
-        button.addEventListener('click', function(e) {
-            e.target.setAttribute('disabled', true)
-        })
-    }
-})
+function directDebitSubmit() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const ddSubmitButton = document.getElementById('submit-dd')
+        if(typeof(ddSubmitButton) != 'undefined' && ddSubmitButton != null){
+            document.getElementById('submit-dd-form').addEventListener('submit', function(e) {
+                ddSubmitButton.setAttribute('disabled', true)
+            })
+        }
+    })
+}
+directDebitSubmit()

@@ -32,7 +32,7 @@
     backLinkEnabled = true
 ) {
 
-    @formHelper(action = controllers.routes.BankDetailsController.post(journeyId)) {
+    @formHelper(action = controllers.routes.BankDetailsController.post(journeyId), 'id -> "submit-dd-form") {
 
         <h1 class="govuk-heading-l">@messages("direct.debit.confirm.and.setup")</h1>
 
