@@ -127,7 +127,8 @@ how-many-months.error.required=Dewiswch ateb ar gyfer dros sawl mis yr hoffech d
 when.to.pay.h1=Dewiswch pryd y bydd eich taliadau’n cael eu casglu
 when.to.pay.p1=Byddwn yn casglu’ch taliad cyntaf ar <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.h2=Ar ba ddiwrnod yr hoffech i’r taliadau misol sy’n weddill gael eu casglu?
-when.to.pay.p2=Os bydd y dyddiad cau ar gyfer talu ar benwythnos, byddwn yn cymryd eich taliad ar y diwrnod gwaith nesaf.
+when.to.pay.p2=Ni fydd eich ail daliad yn cael ei gymryd yn yr un mis â’ch taliad cyntaf.
+when.to.pay.p3=Os bydd y dyddiad cau ar gyfer talu ar benwythnos, byddwn yn cymryd eich taliad ar y diwrnod gwaith nesaf.
 when.to.pay.label=Nodwch ddiwrnod o 1 i 28
 when-to-pay.error.day.required=Nodwch ddiwrnod o 1 i 28
 when-to-pay.error.day.invalid=Nodwch ddiwrnod o 1 i 28
@@ -177,8 +178,8 @@ confirmation.vat.helpline.href=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 confirmation.vat.helpline.content=. (yn agor tab newydd)
 
 confirmation.next.header=Yr hyn i’w wneud nesaf
-confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch crynodeb o daliadau. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
-confirmation.print.or.save.payment-summary=Argraffu neu gadw’r dudalen hon
+confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch cynllun talu. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
+confirmation.print.or.save.payment-summary=Argraffu neu gadw eich cynllun talu
 
 global.button.continue=Yn eich blaen
 global.button.accept.and.continue=Derbyn ac yn eich blaen
