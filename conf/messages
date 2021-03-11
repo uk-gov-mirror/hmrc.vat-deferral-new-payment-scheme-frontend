@@ -55,7 +55,7 @@ enter.postcode.hint=For example, AB1 2YZ
 enter.latestVatReturn.heading=What is your latest VAT Return total?
 enter.latestVatReturn.hint=You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example &pound;123.00
 
-enter.latestVatPeriod.heading=Select the last month of your latest VAT accounting period
+enter.latestVatPeriod.heading=Select the month when your last VAT Return was submitted
 enter.latestVatPeriod.hint=You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
 
 enter.vatRegistrationDate.heading=When did you become VAT registered?
@@ -200,7 +200,7 @@ error.day-and-month.missing=The date you became VAT registered must include a da
 error.month-and-year.missing=The date you became VAT registered must include a month and year
 error.date.invalid=The date you became VAT registered must be a real date
 error.date.in-future=The date you became VAT registered must be in the past
-latest-vat-period.error.required=Select the month of your latest VAT accounting period
+latest-vat-period.error.required=Select the month when your last VAT Return was submitted
 
 matching.notMatched.title=Business not found
 matching.notMatched.p1=We cannot find any business that matches the details you entered.
