@@ -133,7 +133,14 @@ class BankDetailsController @Inject()(
             } yield {
               (a, b) match {
                 case (_, Right(_)) =>
-                  storeSubmitted(journeySession, Submission(isSubmitted = true, "redirect", routes.ConfirmationController.get().url))
+                  storeSubmitted(
+                    journeySession,
+                    Submission(
+                      isSubmitted = true,
+                      resultType = "redirect",
+                      resultPath = routes.ConfirmationController.get().url
+                    )
+                  )
                   audit(
                     "DirectDebitSetup",
                     DirectDebitArrangementRequestAuditWrapper(success = true, vrn.vrn, a)
@@ -145,11 +152,25 @@ class BankDetailsController @Inject()(
                     DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
                   )
                   logger.info(s"getting 406, message: $message")
-                  storeSubmitted(journeySession, Submission(isSubmitted = true, "ok"))
+                  storeSubmitted(
+                    journeySession,
+                    Submission(
+                      isSubmitted = true,
+                      resultType = "ok"
+                    )
+                  )
                    Ok(ddFailurePage())
                 case (_, Left(e)) =>
                   logger.error(e.message)
-                  storeSubmitted(journeySession, Submission(isSubmitted = true, "error", e.message))
+                  storeSubmitted(
+                    journeySession,
+                    Submission(
+                      isSubmitted = true,
+                      resultType = "error",
+                      errorMsg = e.message,
+                      errorCode = e.statusCode
+                    )
+                  )
                   audit(
                     "DirectDebitSetup",
                     DirectDebitArrangementRequestAuditWrapper(success = false, vrn.vrn, a)
