@@ -17,11 +17,12 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import java.time.ZonedDateTime
+
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData, Vrn}
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, InstallmentsAvailable}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -61,4 +62,8 @@ class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDefer
   }
 
   override def firstPaymentDate(vrn: Vrn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = ???
+
+  override def canPay(vrn: Vrn, amount: BigDecimal)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = ???
+
+  override def installmentPeriodsAvailable(vrn: Vrn, amount: BigDecimal)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[InstallmentsAvailable] = ???
 }

@@ -23,7 +23,7 @@ import play.api.Logger
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.DirectDebitArrangementRequest
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangement.{DirectDebitArrangementRequest, InstallmentsAvailable}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{Eligibility, FinancialData, Vrn}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -59,6 +59,23 @@ trait VatDeferralNewPaymentSchemeConnector {
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[ZonedDateTime]
+
+  def canPay(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Boolean]
+
+  def installmentPeriodsAvailable(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[InstallmentsAvailable]
+
 }
 
 class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
@@ -69,11 +86,6 @@ class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
 ) extends VatDeferralNewPaymentSchemeConnector {
 
   lazy val serviceURL: String = servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
-
-  def firstPaymentDate(vrn: Vrn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = {
-    val url = s"$serviceURL/vat-deferral-new-payment-scheme/firstPaymentDate/${vrn.vrn}"
-    http.GET[ZonedDateTime](url)
-  }
 
   def eligibility(vrn: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Eligibility] = {
     val url = s"$serviceURL/vat-deferral-new-payment-scheme/eligibility/$vrn"
@@ -98,5 +110,32 @@ class VatDeferralNewPaymentSchemeConnectorImpl @Inject()(
       url,
       directDebitArrangementRequest
     )
+  }
+
+  def firstPaymentDate(vrn: Vrn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/firstPaymentDate/${vrn.vrn}"
+    http.GET[ZonedDateTime](url)
+  }
+
+  def canPay(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Boolean] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/installments/canPay/${vrn.vrn}/${amount.toString}"
+    http.GET[Boolean](url)
+  }
+
+  def installmentPeriodsAvailable(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[InstallmentsAvailable] = {
+    val url = s"$serviceURL/vat-deferral-new-payment-scheme/installments/available/${vrn.vrn}/${amount.toString}"
+    http.GET[InstallmentsAvailable](url)
   }
 }

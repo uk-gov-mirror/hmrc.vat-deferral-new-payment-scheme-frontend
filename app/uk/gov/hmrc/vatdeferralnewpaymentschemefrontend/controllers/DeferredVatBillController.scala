@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.JourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{DeferredVatBillNoOriginalAmountPage, DeferredVatBillPage}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.DeferredVatBillPage
 
 import scala.concurrent.ExecutionContext
 
@@ -36,7 +36,6 @@ class DeferredVatBillController @Inject()(
   auth: Auth,
   vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
   deferredVatBillPage: DeferredVatBillPage,
-  deferredVatBillNoOriginalAmountPage: DeferredVatBillNoOriginalAmountPage,
   sessionStore: SessionStore
 )(
   implicit val appConfig: AppConfig,
@@ -46,14 +45,13 @@ class DeferredVatBillController @Inject()(
   with I18nSupport {
 
   def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-      vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn) map { e =>
-        sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(outStandingAmount = Some(e.outstandingAmount)))
-        e.originalAmount match {
-          case Some(originalAmount) =>
-            Ok(deferredVatBillPage(originalAmount, e.outstandingAmount, originalAmount - e.outstandingAmount))
-          case _ =>
-            Ok(deferredVatBillNoOriginalAmountPage(e.outstandingAmount))
-        }
-      }
+
+    for {
+      fd <-  vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn)
+      cp <- vatDeferralNewPaymentSchemeConnector.canPay(vrn, fd.outstandingAmount)
+      _ <- sessionStore.store[JourneySession](
+             journeySession.id, "JourneySession", journeySession.copy(outStandingAmount = Some(fd.outstandingAmount))
+           )
+    } yield Ok(deferredVatBillPage(fd.outstandingAmount, fd.originalAmount, cp))
   }
 }
