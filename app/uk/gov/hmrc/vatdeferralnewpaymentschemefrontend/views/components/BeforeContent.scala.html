@@ -16,7 +16,8 @@
 
 @this(
     govUkBetaBanner: GovUkBetaBanner,
-        govukBackLink: GovukBackLink
+    govukBackLink: GovukBackLink,
+    hmrcLanguageSelect : HmrcLanguageSelect
 )
 
 @(backLinkEnabled: Boolean = false, backLink: Option[String] = None)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -41,11 +42,11 @@
 }
 
 @if(appConfig.languageTranslationEnabled) {
-    @language_selection(
-            appConfig.languageMap,
-            appConfig.routeToSwitchLanguage,
-            Some("lang")
-    )
+    @hmrcLanguageSelect(LanguageSelect(
+        if (messages.lang.code == "cy") Cy else En,
+        (En, appConfig.routeToSwitchLanguage("english").url),
+        (Cy, appConfig.routeToSwitchLanguage("cymraeg").url)
+    ))
 }
 
 
