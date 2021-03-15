@@ -34,8 +34,7 @@
 
 @layout(
     pageTitle = PageTitle("how.many.months.h1", form.hasErrors),
-    backLinkEnabled = true,
-    backLink = Some(s"${controllers.routes.MonthsController.get()}")
+    backLinkEnabled = true
 ) {
 
     @formHelper(action = controllers.routes.MonthsController.postInstallmentBreakdown()) {

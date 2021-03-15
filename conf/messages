@@ -108,6 +108,8 @@ deferred.vat.bill.wrong.p1=What to do if you think this bill is wrong
 deferred.vat.bill.wrong.p2=If you think your deferred VAT bill is wrong,
 deferred.vat.bill.wrong.p3=contact the Coronavirus (COVID-19) helpline for businesses and self-employed
 deferred.vat.bill.wrong.p4=. (opens in a new tab)
+deferred.vat.bill.toobig.p1=The instalment limit is £20m per month.
+deferred.vat.bill.toobig.p2=You must contact your Customer Compliance Manager (CCM) to arrange payment as your deferred VAT bill is too large for this service.
 
 installments.h1=Do you want to pay in 11 monthly instalments?
 installments.p1=If you select yes, your monthly payments will be

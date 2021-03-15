@@ -29,10 +29,9 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{DirectDebitPage, ReturningUserPage}
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{DeferredVatBillPage, DirectDebitPage, ReturningUserPage}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors._
 import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.BavfConnector
 
 import scala.concurrent.ExecutionContext
 
@@ -61,6 +60,6 @@ abstract class BaseSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSui
   val outstandingReturnsPage: OutstandingReturnsPage = app.injector.instanceOf[OutstandingReturnsPage]
   val directDebitPage: DirectDebitPage = app.injector.instanceOf[DirectDebitPage]
   val ddFailurePage: DDFailurePage = app.injector.instanceOf[DDFailurePage]
-
+  val deferredVatBillPage: DeferredVatBillPage = app.injector.instanceOf[DeferredVatBillPage]
 
 }

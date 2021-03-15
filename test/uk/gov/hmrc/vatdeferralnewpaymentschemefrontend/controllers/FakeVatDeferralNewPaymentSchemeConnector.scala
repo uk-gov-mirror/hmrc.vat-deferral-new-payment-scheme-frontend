@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
-import java.time.ZonedDateTime
+import java.time.{LocalDate, LocalDateTime, ZoneId, ZonedDateTime}
 
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
@@ -26,7 +26,13 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.directdebitarrangem
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDeferralNewPaymentSchemeConnector {
+class FakeVatDeferralNewPaymentSchemeConnector(
+  testVrn: String,
+  testFinancialData: FinancialData = FinancialData(Some(200000.00), 200000.00),
+  testFirstPaymentDate: ZonedDateTime = ZonedDateTime.of(LocalDateTime.parse(LocalDate.parse("2021-03-15") + "T10:00:00"), ZoneId.of("Europe/London")),
+  testCanPay: Boolean =  true,
+  testInstallmentPeriodsAvailable: Int = 11
+) extends VatDeferralNewPaymentSchemeConnector {
 
   override def eligibility(
     vrn: String
@@ -48,7 +54,7 @@ class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDefer
   )(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
-  ): Future[FinancialData] = ???
+  ): Future[FinancialData] = Future.successful(testFinancialData)
 
   override def createDirectDebitArrangement(
     vrn: String,
@@ -61,9 +67,26 @@ class FakeVatDeferralNewPaymentSchemeConnector(testVrn: String) extends VatDefer
     case _ => Future.successful(Right(HttpResponse(Status.CREATED, "")))
   }
 
-  override def firstPaymentDate(vrn: Vrn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ZonedDateTime] = ???
+  override def firstPaymentDate(
+    vrn: Vrn
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[ZonedDateTime] = Future.successful(testFirstPaymentDate)
 
-  override def canPay(vrn: Vrn, amount: BigDecimal)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = ???
+  override def canPay(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Boolean] = Future.successful(testCanPay)
 
-  override def installmentPeriodsAvailable(vrn: Vrn, amount: BigDecimal)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[InstallmentsAvailable] = ???
+  override def installmentPeriodsAvailable(
+    vrn: Vrn,
+    amount: BigDecimal
+  )(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[InstallmentsAvailable] = Future.successful(InstallmentsAvailable(1,11))
 }

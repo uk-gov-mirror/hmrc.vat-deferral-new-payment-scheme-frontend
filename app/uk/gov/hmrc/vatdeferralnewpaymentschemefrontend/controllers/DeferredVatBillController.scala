@@ -44,10 +44,10 @@ class DeferredVatBillController @Inject()(
 ) extends FrontendController(mcc)
   with I18nSupport {
 
-  def get(): Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
+  def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     for {
-      fd <-  vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn)
+      fd <- vatDeferralNewPaymentSchemeConnector.financialData(vrn.vrn)
       cp <- vatDeferralNewPaymentSchemeConnector.canPay(vrn, fd.outstandingAmount)
       _ <- sessionStore.store[JourneySession](
              journeySession.id, "JourneySession", journeySession.copy(outStandingAmount = Some(fd.outstandingAmount))

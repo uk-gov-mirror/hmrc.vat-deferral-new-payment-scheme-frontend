@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.data.Forms.mapping
@@ -25,7 +26,8 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.JourneySession
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Vrn}
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.viewmodel.Month
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{HowManyMonthsPage, MonthlyInstallmentsPage}
@@ -40,7 +42,8 @@ class MonthsController @Inject()(
   monthlyInstallmentsPage: MonthlyInstallmentsPage,
   howManyMonthsPage: HowManyMonthsPage,
   sessionStore: SessionStore,
-  languageUtils: LanguageUtils
+  languageUtils: LanguageUtils,
+  vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -48,14 +51,30 @@ class MonthsController @Inject()(
 ) extends BaseController(mcc) {
 
   def get: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
-    displayInstalmentsPage(
-      journeySession,
-      journeySession.monthsQuestion.fold(
-        instalmentsForm
-      )(
-        x => instalmentsForm.fill(FormValues(x.toString))
-      )
-    )
+    vatDeferralNewPaymentSchemeConnector
+      .installmentPeriodsAvailable(
+        vrn,
+        journeySession.outStandingAmount.getOrElse(0)
+      ).map { available =>
+
+      if (available.max === 11) {
+        displayInstalmentsPage(
+          journeySession,
+          journeySession.monthsQuestion.fold(
+            instalmentsForm
+          )(
+            x => instalmentsForm.fill(FormValues(x.toString))
+          )
+        )
+      } else {
+        sessionStore.store[JourneySession](
+          journeySession.id,
+          "JourneySession",
+          journeySession.copy(numberOfPaymentMonths = Some(-1))
+        )
+        Future.successful(Redirect(routes.MonthsController.getInstallmentBreakdown()))
+      }
+    }.flatten
   }
 
   def post: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
@@ -86,13 +105,13 @@ class MonthsController @Inject()(
   }
 
   def getInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request =>vrn =>journeySession =>
-    displayMonthsSelectionPage(journeySession, monthForm)
+    displayMonthsSelectionPage(vrn, journeySession, monthForm)
   }
 
   def postInstallmentBreakdown: Action[AnyContent] = auth.authoriseWithJourneySession { implicit request => vrn => journeySession =>
 
     monthForm.bindFromRequest().fold(
-      errors => displayMonthsSelectionPage(journeySession, errors),
+      errors => displayMonthsSelectionPage(vrn, journeySession, errors),
       form => {
           sessionStore.store[JourneySession](journeySession.id, "JourneySession", journeySession.copy(numberOfPaymentMonths = Some(form.value.toInt)))
           Future.successful(Redirect(routes.WhenToPayController.get()))
@@ -100,8 +119,8 @@ class MonthsController @Inject()(
     )
   }
 
-  def getMonths(amount: BigDecimal): Seq[Month] = {
-    (2 to 10).map {
+  def getMonths(min: Int, max: Int, amount: BigDecimal): Seq[Month] = {
+    (min to scala.math.min(max, 10)).map {
       month => {
         val monthlyAmount = (amount / month).setScale(2, RoundingMode.DOWN)
         val remainder = amount - (monthlyAmount * month)
@@ -130,6 +149,7 @@ class MonthsController @Inject()(
   }
 
   def displayMonthsSelectionPage(
+    vrn: Vrn,
     journeySession: JourneySession,
     form: Form[FormValues]
   )(
@@ -139,23 +159,33 @@ class MonthsController @Inject()(
   ): Future[Result] = {
     journeySession.outStandingAmount match {
       case Some(outStandingAmount) => {
-        if (form.hasErrors) {
-          Future.successful(BadRequest(
-            howManyMonthsPage(
-              getMonths(outStandingAmount).reverse,
-              form,
-              languageUtils.getCurrentLang
+
+        vatDeferralNewPaymentSchemeConnector
+          .installmentPeriodsAvailable(
+            vrn,
+            journeySession.outStandingAmount.getOrElse(0)
+          ).map { available =>
+
+          if (form.hasErrors) {
+            BadRequest(
+              howManyMonthsPage(
+                getMonths(available.min, available.max, outStandingAmount).reverse,
+                form,
+                languageUtils.getCurrentLang
+              )
             )
-          ))
-        } else {
-          Future.successful(Ok(
-            howManyMonthsPage(
-              getMonths(outStandingAmount).reverse,
-              journeySession.numberOfPaymentMonths
-                .fold(monthForm)(x => monthForm.fill(FormValues(x.toString))),
-              languageUtils.getCurrentLang
-          )))
+          } else {
+            Ok(
+              howManyMonthsPage(
+                getMonths(available.min, available.max, outStandingAmount).reverse,
+                journeySession.numberOfPaymentMonths
+                  .fold(monthForm)(x => monthForm.fill(FormValues(x.toString))),
+                languageUtils.getCurrentLang
+              ))
+          }
+
         }
+
       }
       case _ => Future.successful(Redirect(routes.DeferredVatBillController.get()))
     }
