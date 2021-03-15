@@ -31,7 +31,7 @@ class FakeVatDeferralNewPaymentSchemeConnector(
   testFinancialData: FinancialData = FinancialData(Some(200000.00), 200000.00),
   testFirstPaymentDate: ZonedDateTime = ZonedDateTime.of(LocalDateTime.parse(LocalDate.parse("2021-03-15") + "T10:00:00"), ZoneId.of("Europe/London")),
   testCanPay: Boolean =  true,
-  testInstallmentPeriodsAvailable: Int = 11
+  testInstallmentPeriodsAvailable: InstallmentsAvailable = InstallmentsAvailable(1,11)
 ) extends VatDeferralNewPaymentSchemeConnector {
 
   override def eligibility(
@@ -88,5 +88,5 @@ class FakeVatDeferralNewPaymentSchemeConnector(
   )(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext
-  ): Future[InstallmentsAvailable] = Future.successful(InstallmentsAvailable(1,11))
+  ): Future[InstallmentsAvailable] = Future.successful(testInstallmentPeriodsAvailable)
 }
