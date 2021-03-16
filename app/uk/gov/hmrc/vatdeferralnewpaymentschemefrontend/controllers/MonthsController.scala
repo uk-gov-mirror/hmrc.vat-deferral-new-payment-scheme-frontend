@@ -163,7 +163,7 @@ class MonthsController @Inject()(
         vatDeferralNewPaymentSchemeConnector
           .installmentPeriodsAvailable(
             vrn,
-            journeySession.outStandingAmount.getOrElse(0)
+            outStandingAmount
           ).map { available =>
 
           if (form.hasErrors) {
