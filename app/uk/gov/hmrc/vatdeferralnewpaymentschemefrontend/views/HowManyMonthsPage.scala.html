@@ -78,14 +78,14 @@
                                    """)
                             } else {
                                 HtmlContent(s"""<span class="govuk-body govuk-!-font-size-36">${item.month}</span>
-                                                ${messages("how.many.months.p1")}
-                                            <span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>""")
+                                    ${messages("how.many.months.p1")}
+                                    <span class="govuk-!-font-weight-bold">${Money(item.amount)}</span>""")
                             },
                             hint = Some(Hint(
                                 content = HtmlContent(s"""${messages("how.many.months.p2.1")}
-                                            <span class="govuk-!-font-weight-bold">${Money(item.remainder)}</span>
-                                            ${messages("how.many.months.p2.2")}
-                                        <hr class="govuk-section-break govuk-section-break--visible" style="margin-top:10px"></hr>""")
+                                    <span class="govuk-!-font-weight-bold">${Money(item.remainder)}</span>
+                                    ${messages("how.many.months.p2.2")}
+                                    <hr class="govuk-section-break govuk-section-break--visible" style="margin-top:10px" aria-hidden="true">""")
                             )),
                             value = Some(item.month),
                             checked = form.data.get(fieldName).fold(false)(x => x == item.month)

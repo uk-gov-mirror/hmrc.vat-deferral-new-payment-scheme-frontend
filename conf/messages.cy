@@ -52,7 +52,7 @@ enter.postcode.heading=Beth yw’r cod post ble mae’ch busnes wedi’i gofrest
 enter.postcode.hint=Er enghraifft, AB1 2YZ
 
 enter.latestVatReturn.heading=Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
-enter.latestVatReturn.hint="Mae’r swm hwn i’w weld ym mlwch 5 yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM. Mae angen nodi’r rhif hwn gan ddefnyddio dau le degol, er enghraifft &pound;123.00"
+enter.latestVatReturn.hint=Mae’r swm hwn i’w weld ym mlwch 5 yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM. Mae angen nodi’r rhif hwn gan ddefnyddio dau le degol, er enghraifft 123.00
 
 enter.latestVatPeriod.heading=Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
 enter.latestVatPeriod.hint=Gallwch ddod o hyd i hwn drwy fewngofnodi i’ch cyfrif TAW ar-lein. Gallwch hefyd dod o hyd iddo yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
