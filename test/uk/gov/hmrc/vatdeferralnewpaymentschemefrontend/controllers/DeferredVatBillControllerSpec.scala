@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.http.Status
-import play.api.test.Helpers.{status, _}
+import play.api.test.Helpers._
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.connectors.VatDeferralNewPaymentSchemeConnector
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.{JourneySession, Submission}
@@ -34,7 +34,7 @@ class DeferredVatBillControllerSpec extends BaseSpec {
     Future.successful(JourneySession("foo", true, Some(BigDecimal(100.00)), Some(11), Some(1), Submission(false)))
   )
 
-  "GET //deferred-vat-bill" should {
+  "GET /deferred-vat-bill" should {
     "tell you your deferred-vat-bill and contain continue button" in {
       val controller = testController(
         new FakeVatDeferralNewPaymentSchemeConnector(
