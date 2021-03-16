@@ -26,38 +26,56 @@
     govukSummaryList: GovukSummaryList
 )
 
-@(totalDeferredVatAmount: BigDecimal, deferredVatAmount: BigDecimal, deferredVatAmountPaid: BigDecimal)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(outstandingAmount: BigDecimal, originalAmount: Option[BigDecimal] = None, canPay: Boolean = false)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
-    pageTitle = PageTitle("deferred.vat.bill.heading.1", messageArg = Money(deferredVatAmount)),
+    pageTitle = PageTitle("deferred.vat.bill.heading.1", messageArg = Money(outstandingAmount)),
     backLinkEnabled = true,
     backLink = Some(s"${controllers.routes.CheckBeforeYouStartController.get()}")
 ) {
 
-    <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1", Money(deferredVatAmount))</h1>
-    <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
-    @{govukSummaryList(SummaryList(
-        rows = Seq(
-            SummaryListRow(
-                Key(content = Text(messages("deferred.vat.bill.vat.total.payable"))),
-                Value(content = Text(Money(totalDeferredVatAmount)))
-            ),
-            SummaryListRow(
-                Key(content = Text(messages("deferred.vat.bill.vat.paid"))),
-                Value(content = Text(Money(deferredVatAmountPaid)))
-            ),
-            SummaryListRow(
-                Key(content = Text(messages("deferred.vat.bill.payable"))),
-                Value(content = Text(Money(deferredVatAmount)))
-            ),
-        )
-    ))}
+    <h1 class="govuk-heading-l">@messages("deferred.vat.bill.heading.1", Money(outstandingAmount))</h1>
+    @if(canPay){
+        @originalAmount.map { orig =>
+            <h2 class="govuk-heading-m">@messages("deferred.vat.bill.heading.2")</h2>
 
+            @{
+                govukSummaryList(SummaryList(
+                    rows = Seq(
+                        SummaryListRow(
+                            Key(content = Text(messages("deferred.vat.bill.vat.total.payable"))),
+                            Value(content = Text(Money(orig)))
+                        ),
+                        SummaryListRow(
+                            Key(content = Text(messages("deferred.vat.bill.vat.paid"))),
+                            Value(content = Text(Money(orig - outstandingAmount)))
+                        ),
+                        SummaryListRow(
+                            Key(content = Text(messages("deferred.vat.bill.payable"))),
+                            Value(content = Text(Money(outstandingAmount)))
+                        ),
+                    )
+                ))
+            }
+        }
+    } else {
+        <div class="govuk-inset-text">
+            <p>@messages("deferred.vat.bill.toobig.p1")
+            </p>
+            <p>@messages("deferred.vat.bill.toobig.p2")</p>
+        </div>
+    }
     @details(
         messages("deferred.vat.bill.wrong.p1"),
         s"""${messages("deferred.vat.bill.wrong.p2")} ${Html("<a rel='noreferrer noopener' target='_blank' href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/coronavirus-covid-19-helpline' class='govuk-link'>")} ${messages("deferred.vat.bill.wrong.p3")}${Html("</a>")}${messages("deferred.vat.bill.wrong.p4")}"""
     )
-
-    @button("global.button.continue", Some(s"${controllers.routes.MonthsController.get()}"))
+    @if(canPay) {
+        @button("global.button.continue", Some(s"${controllers.routes.MonthsController.get()}"))
+    } else {
+        @button(
+            messages("finish.sign-out.button"),
+            Some(uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes.AuthenticationController.signOut().toString)
+        )
+    }
 
 }
