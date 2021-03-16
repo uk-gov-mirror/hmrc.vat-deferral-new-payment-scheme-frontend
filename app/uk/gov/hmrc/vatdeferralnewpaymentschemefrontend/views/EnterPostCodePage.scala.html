@@ -59,6 +59,7 @@
             ),
             hint = Some(Hint(content = Text(messages("enter.postcode.hint")))),
             classes = "govuk-input--width-10",
+            autocomplete = Some("postal-code"),
             errorMessage = if (form.hasErrors) {
                 Some(ErrorMessage(content = Text(messages(form.errors.head.message))))
             } else None
