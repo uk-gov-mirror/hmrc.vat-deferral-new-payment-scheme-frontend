@@ -36,10 +36,6 @@
     <h2 class="govuk-heading-s">@messages("check.before.you.start.t.and.c.heading.small")</h2>
     <p class="govuk-body">@messages("check.before.you.start.t.and.c.cancel")</p>
     <p class="govuk-body">@messages("check.before.you.start.t.and.c.pay.total")</p>
-    <h2 class="govuk-heading-m">@messages("check.before.you.start.t.and.c.declaration")</h2>
-    <p class="govuk-body">@messages("check.before.you.start.t.and.c.agree")</p>
-
-    @button(messages("accept.and.continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
 
     <h2 class="govuk-heading-m">@messages("check.before.you.start.h2.1")</h2>
     <p class="govuk-body">@messages("check.before.you.start.p1")</p>
@@ -48,6 +44,12 @@
         <li>@messages("check.before.you.start.li2")</li>
         <li>@messages("check.before.you.start.li3")</li>
     </ul>
+
+    <h2 class="govuk-heading-m">@messages("check.before.you.start.t.and.c.declaration")</h2>
+    <p class="govuk-body">@messages("check.before.you.start.t.and.c.agree")</p>
+
+    @button(messages("accept.and.continue.button"), Some(controllers.routes.DeferredVatBillController.get().toString))
+
     <div class="govuk-warning-text">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
