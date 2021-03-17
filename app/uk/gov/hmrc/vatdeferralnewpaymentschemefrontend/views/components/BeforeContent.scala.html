@@ -24,6 +24,14 @@
 
 @govUkBetaBanner("BETA")
 
+@if(appConfig.languageTranslationEnabled) {
+    @hmrcLanguageSelect(LanguageSelect(
+        if (messages.lang.code == "cy") Cy else En,
+        (En, appConfig.routeToSwitchLanguage("english").url),
+        (Cy, appConfig.routeToSwitchLanguage("cymraeg").url)
+    ))
+}
+
 @{
     if(backLinkEnabled) {
         Some(
@@ -39,14 +47,6 @@
     } else {
         None
     }
-}
-
-@if(appConfig.languageTranslationEnabled) {
-    @hmrcLanguageSelect(LanguageSelect(
-        if (messages.lang.code == "cy") Cy else En,
-        (En, appConfig.routeToSwitchLanguage("english").url),
-        (Cy, appConfig.routeToSwitchLanguage("cymraeg").url)
-    ))
 }
 
 

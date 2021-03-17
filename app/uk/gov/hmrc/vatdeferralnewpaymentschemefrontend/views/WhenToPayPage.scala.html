@@ -23,11 +23,9 @@
 
 @this(
         layout: Layout,
-        govukDateInput : GovukDateInput,
         formHelper: FormWithCSRF,
         button: Button,
-        govukErrorSummary: GovukErrorSummary,
-
+        govukErrorSummary: GovukErrorSummary
 )
 
 @(form: Form[_], paymentStartDate: String, numberOfMonths: Int)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -46,7 +44,7 @@
             @govukErrorSummary(ErrorSummary(
                 errorList = Seq(
                     ErrorLink(
-                        href = Some(s"#dd-date-${err.key}"),
+                        href = Some(s"#${err.key}"),
                         content = Text(s"${messages("when-to-pay." ++err.message)}")
                     )
                 ),
@@ -55,32 +53,36 @@
         }
 
         <h1 class="govuk-heading-l">@messages("when.to.pay.h1")</h1>
-
         <p class="govuk-body">@Html(messages("when.to.pay.p1", paymentStartDate))</p>
 
-        <h2 class="govuk-heading-m">@messages("when.to.pay.h2")</h2>
-
-        <p class="govuk-body">@messages("when.to.pay.p2")</p>
-        <p class="govuk-body">@messages("when.to.pay.p3")</p>
-
-        @govukDateInput(DateInput(
-            errorMessage = if (form.hasErrors) {
-                Some(ErrorMessage(
-                    content = Text(messages(
-                        form.errors.headOption.fold("")(x => s"when-to-pay.${x.message}"))
-                    )
-                ))
-            } else None,
-            items = Seq(
-                        InputItem(
-                            name = "day",
-                            label = Some(messages("when.to.pay.label")),
-                            classes = "govuk-input--width-2",
-                            value = form.data.get("day")
-                        )
-                    ),
-            id = "dd-date"
-        ))
+        <div class="govuk-form-group@if(form.hasErrors){ govuk-form-group--error}">
+            <h2 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--m" for="day">
+                    @messages("when.to.pay.label")
+                </label>
+            </h2>
+            <p class="govuk-body" id="day-paragraph">@messages("when.to.pay.p2")</p>
+            <p class="govuk-body" id="day-paragraph">@messages("when.to.pay.p3")</p>
+            <div id="day-hint" class="govuk-hint">
+                @messages("when.to.pay.hint")
+            </div>
+            @if(form.hasErrors){
+                <span id="day-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">@messages("common.error.title")</span> @messages(form.errors.headOption.fold("")(x => s"when-to-pay.${x.message}"))
+                </span>
+            }
+            <input 
+                class="govuk-input govuk-input--width-2@if(form.hasErrors){ govuk-input--error}" 
+                id="day" 
+                name="day" 
+                type="text" 
+                spellcheck="false" 
+                pattern="[0-9]*" 
+                inputmode="numeric"
+                aria-describedby="day-paragraph day-hint @if(form.hasErrors){ dd-date-day-error}"
+            >
+            
+        </div>
 
         @button("continue.button")
     }
