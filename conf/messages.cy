@@ -145,6 +145,7 @@ payment.plan.dates.first-payment=Casglwyd y taliad cyntaf ar
 payment.plan.dates.remaining-payments=Taliadau sy'n weddill a gasglwyd ar
 payment.plan.dates.remaining-payments.change.hidden=cesglir taliadau diwrnod sy'n weddill
 payment.plan.monthly.payments=Taliadau misol
+payment.plan.monthly.change.hidden=faint o randaliadau misol a wnewch
 payment.plan.month=Mis
 payment.plan.amount=Swm
 

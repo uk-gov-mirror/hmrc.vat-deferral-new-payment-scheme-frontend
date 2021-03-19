@@ -142,6 +142,7 @@ payment.plan.dates.first-payment=First payment collected on
 payment.plan.dates.remaining-payments=Remaining payments collected on
 payment.plan.dates.remaining-payments.change.hidden=day remaining payments are collected on
 payment.plan.monthly.payments=Monthly payments
+payment.plan.monthly.change.hidden=how many monthly instalments you make
 payment.plan.month=Month
 payment.plan.amount=Amount
 
