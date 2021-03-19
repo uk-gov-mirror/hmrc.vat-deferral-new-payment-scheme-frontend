@@ -17,13 +17,15 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers._
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.{Button}
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers._
 @import java.time.ZonedDateTime
 @import java.time.format.DateTimeFormatter
 
 @this(
         layout: Layout,
-        govukPanel : GovukPanel
+        govukPanel : GovukPanel,
+        button: Button
 )
 
 @(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime, paymentSummary: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -62,6 +64,11 @@
     </p>
 
     <div id="confDetails" hidden>@paymentSummary</div>
+
+    @button(
+        messages("finish.sign-out.button"),
+        Some(uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers.routes.AuthenticationController.signOut().toString)
+    )
 
     <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
     <p class="govuk-body">

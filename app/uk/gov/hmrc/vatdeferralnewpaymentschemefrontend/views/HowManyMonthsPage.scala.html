@@ -82,9 +82,10 @@
                             },
                             hint = Some(Hint(
                                 content = HtmlContent(s"""${messages("how.many.months.p2.1")}
+                                    <div class="months-to-pay-hint">
                                     <span class="govuk-!-font-weight-bold">${Money(item.remainder)}</span>
                                     ${messages("how.many.months.p2.2")}
-                                    <hr class="govuk-section-break govuk-section-break--visible" style="margin-top:10px" aria-hidden="true">""")
+                                    </div>""")
                             )),
                             value = Some(item.month),
                             checked = form.data.get(fieldName).fold(false)(x => x == item.month)
