@@ -98,7 +98,7 @@ check.before.you.start.p2.start=Mae’n rhaid i chi dalu’ch holl randaliadau m
 check.before.you.start.p2.contact.us=cysylltwch â ni
 check.before.you.start.p2.end=(yn agor tab newydd) er mwyn trefnu dulliau eraill o glirio’ch dyled.
 
-deferred.vat.bill.heading.1={0} yw swm eich bil ar gyfer TAW ohiriedig
+deferred.vat.bill.heading.1=Eich bil ar gyfer TAW ohiriedig yw {0}
 deferred.vat.bill.heading.2=Sut gwnaethom gyfrifo’ch bil ar gyfer TAW ohiriedig
 deferred.vat.bill.vat.total.payable=TAW sy’n daladwy ar gyfer 20 Mawrth i 30 Mehefin 2020
 deferred.vat.bill.vat.paid=TAW a dalwyd hyd yma
