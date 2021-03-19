@@ -98,7 +98,7 @@ check.before.you.start.p2.start=Mae’n rhaid i chi dalu’ch holl randaliadau m
 check.before.you.start.p2.contact.us=cysylltwch â ni
 check.before.you.start.p2.end=(yn agor tab newydd) er mwyn trefnu dulliau eraill o glirio’ch dyled.
 
-deferred.vat.bill.heading.1={0} yw swm eich bil ar gyfer TAW ohiriedig
+deferred.vat.bill.heading.1=Eich bil ar gyfer TAW ohiriedig yw {0}
 deferred.vat.bill.heading.2=Sut gwnaethom gyfrifo’ch bil ar gyfer TAW ohiriedig
 deferred.vat.bill.vat.total.payable=TAW sy’n daladwy ar gyfer 20 Mawrth i 30 Mehefin 2020
 deferred.vat.bill.vat.paid=TAW a dalwyd hyd yma
@@ -107,9 +107,8 @@ deferred.vat.bill.wrong.p1=Yr hyn i’w wneud os ydych o’r farn bod y bil hwn 
 deferred.vat.bill.wrong.p2=Os ydych yn credu bod eich bil ar gyfer TAW ohiriedig yn anghywir,
 deferred.vat.bill.wrong.p3=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 deferred.vat.bill.wrong.p4=. (yn agor tab newydd)
-#TODO - get Welsh
-deferred.vat.bill.toobig.p1=The instalment limit is £20m per month.
-deferred.vat.bill.toobig.p2=You must contact your Customer Compliance Manager (CCM) to arrange payment as your deferred VAT bill is too large for this service.
+deferred.vat.bill.toobig.p1=Y terfyn ar gyfer rhandaliadau yw £20m y mis.
+deferred.vat.bill.toobig.p2=Mae’n rhaid i chi gysylltu â’ch Rheolwr Cydymffurfiad Cwsmeriaid (CCM) i drefnu talu gan fod eich bil ar gyfer TAW ohiriedig yn rhy fawr ar gyfer y gwasanaeth hwn.
 
 installments.h1=A hoffech dalu fesul 11 o randaliadau misol?
 installments.p1=Os dewiswch ‘Iawn’, eich taliadau misol fydd
