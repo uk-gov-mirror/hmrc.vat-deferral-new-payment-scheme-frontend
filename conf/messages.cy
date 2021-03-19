@@ -54,7 +54,7 @@ enter.postcode.hint=Er enghraifft, AB1 2YZ
 enter.latestVatReturn.heading=Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
 enter.latestVatReturn.hint=Mae’r swm hwn i’w weld ym mlwch 5 yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM. Mae angen nodi’r rhif hwn gan ddefnyddio dau le degol, er enghraifft 123.00
 
-enter.latestVatPeriod.heading=Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
+enter.latestVatPeriod.heading=Dewiswch y mis pan gyflwynwyd eich Ffurflen TAW ddiwethaf
 enter.latestVatPeriod.hint=Gallwch ddod o hyd i hwn drwy fewngofnodi i’ch cyfrif TAW ar-lein. Gallwch hefyd dod o hyd iddo yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
 
 enter.vatRegistrationDate.heading=Pryd y gwnaethoch gofrestru ar gyfer TAW?
@@ -206,7 +206,7 @@ error.day-and-month.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru a
 error.month-and-year.missing=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW gynnwys mis a blwyddyn
 error.date.invalid=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW fod yn ddyddiad go iawn
 error.date.in-future=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW fod yn y gorffennol
-latest-vat-period.error.required=Mae’n rhaid i’r dyddiad y gwnaethoch gofrestru ar gyfer TAW fod yn y gorffennol
+latest-vat-period.error.required=Dewiswch y mis pan gyflwynwyd eich Ffurflen TAW ddiwethaf
 
 matching.notMatched.title=Heb ddod o hyd i’r busnes
 matching.notMatched.p1=Ni allwn ddod o hyd i unrhyw fusnes sy’n cyd-fynd â’r manylion a nodwyd gennych.
