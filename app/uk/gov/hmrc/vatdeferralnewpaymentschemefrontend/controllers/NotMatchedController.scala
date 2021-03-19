@@ -22,15 +22,17 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.errors.NotMatchedPage
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NotMatchedController @Inject()(
+  auth: Auth,
   mcc: MessagesControllerComponents,
   notMatchedPage: NotMatchedPage,
   sessionStore: SessionStore
@@ -44,11 +46,9 @@ class NotMatchedController @Inject()(
 {
   val logger = Logger(getClass)
 
-  def get: Action[AnyContent] = Action.async { implicit request =>
-    val sessionId = request.session.get("sessionId").getOrElse(throw new RuntimeException("Session id does not exist"))
-    sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").map { x =>
+  def get: Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
+    sessionStore.get[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession").map { x =>
       x.fold{
-        logger.warn(s"sessionStore cannot be retrieved for $sessionId")
         Redirect(routes.VrnController.get())
       }{ y =>
         Ok(
