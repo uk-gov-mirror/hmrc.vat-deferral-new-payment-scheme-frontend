@@ -17,12 +17,11 @@
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.{Configuration, Environment, Logger, Mode}
 import play.api.i18n.I18nSupport
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import play.api.mvc.{request, _}
+import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, ServicesConfig}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.MatchingJourneySession
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
@@ -32,10 +31,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NotMatchedController @Inject()(
-  auth: Auth,
   mcc: MessagesControllerComponents,
   notMatchedPage: NotMatchedPage,
-  sessionStore: SessionStore
+  sessionStore: SessionStore,
+  val env: Environment,
+  val config: Configuration
 )(
   implicit val appConfig: AppConfig,
   val serviceConfig: ServicesConfig,
@@ -43,17 +43,24 @@ class NotMatchedController @Inject()(
 )
   extends FrontendController(mcc)
   with I18nSupport
+  with AuthRedirects
 {
   val logger = Logger(getClass)
 
-  def get: Action[AnyContent] = auth.authoriseWithMatchingJourneySession { implicit request => matchingJourneySession =>
-    sessionStore.get[MatchingJourneySession](matchingJourneySession.id, "MatchingJourneySession").map { x =>
-      x.fold{
-        Redirect(routes.VrnController.get())
-      }{ y =>
-        Ok(
-          notMatchedPage(y.failedMatchingAttempts, y.locked)
-        )
+    def get: Action[AnyContent] = Action.async { implicit request =>
+      val currentUrl = {
+        if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}"
+      }
+      request.session.get("sessionId").fold(Future.successful(toGGLogin(currentUrl))){sessionId =>
+      sessionStore.get[MatchingJourneySession](sessionId, "MatchingJourneySession").map { x =>
+        x.fold{
+          logger.warn(s"sessionStore cannot be retrieved for $sessionId")
+          Redirect(routes.VrnController.get())
+        }{ y =>
+          Ok(
+            notMatchedPage(y.failedMatchingAttempts, y.locked)
+          )
+        }
       }
     }
   }
