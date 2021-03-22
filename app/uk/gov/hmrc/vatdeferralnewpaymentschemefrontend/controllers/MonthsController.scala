@@ -169,7 +169,7 @@ class MonthsController @Inject()(
           if (form.hasErrors) {
             BadRequest(
               howManyMonthsPage(
-                getMonths(available.min, available.max, outStandingAmount).reverse,
+                getMonths(scala.math.max(available.min,2), available.max, outStandingAmount).reverse,
                 form,
                 languageUtils.getCurrentLang
               )
@@ -177,7 +177,7 @@ class MonthsController @Inject()(
           } else {
             Ok(
               howManyMonthsPage(
-                getMonths(available.min, available.max, outStandingAmount).reverse,
+                getMonths(scala.math.max(available.min,2), available.max, outStandingAmount).reverse,
                 journeySession.numberOfPaymentMonths
                   .fold(monthForm)(x => monthForm.fill(FormValues(x.toString))),
                 languageUtils.getCurrentLang
