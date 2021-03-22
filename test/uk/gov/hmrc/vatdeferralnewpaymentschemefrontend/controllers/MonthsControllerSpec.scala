@@ -68,8 +68,8 @@ class MonthsControllerSpec extends BaseSpec {
       val result = controller.getInstallmentBreakdown(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) should include("how.many.months.h1")
-      contentAsString(result) should include("how-many-months-5")
-      contentAsString(result) shouldNot include("how-many-months-6")
+      contentAsString(result) should include("how-many-months-4")
+      contentAsString(result) shouldNot include("how-many-months-5")
     }
 
     "Display howManyMonthsPage with 10 radio buttons for 10 InstallmentsAvailable" in {
@@ -85,8 +85,8 @@ class MonthsControllerSpec extends BaseSpec {
       val result = controller.getInstallmentBreakdown(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) should include("how.many.months.h1")
-      contentAsString(result) should include("how-many-months-10")
-      contentAsString(result) shouldNot include("how-many-months-11")
+      contentAsString(result) should include("how-many-months-9")
+      contentAsString(result) shouldNot include("how-many-months-10")
     }
   }
 
