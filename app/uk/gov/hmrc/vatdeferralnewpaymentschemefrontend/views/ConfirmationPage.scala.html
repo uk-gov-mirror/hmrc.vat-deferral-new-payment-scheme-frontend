@@ -44,13 +44,13 @@
     @messages(
         "confirmation.p2",
         Money(firstPaymentAmount),
-        startDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))
+        startDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy").withLocale(messages.lang.locale))
     )
     </p>
     <p class="govuk-body">
     @messages(
         "confirmation.p3",
-        regularPaymentDate.format(DateTimeFormatter.ofPattern("MMMM yyyy")),
+        regularPaymentDate.format(DateTimeFormatter.ofPattern("MMMM yyyy").withLocale(messages.lang.locale)),
         regularPaymentDate.getDayOfMonth.toString ++ daySuffix(regularPaymentDate.getDayOfMonth)
     )
     </p>

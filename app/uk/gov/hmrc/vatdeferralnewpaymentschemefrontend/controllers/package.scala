@@ -35,8 +35,8 @@ package object controllers {
 
   val logger = Logger(this.getClass)
 
-  def formattedPaymentsStartDate(zdt: ZonedDateTime): String =
-    zdt.format(DateTimeFormatter.ofPattern("d MMMM YYYY"))
+  def formattedPaymentsStartDate(zdt: ZonedDateTime)(implicit messages: Messages) =
+    zdt.format(DateTimeFormatter.ofPattern("d MMMM YYYY").withLocale(messages.lang.locale))
 
   def firstPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
     val monthlyAmount = regularPaymentAmount(amountOwed, periodOwed)
