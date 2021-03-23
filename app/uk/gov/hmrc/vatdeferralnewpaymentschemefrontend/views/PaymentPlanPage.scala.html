@@ -48,7 +48,7 @@
             rows = Seq(
                 SummaryListRow(
                     Key(content = Text(messages("payment.plan.dates.first-payment"))),
-                    Value(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy"))))
+                    Value(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy").withLocale(messages.lang.locale))))
                 ),
                 SummaryListRow(
                     Key(content = Text(messages("payment.plan.dates.remaining-payments"))),
@@ -72,10 +72,11 @@
 
         <h2 class="govuk-heading-m">@messages("payment.plan.monthly.payments")</h2>
 
+
         @{govukSummaryList(SummaryList(
             rows = Seq(
                 SummaryListRow(
-                    Key(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy")))),
+                    Key(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy").withLocale(messages.lang.locale)))),
                     Value(content = Text(Money(firstPaymentAmount))),
                     actions = Some(Actions(
                         items = Seq(
@@ -90,7 +91,7 @@
             ) ++
             {(1 until numberOfPayments).map{ item =>
                 SummaryListRow(
-                    Key(content = Text(paymentStartDate.plusMonths(item).format(DateTimeFormatter.ofPattern("MMMM yyyy")))),
+                    Key(content = Text(paymentStartDate.plusMonths(item).format(DateTimeFormatter.ofPattern("MMMM yyyy").withLocale(messages.lang.locale)))),
                     Value(content = Text(Money(regularPaymentAmount)))
                 )
             }} ++
