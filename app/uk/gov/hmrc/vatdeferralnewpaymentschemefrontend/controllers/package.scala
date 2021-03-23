@@ -35,8 +35,21 @@ package object controllers {
 
   val logger = Logger(this.getClass)
 
-  def formattedPaymentsStartDate(zdt: ZonedDateTime)(implicit messages: Messages) =
-    zdt.format(DateTimeFormatter.ofPattern("d MMMM YYYY").withLocale(messages.lang.locale))
+  def formattedPaymentsStartDate(zdt: ZonedDateTime)(implicit messages: Messages): String =
+    zdt.formatWithWelshMonth("d MMMM YYYY")
+
+  implicit class MyDate(date: ZonedDateTime) {
+    def formatWithWelshMonth(pattern: String)(implicit messages: Messages): String = {
+      date.format(
+        DateTimeFormatter.ofPattern(
+          pattern.replace(
+            "MMMM",
+            "'"+messages("global.month."+date.getMonthValue)+"'"
+          )
+        )
+      )
+    }
+  }
 
   def firstPaymentAmount(amountOwed: BigDecimal, periodOwed: Int): BigDecimal = {
     val monthlyAmount = regularPaymentAmount(amountOwed, periodOwed)

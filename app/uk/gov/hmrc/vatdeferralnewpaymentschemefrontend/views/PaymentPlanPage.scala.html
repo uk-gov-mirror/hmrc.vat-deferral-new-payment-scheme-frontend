@@ -48,7 +48,7 @@
             rows = Seq(
                 SummaryListRow(
                     Key(content = Text(messages("payment.plan.dates.first-payment"))),
-                    Value(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern(s"d MMMM yyyy").withLocale(messages.lang.locale))))
+                    Value(content = Text(paymentStartDate.formatWithWelshMonth("d MMMM yyyy")))
                 ),
                 SummaryListRow(
                     Key(content = Text(messages("payment.plan.dates.remaining-payments"))),
@@ -76,7 +76,7 @@
         @{govukSummaryList(SummaryList(
             rows = Seq(
                 SummaryListRow(
-                    Key(content = Text(paymentStartDate.format(DateTimeFormatter.ofPattern("MMMM yyyy").withLocale(messages.lang.locale)))),
+                    Key(content = Text(paymentStartDate.formatWithWelshMonth("MMMM yyyy"))),
                     Value(content = Text(Money(firstPaymentAmount))),
                     actions = Some(Actions(
                         items = Seq(
@@ -91,7 +91,7 @@
             ) ++
             {(1 until numberOfPayments).map{ item =>
                 SummaryListRow(
-                    Key(content = Text(paymentStartDate.plusMonths(item).format(DateTimeFormatter.ofPattern("MMMM yyyy").withLocale(messages.lang.locale)))),
+                    Key(content = Text(paymentStartDate.plusMonths(item).formatWithWelshMonth("MMMM yyyy"))),
                     Value(content = Text(Money(regularPaymentAmount)))
                 )
             }} ++
