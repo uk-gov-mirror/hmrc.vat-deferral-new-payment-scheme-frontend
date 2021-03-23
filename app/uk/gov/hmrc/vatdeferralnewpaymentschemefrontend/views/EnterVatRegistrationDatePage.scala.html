@@ -38,7 +38,7 @@
     val data:Seq[InputItem] = form.data.filter(x => fields.contains(x._1)).map {x =>
         InputItem(
             name = x._1,
-            classes = s"govuk-input--width-${if(x._1=="year") "4" else "2"} ${if(errKeys.contains(x._1)) "govuk-input--error"}",
+            classes = s"govuk-input--width-${if(x._1=="year") "4" else "2"} govuk-input--error",
             value = Some(x._2)
         )
     }.toSeq
@@ -58,7 +58,7 @@
                 ErrorSummary(
                     errorList = form.errors.map { err =>
                         ErrorLink(
-                            href = Some(s"#${err.key}"),
+                            href = Some(s"#vat-amount-day"),
                             content = Text(s"${messages(err.message)}"),
                             attributes = Map("class" ->"govuk-link")
                         )
