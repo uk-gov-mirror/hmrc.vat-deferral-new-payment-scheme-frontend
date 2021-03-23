@@ -125,7 +125,6 @@ how.many.months.p2.2=added to first payment
 how-many-months.error.required=Select how many months you want to pay over
 
 when.to.pay.h1=Choose when your payments will be collected
-when.to.pay.p1=We will collect your first payment on <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.label=On which day do you want the remaining monthly payments to be collected?
 when.to.pay.p2=Your second payment will not be taken in the same month as your first payment.
 when.to.pay.p3=If the payment due date falls on a weekend, we will take your payment on the next working day.
