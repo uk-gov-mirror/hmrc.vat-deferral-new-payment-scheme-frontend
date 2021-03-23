@@ -197,8 +197,9 @@ package object controllers {
         checkVatRegistrationDate(v, mjs.date)
       }
       case (HmceVatdecOrgService, "PETAXDUESALES", v) =>  {
-        logger.warn(s"VDNPS: PETAXDUESALES: ${v == mjs.latestVatAmount.getOrElse("") }")
-        v == mjs.latestVatAmount.getOrElse("")
+        val matches = v.replace("-", "").dropWhile(_ == '0') == mjs.latestVatAmount.getOrElse("").replace("-", "")
+        logger.warn(s"VDNPS: PETAXDUESALES: $matches")
+        matches
       }
       case (HmceVatdecOrgService, "PEPDNO", v) => {
         logger.warn(s"VDNPS: PEPDNO: ${v.toLowerCase() == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)}")
