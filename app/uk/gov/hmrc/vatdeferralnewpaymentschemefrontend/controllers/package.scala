@@ -201,8 +201,8 @@ package object controllers {
         v == mjs.latestVatAmount.getOrElse("")
       }
       case (HmceVatdecOrgService, "PEPDNO", v) => {
-        logger.warn(s"VDNPS: PEPDNO: ${v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)}")
-        v == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
+        logger.warn(s"VDNPS: PEPDNO: ${v.toLowerCase() == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)}")
+        v.toLowerCase() == formatLastAccountPeriodMonth(mjs.latestAccountPeriodMonth)
       }
       case (HmceVatdecOrgService, "IREFFREGDATE", v) =>
         logger.warn(s"VDNPS: IREFFREGDATE: ${checkVatRegistrationDate(v, mjs.date) }, length: ${v.length}, format: ${v.replaceAll("[0-9]", "x")}")
