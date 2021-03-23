@@ -58,7 +58,7 @@
                 ErrorSummary(
                     errorList = form.errors.map { err =>
                         ErrorLink(
-                            href = Some(s"#vat-amount-day"),
+                            href = Some(s"#${err.key}"),
                             content = Text(s"${messages(err.message)}"),
                             attributes = Map("class" ->"govuk-link")
                         )
