@@ -126,9 +126,7 @@ how.many.months.p2.2=sy’n weddill at y taliad cyntaf
 how-many-months.error.required=Dewiswch ateb ar gyfer dros sawl mis yr hoffech dalu
 
 when.to.pay.h1=Dewiswch pryd y bydd eich taliadau’n cael eu casglu
-when.to.pay.p1=Byddwn yn casglu’ch taliad cyntaf ar <span class="govuk-!-font-weight-bold">{0}</span>.
 when.to.pay.label=Ar ba ddiwrnod yr hoffech i’r taliadau misol sy’n weddill gael eu casglu?
-when.to.pay.p2=Your second payment will not be taken in the same month as your first payment.
 when.to.pay.p2=Ni fydd eich ail daliad yn cael ei gymryd yn yr un mis â’ch taliad cyntaf.
 when.to.pay.p3=Os bydd y dyddiad cau ar gyfer talu ar benwythnos, byddwn yn cymryd eich taliad ar y diwrnod gwaith nesaf.
 when.to.pay.hint=Nodwch ddiwrnod o 1 i 28

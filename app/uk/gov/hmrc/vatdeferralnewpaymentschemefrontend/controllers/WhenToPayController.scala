@@ -56,7 +56,6 @@ class WhenToPayController @Inject()(
               Ok(
                 whenToPagePage(
                   dop.fold(frm)(x => frm.fill(FormValues(x.toString))),
-                  formattedPaymentsStartDate(firstPaymentDate),
                   journeySession.numberOfPaymentMonths.getOrElse(11)
                 )
               )
@@ -79,7 +78,6 @@ class WhenToPayController @Inject()(
               BadRequest(
                 whenToPagePage(
                   errors,
-                  formattedPaymentsStartDate(firstPaymentDate),
                   journeySession.numberOfPaymentMonths.getOrElse(11)
                 )
               )
