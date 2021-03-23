@@ -92,7 +92,6 @@ check.before.you.start.t.and.c.agree=Cytunaf â thelerau ac amodau’r cynllun t
 check.before.you.start.p1=Er mwyn defnyddio’r gwasanaeth hwn, mae’n rhaid:
 check.before.you.start.li1=i chi fod â chyfrif banc yn y DU
 check.before.you.start.li2=i chi allu sefydlu Debyd Uniongyrchol
-check.before.you.start.li3=i chi allu dalu’r rhandaliad cyntaf ar 1 Mawrth 2021
 check.before.you.start.warning=Rhybudd
 check.before.you.start.p2.start=Mae’n rhaid i chi dalu’ch holl randaliadau mewn pryd. Os na allwch dalu,
 check.before.you.start.p2.contact.us=cysylltwch â ni
