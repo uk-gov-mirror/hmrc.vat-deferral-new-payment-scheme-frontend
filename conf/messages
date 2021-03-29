@@ -177,6 +177,7 @@ confirmation.vat.helpline.content=. (opens in a new tab)
 
 confirmation.next.header=What to do next
 confirmation.next.p1=Before you leave this page, print or save a copy of your payment plan as you will not be able to do this later.
+confirmation.details.summary.print=Print or save your payment summary
 confirmation.print.or.save.payment-summary=Print or save your payment plan
 
 global.button.continue=Continue
