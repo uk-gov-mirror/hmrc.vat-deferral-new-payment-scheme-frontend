@@ -25,7 +25,7 @@ case class InitRequest(
   messages: Option[InitRequestMessages] = None,
   customisationsUrl: Option[String] = None,
   address: Option[InitRequestAddress] = None,
-  initBacsRequirements:InitBACSRequirements = InitBACSRequirements(true, false)
+  bacsRequirements:InitBACSRequirements = InitBACSRequirements(true, false)
 )
 
 case class InitBACSRequirements(directDebitRequired: Boolean, directCreditRequired: Boolean)
