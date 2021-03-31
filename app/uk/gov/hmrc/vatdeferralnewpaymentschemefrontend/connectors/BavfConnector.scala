@@ -63,10 +63,9 @@ class BavfConnectorImpl @Inject()(
     val request = InitRequest(
       "vdnps",
       continueUrl,
+      prepopulatedData,
       messages,
-      customisationsUrl,
-      address = None,
-      prepopulatedData
+      customisationsUrl
     )
 
     val url = s"${appConfig.bavfApiBaseUrl}/api/init"
