@@ -60,8 +60,8 @@
                         items = Seq(
                             ActionItem(
                                 href = controllers.routes.WhenToPayController.get().toString(),
-                                content = Text(messages("common.change")),
-                                visuallyHiddenText = Some(messages("payment.plan.dates.remaining-payments.change.hidden"))
+                                content = HtmlContent(s"<span aria-hidden='true'>${messages("common.change")}</span>"),
+                                visuallyHiddenText = Some(messages("common.change") + " " + messages("payment.plan.dates.remaining-payments.change.hidden"))
                             )
                         )
                     ))
@@ -78,15 +78,6 @@
                 SummaryListRow(
                     Key(content = Text(paymentStartDate.formatWithWelshMonth("MMMM yyyy"))),
                     Value(content = Text(Money(firstPaymentAmount))),
-                    actions = Some(Actions(
-                        items = Seq(
-                            ActionItem(
-                                href = controllers.routes.MonthsController.get().toString(),
-                                content = Text(messages("common.change")),
-                                visuallyHiddenText = Some(messages("common.change"))
-                            )
-                        )
-                    ))
                 )
             ) ++
             {(1 until numberOfPayments).map{ item =>
@@ -98,7 +89,16 @@
             Seq(
                 SummaryListRow(
                     Key(content = Text(messages("payment.plan.total.pay"))),
-                    Value(content = Text(Money(outstandingAmount)))
+                    Value(content = Text(Money(outstandingAmount))),
+                    actions = Some(Actions(
+                        items = Seq(
+                            ActionItem(
+                                href = controllers.routes.MonthsController.get().toString(),
+                                content = HtmlContent(s"<span aria-hidden='true'>${messages("common.change")}</span>"),
+                                visuallyHiddenText = Some(messages("common.change") + " " + messages("payment.plan.monthly.change.hidden"))
+                            )
+                        )
+                    ))
                 )
             )
         ))}
