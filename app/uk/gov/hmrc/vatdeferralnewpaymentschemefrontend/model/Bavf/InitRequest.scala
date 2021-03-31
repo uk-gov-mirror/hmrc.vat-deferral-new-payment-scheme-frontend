@@ -21,13 +21,17 @@ import play.api.libs.json._
 case class InitRequest(
   serviceIdentifier: String,
   continueUrl: String,
+  prepopulatedData: Option[InitRequestPrepopulatedData],
   messages: Option[InitRequestMessages] = None,
   customisationsUrl: Option[String] = None,
   address: Option[InitRequestAddress] = None,
-  prepopulatedData: Option[InitRequestPrepopulatedData]
+  bacsRequirements:InitBACSRequirements = InitBACSRequirements(true, false)
 )
 
+case class InitBACSRequirements(directDebitRequired: Boolean, directCreditRequired: Boolean)
+
 object InitRequest {
+  implicit val initBacsWrites: OWrites[InitBACSRequirements] = Json.writes[InitBACSRequirements]
   implicit val messagesWrites: OWrites[InitRequestMessages] = Json.writes[InitRequestMessages]
   implicit val addressWrites: OWrites[InitRequestAddress] = Json.writes[InitRequestAddress]
   implicit val prePopulatedDataWrites: OWrites[InitRequestPrepopulatedData] = Json.writes[InitRequestPrepopulatedData]
