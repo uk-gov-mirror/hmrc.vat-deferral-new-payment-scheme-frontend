@@ -22,7 +22,7 @@ time-out.button=Mewngofnodi
 global.month.1=Ionawr
 global.month.2=Chwefror
 global.month.3=Mawrth
-global.month.4=Ebril
+global.month.4=Ebrill
 global.month.5=Mai
 global.month.6=Mehefin
 global.month.7=Gorffennaf
@@ -55,7 +55,11 @@ enter.latestVatReturn.heading=Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
 enter.latestVatReturn.hint=Mae’r swm hwn i’w weld ym mlwch 5 yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM. Mae angen nodi’r rhif hwn gan ddefnyddio dau le degol, er enghraifft 123.00
 
 enter.latestVatPeriod.heading=Dewiswch y mis pan gyflwynwyd eich Ffurflen TAW ddiwethaf
-enter.latestVatPeriod.hint=Gallwch ddod o hyd i hwn drwy fewngofnodi i’ch cyfrif TAW ar-lein. Gallwch hefyd dod o hyd iddo yn y Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
+enter.latestVatPeriod.hint.what=Beth yw mis
+enter.latestVatPeriod.hint.last=olaf
+enter.latestVatPeriod.hint.month=eich cyfnod cyfrifyddu TAW
+enter.latestVatPeriod.hint.previous=blaenorol
+enter.latestVatPeriod.hint.VAT=(nid y mis y gwnaethoch gyflwyno’ch Ffurflen TAW)?
 
 enter.vatRegistrationDate.heading=Pryd y gwnaethoch gofrestru ar gyfer TAW?
 enter.vatRegistrationDate.hint1=Mae hwn i’w weld ar eich tystysgrif cofrestru ar gyfer TAW.
