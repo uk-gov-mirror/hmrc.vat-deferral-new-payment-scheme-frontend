@@ -32,7 +32,7 @@ import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.services.SessionStore
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.{EnterVatRegistrationDatePage, VatDetailsNotValidPage}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.util.{Success, Try}
 
 @Singleton
 class VatRegistrationDateController @Inject()(
@@ -95,7 +95,7 @@ class VatRegistrationDateController @Inject()(
     )
   }
 
-  def trim(inputStr: String) = inputStr.trim()
+  private def trim(inputStr: String): String = inputStr.trim()
 
   lazy val vatRegDateMapping: Mapping[DateFormValues] = tuple(
     "day"   -> text,
@@ -164,8 +164,13 @@ class VatRegistrationDateController @Inject()(
       x =>
         x match {
           case (d: String, m: String, y: String) if trim(d) != "" && trim(m) != "" && trim(y) != "" =>
-            LocalDate.of(trim(y).toInt, trim(m).toInt, trim(d).toInt)
-              .isBefore(LocalDate.now(ZoneId.of("Europe/London")))
+           val parseDate = Try{
+              LocalDate.of(trim(y).toInt, trim(m).toInt, trim(d).toInt)
+           }
+            parseDate match {
+              case Success(ld) => ld.isBefore(LocalDate.now(ZoneId.of("Europe/London")))
+              case _ => true
+            }
           case _ => true
         }
     )
