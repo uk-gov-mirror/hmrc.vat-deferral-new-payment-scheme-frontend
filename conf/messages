@@ -56,7 +56,11 @@ enter.latestVatReturn.heading=What is your latest VAT Return total?
 enter.latestVatReturn.hint=You can find this amount in box number 5 on your latest VAT Return submitted to HMRC. The format of this number needs to be two decimal places, for example 123.00
 
 enter.latestVatPeriod.heading=Select the month when your last VAT Return was submitted
-enter.latestVatPeriod.hint=You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
+enter.latestVatPeriod.hint.what=What is the
+enter.latestVatPeriod.hint.last=last
+enter.latestVatPeriod.hint.month=month of your
+enter.latestVatPeriod.hint.previous=previous
+enter.latestVatPeriod.hint.VAT=VAT accounting period (not the month you filed your return)?
 
 enter.vatRegistrationDate.heading=When did you become VAT registered?
 enter.vatRegistrationDate.hint1=You can find this date on your VAT registration certificate.

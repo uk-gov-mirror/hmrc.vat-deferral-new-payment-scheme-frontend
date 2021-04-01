@@ -49,11 +49,22 @@
                 title = Text(messages("common.error.summary.title"))
             ))
         }
-        @govukRadios(Radios(
-            errorMessage = if(form.hasErrors) {Some(ErrorMessage(
-                content = Text(messages("latest-vat-period.error.required"))
-            ))} else None,
-            hint = Some(Hint(content = Text(messages("enter.latestVatPeriod.hint")))),
+        @govukRadios(
+            Radios(
+                errorMessage = if(form.hasErrors) {Some(ErrorMessage(
+                    content = Text(messages("latest-vat-period.error.required"))
+                ))} else None,
+                hint = Some(
+                    Hint(
+                        content = HtmlContent(
+                                s"""${messages("enter.latestVatPeriod.hint.what")}
+                                    <span class="govuk-!-font-weight-bold">${messages("enter.latestVatPeriod.hint.last")}</span>
+                                    ${messages("enter.latestVatPeriod.hint.month")}
+                                    <span class="govuk-!-font-weight-bold">${messages("enter.latestVatPeriod.hint.previous")}</span>
+                                    ${messages("enter.latestVatPeriod.hint.VAT")}"""
+                        )
+                    )
+                ),
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
                     content = Text(messages("enter.latestVatPeriod.heading")),
