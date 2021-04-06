@@ -62,15 +62,12 @@ package object controllers {
   }
 
   def daySuffix(day: Int)(implicit messages: Messages): String = {
-    if(messages.lang.code == "cy"){
-      ""
-    } else{
-      day % 10 match {
-        case 1 if day != 11 => "st"
-        case 2 if day != 12 => "nd"
-        case 3 if day != 13 => "rd"
-        case _ => "th"
-      }
+    (messages.lang.code, day % 10) match {
+      case ("en", 1) if day != 11 => "st"
+      case ("en", 2) if day != 12 => "nd"
+      case ("en", 3) if day != 13 => "rd"
+      case ("en", _) => "th"
+      case _ => ""
     }
   }
 
