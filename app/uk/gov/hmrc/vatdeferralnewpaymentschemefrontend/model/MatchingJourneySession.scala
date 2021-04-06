@@ -16,28 +16,15 @@
 
 package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.Future
 
-case class DateFormValues(day: String, month: String, year: String) {
-  def isValidDate: Boolean = try{
-    val dateText = s"${"%02d".format(day.toInt)}/${"%02d".format(month.toInt)}/$year"
-    LocalDate.parse(dateText, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    true
-  }
-  catch {
-    case _ => false
-  }
-}
+case class DateFormValues(day: String, month: String, year: String)
 
 case object DateFormValues {
   implicit val format = Json.format[DateFormValues]
-
 }
 
 case class MatchingJourneySession (

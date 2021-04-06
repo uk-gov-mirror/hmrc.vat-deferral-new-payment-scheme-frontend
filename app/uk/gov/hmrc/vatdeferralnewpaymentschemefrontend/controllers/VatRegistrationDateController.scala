@@ -181,6 +181,5 @@ class VatRegistrationDateController @Inject()(
 
   val frm: Form[DateFormValues] = Form(
     vatRegDateMapping
-      .verifying("error.date.invalid", a =>  a.isValidDate)
   )
 }

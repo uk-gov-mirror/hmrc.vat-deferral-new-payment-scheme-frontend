@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
+@import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.model.DateFormValues
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.helpers.PageTitle
 @import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.views.html.components.Button
 @import views.html.helper.CSRF
@@ -30,19 +31,26 @@
 
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[DateFormValues])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @formData = @{
     val fields =  Seq("day", "month", "year")
     val errKeys = form.errors.map(x => x.key)
-    val data:Seq[InputItem] = form.data.filter(x => fields.contains(x._1)).map {x =>
+    val data:Seq[InputItem] = form.data.filter(x => fields.contains(x._1)).map {y =>
         InputItem(
-            name = x._1,
-            classes = s"govuk-input--width-${if(x._1=="year") "4" else "2"} govuk-input--error",
-            value = Some(x._2)
+            name = y._1,
+            classes = s"govuk-input--width-${if(y._1=="year") "4" else "2"} govuk-input--error",
+            value = Some(y._2)
         )
     }.toSeq
     data
+}
+
+@errorLinkID(s:String) = @{
+    if (s.contains("day")) "vat-amount-day"
+    else if (s.contains("month")) "vat-amount-month"
+    else if (s.contains("year")) "vat-amount-year"
+        else "vat-amount-day"
 }
 
 @layout(
@@ -58,7 +66,7 @@
                 ErrorSummary(
                     errorList = form.errors.map { err =>
                         ErrorLink(
-                            href = Some(s"#vat-amount-day"),
+                            href = Some(s"#${errorLinkID(err.message)}"),
                             content = Text(s"${messages(err.message)}"),
                             attributes = Map("class" ->"govuk-link")
                         )
