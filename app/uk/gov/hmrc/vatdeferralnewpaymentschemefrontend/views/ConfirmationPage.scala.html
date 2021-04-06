@@ -28,7 +28,7 @@
         button: Button
 )
 
-@(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime, paymentSummary: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(startDate: ZonedDateTime, firstPaymentAmount: BigDecimal, regularPaymentDate: ZonedDateTime, regularPaymentAmount: BigDecimal, paymentSummary: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = PageTitle("confirmation.header")
@@ -51,6 +51,7 @@
     @messages(
         "confirmation.p3",
         regularPaymentDate.formatWithWelshMonth("MMMM yyyy"),
+        Money(regularPaymentAmount),
         regularPaymentDate.getDayOfMonth.toString ++ daySuffix(regularPaymentDate.getDayOfMonth)
     )
     </p>
@@ -67,11 +68,7 @@
     <h2 class="govuk-heading-m">@messages("confirmation.service.help.header")</h2>
     <p class="govuk-body">
         @messages("confirmation.p4")
-        <a
-        target='_blank'
-        class="govuk-link"
-        rel='noreferrer noopener'
-        href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">@messages("confirmation.vat.helpline.href")</a>
+        @Html(Messages("confirmation.vat.helpline.href"))
     </p>
 
 }
