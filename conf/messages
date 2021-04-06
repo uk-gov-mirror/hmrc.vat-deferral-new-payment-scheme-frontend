@@ -169,19 +169,19 @@ direct.debit.p5=You can cancel a Direct Debit at any time by simply contacting y
 direct.debit.confirm.and.setup=Click once to confirm and set up Direct Debit
 direct.debit.double-click.warning=Clicking the button more than once will set up multiple Direct Debits.
 
-confirmation.header=You have set up a Direct Debit for your deferred VAT payments
+confirmation.header=You have completed the Direct Debit set up for your deferred VAT payments
 confirmation.header2=What happens next
-confirmation.p1=We will send you a letter confirming your payment dates. You should get this within 5 working days.
+confirmation.p1=We will send you a letter confirming your payment dates to the address where you are registered for VAT. You should get this within 5 working days.
 confirmation.p2=We will collect your first payment of {0} from your bank account on {1}.
-confirmation.p3=From {0}, we will collect on the {1} day of the month, or the next working day.
+confirmation.p3=From {0}, we will collect {1} on the {2} day of the month, or the next working day.
 confirmation.summary.page.href=View your payment summary
 confirmation.service.help.header=Get help with this service
 confirmation.p4=If you have any questions or need to speak to someone about your payments,
-confirmation.vat.helpline.href=contact the Coronavirus (COVID-19) helpline for businesses and self-employed people
+confirmation.vat.helpline.href=<a target='_blank' class='govuk-link' rel='noreferrer noopener' href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries'>contact the Coronavirus (COVID-19) helpline for businesses and self-employed people</a>.
 confirmation.vat.helpline.content=. (opens in a new tab)
 
 confirmation.next.header=What to do next
-confirmation.next.p1=Before you leave this page, print or save a copy of your payment plan as you will not be able to do this later.
+confirmation.next.p1=Before you leave this page, print or save a copy of your payment summary as you will not be able to do this later.
 confirmation.details.summary.print=Print or save your payment summary
 confirmation.print.or.save.payment-summary=Print or save your payment plan
 

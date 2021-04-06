@@ -58,17 +58,17 @@ class ConfirmationController @Inject()(
       val dop = journeySession.dayOfPayment.fold(throw new IllegalStateException("Missing recurring monthly payment day")){
         dop => paymentStartDate.plusMonths(1L).withDayOfMonth(dop)
       }
-
+      val rpa = regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
       val ps = paymentSummary(
         formattedPaymentsStartDate(paymentStartDate),
         journeySession.dayOfPayment.getOrElse((0)),
         journeySession.numberOfPaymentMonths.getOrElse(11),
         journeySession.outStandingAmount.getOrElse(BigDecimal(0)),
         firstPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11)),
-        regularPaymentAmount(oa, journeySession.numberOfPaymentMonths.getOrElse(11))
+        rpa
       )
       request.session.get("sessionId").fold(())(sessionStore.drop)
-      Ok(confirmationPage(paymentStartDate,fpa,dop,ps)).withNewSession
+      Ok(confirmationPage(paymentStartDate,fpa,dop,rpa,ps)).withNewSession
     }
   }
 }

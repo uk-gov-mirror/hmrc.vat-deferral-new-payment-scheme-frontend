@@ -63,7 +63,7 @@ package object controllers {
 
   def daySuffix(day: Int)(implicit messages: Messages): String = {
     if(messages.lang.code == "cy"){
-      day.toString
+      ""
     } else{
       day % 10 match {
         case 1 if day != 11 => "st"

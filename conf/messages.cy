@@ -171,20 +171,21 @@ direct.debit.confirm.and.setup=Click once to confirm and set up Direct Debit
 direct.debit.double-click.warning=Clicking the button more than once will set up multiple Direct Debits.
 #direct.debit.confirm.and.setup=Cadarnhau a sefydlu Debyd Uniongyrchol
 
-confirmation.header=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer eich taliadau TAW gohiriedig
+confirmation.header=Rydych wedi gorffen sefydlu’r Debyd Uniongyrchol ar gyfer eich taliadau TAW gohiriedig
 confirmation.header2=Yr hyn sy’n digwydd nesaf
 confirmation.p1=Byddwn yn anfon llythyr atoch yn cadarnhau’ch dyddiadau talu i’r cyfeiriad lle’r ydych wedi’ch cofrestru ar gyfer TAW. Dylai hyn eich cyrraedd cyn pen 5 diwrnod gwaith.
 confirmation.p2=Byddwn yn casglu’ch taliad cyntaf o {0} o’ch cyfrif banc ar {1}.
-confirmation.p3=O fis {0} ymlaen, byddwn yn casglu {1} ar ddiwrnod cyntaf y mis, neu’r diwrnod gwaith nesaf.
+confirmation.p3=O {0} ymlaen, byddwn yn casglu {1} ar {2}, neu’r diwrnod gwaith nesaf. 
 confirmation.summary.page.href=Bwrw golwg dros grynodeb o’ch taliadau
 confirmation.service.help.header=Help gyda’r gwasanaeth hwn
 confirmation.p4=Os oes gennych unrhyw gwestiynau neu os oes angen i chi siarad â rhywun am eich taliadau,
-confirmation.vat.helpline.href=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM.
+confirmation.vat.helpline.href=<a target='_blank' class='govuk-link' rel='noreferrer noopener' href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines'>cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM</a>.
 confirmation.vat.helpline.content=. (yn agor tab newydd)
 
 confirmation.next.header=Yr hyn i’w wneud nesaf
-confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch cynllun talu. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
+confirmation.next.p1=Cyn i chi adael y dudalen hon, dylech argraffu neu gadw copi o’ch crynodeb o daliadau. Ni fyddwch yn gallu gwneud hyn yn nes ymlaen.
 confirmation.print.or.save.payment-summary=Argraffu neu gadw eich cynllun talu
+confirmation.details.summary.print=Argraffu neu gadw crynodeb o’ch taliadau
 
 global.button.continue=Yn eich blaen
 global.button.accept.and.continue=Derbyn ac yn eich blaen
