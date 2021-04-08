@@ -31,8 +31,11 @@ class BaseController @Inject()(mcc: MessagesControllerComponents) extends Fronte
     text.transform[String](_.trim, s => s).verifying(required(key))
   }
 
-  protected def mandatoryAndValid(key: String, regex: String): Mapping[String] = {
-    text.transform[String](_.trim, s => s).verifying(combine(required(key), constraint(key, regex)))
+  protected def mandatoryAndValid(key: String, regex: String, isUppercase: Boolean = false): Mapping[String] = {
+    text.transform[String](
+      x => if(isUppercase){x.trim.toUpperCase} else {x.replace(" ", "")},
+      s => s
+    ).verifying(combine(required(key), constraint(key, regex)))
   }
 
   private def combine[T](c1: Constraint[T], c2: Constraint[T]): Constraint[T] = Constraint { v =>

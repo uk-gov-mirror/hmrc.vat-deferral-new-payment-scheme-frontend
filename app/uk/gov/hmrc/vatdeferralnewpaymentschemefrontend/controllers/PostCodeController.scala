@@ -61,7 +61,7 @@ class PostCodeController @Inject()(
     )
   }
 
-  val frm: Form[PostCode] = Form(mapping("post-code" -> mandatoryAndValid("postcode",  appConfig.postCodeRegex))(PostCode.apply)(PostCode.unapply))
+  val frm: Form[PostCode] = Form(mapping("post-code" -> mandatoryAndValid("postcode",  appConfig.postCodeRegex, true))(PostCode.apply)(PostCode.unapply))
 
   case class PostCode(value: String)
 }
