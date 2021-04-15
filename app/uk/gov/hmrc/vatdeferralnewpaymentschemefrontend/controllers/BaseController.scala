@@ -45,12 +45,12 @@ class BaseController @Inject()(mcc: MessagesControllerComponents) extends Fronte
     }
   }
 
-  private def required(key: String): Constraint[String] = Constraint {
+  def required(key: String): Constraint[String] = Constraint {
     case "" => Invalid(s"error.$key.required")
     case _ => Valid
   }
 
-  private def constraint(key: String, regex: String): Constraint[String] = Constraint {
+  def constraint(key: String, regex: String): Constraint[String] = Constraint {
     case a if !a.matches(regex) => Invalid(s"error.$key.invalid")
     case _ => Valid
   }

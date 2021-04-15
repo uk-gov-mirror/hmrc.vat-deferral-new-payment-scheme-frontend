@@ -18,7 +18,8 @@ package uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
-import play.api.data.Forms.mapping
+import play.api.data.Forms.{mapping, text}
+import play.api.data.validation.{Constraint, Invalid, Valid}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.vatdeferralnewpaymentschemefrontend.auth.Auth
@@ -61,7 +62,14 @@ class VatReturnController @Inject()(
     )
   }
 
-  val frm: Form[Amount] = Form(mapping("vat-amount" -> mandatoryAndValid("vatamount",  appConfig.decimalRegex))(Amount.apply)(Amount.unapply))
+  val frm: Form[Amount] = Form(
+    mapping(
+      "vat-amount" -> text.transform[String](_.trim, s => s).verifying(
+        required("vatamount"),
+        constraint("vatamount", appConfig.moneyWithCommaRegex)
+      )
+    )(Amount.apply)(Amount.unapply)
+  )
 
   case class Amount(value: String)
 }

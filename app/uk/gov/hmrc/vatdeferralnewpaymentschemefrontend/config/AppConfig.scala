@@ -65,7 +65,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val bavfWebBaseUrl = servicesConfig.baseUrl("bank-account-verification-web")
 
   val vrnRegex = servicesConfig.getString(s"regex.vrn")
-  val decimalRegex = servicesConfig.getString(s"regex.decimal")
+  val moneyWithCommaRegex = servicesConfig.getString(s"regex.moneyWithComma")
   val postCodeRegex = servicesConfig.getString(s"regex.postCode")
 
   def languageMap: Map[String, Lang] = Map(
