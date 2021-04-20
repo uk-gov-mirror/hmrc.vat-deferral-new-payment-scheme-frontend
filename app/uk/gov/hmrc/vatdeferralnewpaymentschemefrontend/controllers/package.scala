@@ -195,8 +195,8 @@ package object controllers {
       mjs: MatchingJourneySession
     ): Boolean = (service, identifiers.key, identifiers.value) match {
       case (HmrcMtdVatService, "BoxFiveValue", v) => {
-        logger.warn(s"VDNPS: BoxFiveValue: ${v == mjs.latestVatAmount.getOrElse("")}")
-        v == mjs.latestVatAmount.getOrElse("")
+        logger.warn(s"VDNPS: BoxFiveValue: ${v == mjs.latestVatAmount.fold("")(_.replace(",", ""))}")
+        v == mjs.latestVatAmount.fold("")(_.replace(",", ""))
       }
       case (HmrcMtdVatService, "LastMonthLatestStagger", v) => {
         logger.warn(s"VDNPS: LastMonthLatestStagger: ${v == mjs.latestAccountPeriodMonth.getOrElse("")}")
